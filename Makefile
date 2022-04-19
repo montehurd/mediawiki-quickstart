@@ -74,6 +74,7 @@ runonce:
 	docker compose up -d; \
 	docker compose exec mediawiki composer update; \
 	docker compose exec mediawiki bash /docker/install.sh; \
+	sleep 2; \
 	docker compose down; \
 	cd $(makefile_dir); \
 	touch runonce; \
