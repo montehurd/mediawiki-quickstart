@@ -124,9 +124,9 @@ applyskinsettings:
 usevectorskin:
 	make applyskin skinDirectory=Vector skinRepoURL=https://github.com/wikimedia/mediawiki-skins-Vector.git wfLoadSkin=Vector wgDefaultSkin=vector;
 
-.PHONY: usedarkvectorskin
-usedarkvectorskin:
-	make applyskin skinDirectory=DarkVector skinRepoURL=https://github.com/jdlrobson/DarkVector.git skinBranch=24 wfLoadSkin=DarkVector wgDefaultSkin=darkvector;
+.PHONY: useapiportalskin
+useapiportalskin:
+	make applyskin skinDirectory=WikimediaApiPortal skinRepoURL=https://github.com/wikimedia/mediawiki-skins-WikimediaApiPortal.git wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal;
 
 .PHONY: useminervaneueskin
 useminervaneueskin:
