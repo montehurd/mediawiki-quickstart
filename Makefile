@@ -157,7 +157,6 @@ installnode:
 	cd $(mediawiki_dir); \
 	docker compose exec mediawiki /bin/bash -c "curl -s https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash && source ~/.profile && nvm install node;"
 
-
 .PHONY: applyextension
 applyextension:
 	@cd $(mediawiki_dir); \
