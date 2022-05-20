@@ -6,6 +6,7 @@ SHELL := /bin/bash
 # For general info on Makefiles see: https://makefiletutorial.com but this Makefile is really
 # just a convenient way to run some commands via simple "make" shortcuts. For a similar
 # example see: https://github.com/graphql-python/graphene/blob/master/docs/Makefile
+# Note: "fresh" here does not reference the excellent "freshnode" container
 
 makefile_dir = $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 mediawiki_dir = "$(makefile_dir)/mediawiki"
