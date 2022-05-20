@@ -47,10 +47,8 @@ remove:
 		read -p "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$(mediawiki_dir)\" (y/n)? " -n 1 -r; \
 		echo ; \
 		if [ "$$REPLY" = "y" ]; then \
-			make stop; \
-			docker container rm mediawiki-mediawiki-web-1; \
-			docker container rm mediawiki-mediawiki-1; \
-			docker container rm mediawiki-mediawiki-jobrunner-1; \
+			cd $(mediawiki_dir); \
+			docker compose down; \
 			rm -rf $(mediawiki_dir); \
 			rm $(makefile_dir)/runonce; \
 		fi; \
@@ -60,7 +58,7 @@ remove:
 .PHONY: stop
 stop:
 	-@cd $(mediawiki_dir); \
-	docker compose down
+	docker compose stop
 
 # "make start" start mediawiki containers.
 .PHONY: start
