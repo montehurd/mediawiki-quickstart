@@ -137,11 +137,18 @@ useminervaneueskin:
 usetimelessskin:
 	make applyskin skinDirectory=Timeless skinRepoURL=https://github.com/wikimedia/mediawiki-skins-Timeless.git wfLoadSkin=Timeless wgDefaultSkin=timeless;
 
+special_version_url = "http://localhost:8080/wiki/Special:Version"
+
 .PHONY: openspecialversionpage
 openspecialversionpage:
 	@if [ "$$skipopenspecialversionpage" != "true" ]; then \
-		open "http://localhost:8080/wiki/Special:Version"; \
+		while ! [[ $$(make get_response_code) =~ ^(200|301)$$ ]]; do sleep 1; done; \
+		sleep 0.5; \
+		( open $(special_version_url) || xdg-open $(special_version_url) || echo "Open '$(special_version_url)' in a browser to view the Mediawiki special version page." ) & \
 	fi
+
+get_response_code:
+	@echo $$(curl --write-out '%{http_code}' --silent --output /dev/null $(special_version_url))
 
 .PHONY: runparsertests
 runparsertests:
