@@ -60,12 +60,19 @@ stop:
 	-@cd $(mediawiki_dir); \
 	docker compose stop
 
+# example: make is_container_running container_name="mediawiki-mediawiki-1"
+is_container_running:
+	@[ "$$(docker inspect -f '{{.State.Running}}' ${container_name} 2>/dev/null)" = "true" ] && echo "true" || echo "false";
+
 # "make start" start mediawiki containers.
 .PHONY: start
 start: runonce
-	@cd $(mediawiki_dir); \
-	docker compose up -d; \
-	sleep 1; \
+	@is_running=$$( make is_container_running container_name="mediawiki-mediawiki-1" ); \
+	if [ "$$is_running" = false ]; then \
+		cd $(mediawiki_dir); \
+		docker compose up -d; \
+		sleep 1; \
+	fi; \
 	cd $(makefile_dir); \
 	make openspecialversionpage;
 
@@ -75,7 +82,6 @@ runonce:
 	docker compose exec mediawiki composer update; \
 	docker compose exec mediawiki bash /docker/install.sh; \
 	sleep 2; \
-	docker compose down; \
 	cd $(makefile_dir); \
 	touch runonce; \
 	make usevectorskin skipopenspecialversionpage=true;
