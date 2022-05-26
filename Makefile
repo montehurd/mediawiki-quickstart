@@ -36,7 +36,7 @@ freshinstall:
 prepare:
 	@mkdir $(mediawiki_dir); \
 	cd $(mediawiki_dir); \
-	git clone https://github.com/wikimedia/mediawiki.git . --depth=1; \
+	git clone https://gerrit.wikimedia.org/r/mediawiki/core.git . --depth=1; \
 	echo "$$MW_ENV" > .env;
 	-cp ./docker-compose.override.yml $(mediawiki_dir)/docker-compose.override.yml;
 
