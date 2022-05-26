@@ -129,19 +129,19 @@ applyskinsettings:
 
 .PHONY: usevectorskin
 usevectorskin:
-	make applyskin skinDirectory=Vector skinRepoURL=https://github.com/wikimedia/mediawiki-skins-Vector.git wfLoadSkin=Vector wgDefaultSkin=vector;
+	make applyskin skinDirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git wfLoadSkin=Vector wgDefaultSkin=vector;
 
 .PHONY: useapiportalskin
 useapiportalskin:
-	make applyskin skinDirectory=WikimediaApiPortal skinRepoURL=https://github.com/wikimedia/mediawiki-skins-WikimediaApiPortal.git wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal;
+	make applyskin skinDirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal;
 
 .PHONY: useminervaneueskin
 useminervaneueskin:
-	make applyskin skinDirectory=MinervaNeue skinRepoURL=https://github.com/wikimedia/mediawiki-skins-MinervaNeue.git wfLoadSkin=MinervaNeue wgDefaultSkin=minerva;
+	make applyskin skinDirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git wfLoadSkin=MinervaNeue wgDefaultSkin=minerva;
 
 .PHONY: usetimelessskin
 usetimelessskin:
-	make applyskin skinDirectory=Timeless skinRepoURL=https://github.com/wikimedia/mediawiki-skins-Timeless.git wfLoadSkin=Timeless wgDefaultSkin=timeless;
+	make applyskin skinDirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git wfLoadSkin=Timeless wgDefaultSkin=timeless;
 
 special_version_url = "http://localhost:8080/wiki/Special:Version"
 
