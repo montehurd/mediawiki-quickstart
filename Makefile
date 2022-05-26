@@ -10,9 +10,10 @@ SHELL := /bin/bash
 
 makefile_dir = $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 mediawiki_dir = "$(makefile_dir)/mediawiki"
+mediawiki_port=8080
 
 define MW_ENV
-MW_DOCKER_PORT=8080
+MW_DOCKER_PORT=$(mediawiki_port)
 MW_DOCKER_UID=$(id -u)
 MW_DOCKER_GID=$(id -g)
 MEDIAWIKI_USER=Admin
@@ -143,7 +144,7 @@ useminervaneueskin:
 usetimelessskin:
 	make applyskin skinDirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git wfLoadSkin=Timeless wgDefaultSkin=timeless;
 
-special_version_url = "http://localhost:8080/wiki/Special:Version"
+special_version_url = "http://localhost:$(mediawiki_port)/wiki/Special:Version"
 
 .PHONY: openspecialversionpage
 openspecialversionpage:
