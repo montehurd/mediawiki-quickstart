@@ -61,14 +61,11 @@ stop:
 	-@cd $(mediawiki_dir); \
 	docker compose stop
 
-# example: make is_container_running container_name="mediawiki-mediawiki-1"
-is_container_running:
-	@[ "$$(docker inspect -f '{{.State.Running}}' ${container_name} 2>/dev/null)" = "true" ] && echo "true" || echo "false";
-
 # "make start" start mediawiki containers.
 .PHONY: start
 start: runonce
-	@is_running=$$( make is_container_running container_name="mediawiki-mediawiki-1" ); \
+	@is_running=$$(./utility.sh is_container_running "mediawiki-mediawiki-1"); \
+	echo $$is_running; \
 	if [ "$$is_running" = false ]; then \
 		cd $(mediawiki_dir); \
 		docker compose up -d; \
@@ -149,13 +146,10 @@ special_version_url = "http://localhost:$(mediawiki_port)/wiki/Special:Version"
 .PHONY: openspecialversionpage
 openspecialversionpage:
 	@if [ "$$skipopenspecialversionpage" != "true" ]; then \
-		while ! [[ $$(make get_response_code) =~ ^(200|301)$$ ]]; do sleep 1; done; \
+		while ! [[ $$(./utility.sh get_response_code $(special_version_url)) =~ ^(200|301)$$ ]]; do sleep 1; done; \
 		sleep 0.5; \
 		( open $(special_version_url) || xdg-open $(special_version_url) || echo "Open '$(special_version_url)' in a browser to view the Mediawiki special version page." ) & \
 	fi
-
-get_response_code:
-	@echo $$(curl --write-out '%{http_code}' --silent --output /dev/null $(special_version_url))
 
 .PHONY: runparsertests
 runparsertests:
