@@ -65,7 +65,6 @@ stop:
 .PHONY: start
 start: runonce
 	@is_running=$$(./utility.sh is_container_running "mediawiki-mediawiki-1"); \
-	echo $$is_running; \
 	if [ "$$is_running" = false ]; then \
 		cd $(mediawiki_dir); \
 		docker compose up -d; \
