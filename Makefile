@@ -8,7 +8,7 @@ SHELL := /bin/bash
 # example see: https://github.com/graphql-python/graphene/blob/master/docs/Makefile
 # Note: "fresh" here does not reference the excellent "freshnode" container
 
-makefile_dir = $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+makefile_dir = $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 mediawiki_dir = "$(makefile_dir)/mediawiki"
 mediawiki_port=8080
 
@@ -63,8 +63,8 @@ stop:
 
 # "make start" start mediawiki containers.
 .PHONY: start
-start: runonce
-	@is_running=$$(./utility.sh is_container_running "mediawiki-mediawiki-1"); \
+start: $(makefile_dir)/runonce
+	@is_running=$$($(makefile_dir)/utility.sh is_container_running "mediawiki-mediawiki-1"); \
 	if [ "$$is_running" = false ]; then \
 		cd $(mediawiki_dir); \
 		docker compose up -d; \
@@ -73,7 +73,7 @@ start: runonce
 	cd $(makefile_dir); \
 	make openspecialversionpage;
 
-runonce:
+$(makefile_dir)/runonce:
 	-@cd $(mediawiki_dir); \
 	docker compose up -d; \
 	docker compose exec mediawiki composer update; \
@@ -145,7 +145,7 @@ special_version_url = "http://localhost:$(mediawiki_port)/wiki/Special:Version"
 .PHONY: openspecialversionpage
 openspecialversionpage:
 	@if [ "$$skipopenspecialversionpage" != "true" ]; then \
-		while ! [[ $$(./utility.sh get_response_code $(special_version_url)) =~ ^(200|301)$$ ]]; do sleep 1; done; \
+		while ! [[ $$($(makefile_dir)/utility.sh get_response_code $(special_version_url)) =~ ^(200|301)$$ ]]; do sleep 1; done; \
 		sleep 0.5; \
 		( open $(special_version_url) || xdg-open $(special_version_url) || echo "Open '$(special_version_url)' in a browser to view the Mediawiki special version page." ) & \
 	fi
