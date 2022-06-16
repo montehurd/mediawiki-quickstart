@@ -145,9 +145,7 @@ special_version_url = "http://localhost:$(mediawiki_port)/wiki/Special:Version"
 .PHONY: openspecialversionpage
 openspecialversionpage:
 	@if [ "$$skipopenspecialversionpage" != "true" ]; then \
-		while ! [[ $$($(makefile_dir)/utility.sh get_response_code $(special_version_url)) =~ ^(200|301)$$ ]]; do sleep 1; done; \
-		sleep 0.5; \
-		( open $(special_version_url) || xdg-open $(special_version_url) || echo "Open '$(special_version_url)' in a browser to view the Mediawiki special version page." ) & \
+		$(makefile_dir)/utility.sh open_url_when_available $(special_version_url); \
 	fi
 
 .PHONY: runparsertests
