@@ -10,9 +10,13 @@ is_container_running () {
 }
 
 open_url_when_available () {
+   wait_until_url_available "$1";
+   ( open "$1" || xdg-open "$1" || echo "Unable to automatically open '$1', try opening it in a browser" ) &
+}
+
+wait_until_url_available () {
    while ! [[ "$(get_response_code $1)" =~ ^(200|301)$ ]]; do sleep 1; done;
    sleep 0.5;
-   ( open "$1" || xdg-open "$1" || echo "Unable to automatically open '$1', try opening it in a browser" ) &
 }
 
 $*
