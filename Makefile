@@ -71,6 +71,7 @@ start: $(makefile_dir)/runonce
 		sleep 1; \
 	fi; \
 	cd $(makefile_dir); \
+	./utility.sh wait_until_url_available $(special_version_url); \
 	make openspecialversionpage;
 
 $(makefile_dir)/runonce:
