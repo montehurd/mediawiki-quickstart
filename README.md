@@ -63,11 +63,6 @@ Quickly switch skins with these commands (easy to add more if needed):
     Fetch and switch to the Vector skin
 
 -   ```
-    make usedarkvectorskin
-     ```
-    Fetch and switch to the dark Vector skin
-
--   ```
     make useminervaneueskin
      ```
     Fetch and switch to the Minerva Neue skin
