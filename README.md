@@ -2,6 +2,8 @@ Quickly spin up a MediaWiki instance.
 
 ## Installation 
 
+Ensure you have [Docker](https://www.docker.com/products/docker-desktop) installed.
+
 Clone the repo:
 
     git clone https://gitlab.wikimedia.org/mhurd/mediawiki-docker-make.git
