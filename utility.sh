@@ -20,4 +20,15 @@ wait_until_url_available () {
    sleep 0.5;
 }
 
+# args
+# $1 - mediawiki path
+# $2 - wfLoadSkin value
+# $3 - wgDefaultSkin value
+apply_mediawiki_skin_settings () {
+	cd $1;
+	grep -qx '^wfLoadSkin.*$' LocalSettings.php || echo 'wfLoadSkin("");' >> LocalSettings.php;
+	sed -i -E "s/^wfLoadSkin[[:blank:]]*\(([[:blank:]]*.*[[:blank:]]*)\)[[:blank:]]*;[[:blank:]]*$/wfLoadSkin(\"$2\");/g" LocalSettings.php;
+	sed -i -E "s/\\\$wgDefaultSkin.*;[[:blank:]]*$/\\\$wgDefaultSkin = \"$3\";/g" LocalSettings.php;
+}
+
 "$@"

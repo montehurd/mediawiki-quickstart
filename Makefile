@@ -120,10 +120,7 @@ applyskin:
 
 .PHONY: applyskinsettings
 applyskinsettings:
-	@cd $(mediawiki_dir); \
-	grep -qx '^wfLoadSkin.*$$' LocalSettings.php || echo 'wfLoadSkin("");' >> LocalSettings.php; \
-	sed -i -E "s/^wfLoadSkin[[:blank:]]*\(([[:blank:]]*.*[[:blank:]]*)\)[[:blank:]]*;[[:blank:]]*$$/wfLoadSkin(\"$(wfLoadSkin)\");/g" LocalSettings.php; \
-	sed -i -E "s/\\\$$wgDefaultSkin.*;[[:blank:]]*$$/\\\$$wgDefaultSkin = \"$(wgDefaultSkin)\";/g" LocalSettings.php;
+	@./utility.sh apply_mediawiki_skin_settings $(mediawiki_dir) $(wfLoadSkin) $(wgDefaultSkin);
 
 .PHONY: usevectorskin
 usevectorskin:
