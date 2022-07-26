@@ -147,4 +147,4 @@ runphpunittests:
 	docker compose exec --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php $(if $(testpath), $(testpath),) $(if $(testgroup), --group $(testgroup),) --testdox;
 
 # applyextensionexample:
-# 	set -k; ./utility.sh apply_mediawiki_extension mediawikiPath=$(mediawiki_dir) extensionBranch=master extensionSubdirectory=CampaignEvents extensionRepoURL=https://gerrit.wikimedia.org/r/mediawiki/extensions/CampaignEvents wfLoadExtension=CampaignEvents;
+# 	set -k; ./utility.sh apply_mediawiki_extension mediawikiPath=$(mediawiki_dir) extensionRepoURL=https://gerrit.wikimedia.org/r/mediawiki/extensions/CampaignEvents extensionBranch=master extensionSubdirectory=CampaignEvents wfLoadExtension=CampaignEvents;
