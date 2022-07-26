@@ -108,35 +108,25 @@ bashwb:
 	cd $(mediawiki_dir); \
 	docker compose exec mediawiki-web bash
 
-.PHONY: applyskin
-applyskin:
-	@cd $(mediawiki_dir); \
-	rm -rf "skins/$(skinDirectory)"; \
-	git clone $(if $(skinBranch), --branch $(skinBranch),) $(skinRepoURL) "./skins/$(skinDirectory)" --depth=1; \
-	cd $(makefile_dir); \
-	sleep 1; \
-	make applyskinsettings; \
-	make openspecialversionpage;
-
-.PHONY: applyskinsettings
-applyskinsettings:
-	@./utility.sh apply_mediawiki_skin_settings $(mediawiki_dir) $(wfLoadSkin) $(wgDefaultSkin);
-
 .PHONY: usevectorskin
 usevectorskin:
-	make applyskin skinDirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git wfLoadSkin=Vector wgDefaultSkin=vector;
+	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinDirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector; \
+	make openspecialversionpage;
 
 .PHONY: useapiportalskin
 useapiportalskin:
-	make applyskin skinDirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal;
+	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinDirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal; \
+	make openspecialversionpage;
 
 .PHONY: useminervaneueskin
 useminervaneueskin:
-	make applyskin skinDirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git wfLoadSkin=MinervaNeue wgDefaultSkin=minerva;
+	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinDirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva; \
+	make openspecialversionpage;
 
 .PHONY: usetimelessskin
 usetimelessskin:
-	make applyskin skinDirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git wfLoadSkin=Timeless wgDefaultSkin=timeless;
+	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinDirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless; \
+	make openspecialversionpage;
 
 special_version_url = "http://localhost:$(mediawiki_port)/wiki/Special:Version"
 
