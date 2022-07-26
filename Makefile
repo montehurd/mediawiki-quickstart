@@ -110,22 +110,22 @@ bashwb:
 
 .PHONY: usevectorskin
 usevectorskin:
-	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinDirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector; \
+	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector; \
 	make openspecialversionpage;
 
 .PHONY: useapiportalskin
 useapiportalskin:
-	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinDirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal; \
+	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal; \
 	make openspecialversionpage;
 
 .PHONY: useminervaneueskin
 useminervaneueskin:
-	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinDirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva; \
+	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva; \
 	make openspecialversionpage;
 
 .PHONY: usetimelessskin
 usetimelessskin:
-	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinDirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless; \
+	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless; \
 	make openspecialversionpage;
 
 special_version_url = "http://localhost:$(mediawiki_port)/wiki/Special:Version"
@@ -147,4 +147,4 @@ runphpunittests:
 	docker compose exec --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php $(if $(testpath), $(testpath),) $(if $(testgroup), --group $(testgroup),) --testdox;
 
 # applyextensionexample:
-# 	set -k; ./utility.sh apply_mediawiki_extension mediawikiPath=$(mediawiki_dir) extensionBranch=master extensionDirectory=CampaignEvents extensionRepoURL=https://gerrit.wikimedia.org/r/mediawiki/extensions/CampaignEvents wfLoadExtension=CampaignEvents;
+# 	set -k; ./utility.sh apply_mediawiki_extension mediawikiPath=$(mediawiki_dir) extensionBranch=master extensionSubdirectory=CampaignEvents extensionRepoURL=https://gerrit.wikimedia.org/r/mediawiki/extensions/CampaignEvents wfLoadExtension=CampaignEvents;

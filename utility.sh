@@ -29,8 +29,8 @@ apply_mediawiki_skin_settings () {
 
 apply_mediawiki_skin () {
 	cd "$mediawikiPath";
-	rm -rf "skins/$skinDirectory";
-	git clone --branch "$skinBranch" "$skinRepoURL" "./skins/$skinDirectory" --depth=1;
+	rm -rf "skins/$skinSubdirectory";
+	git clone --branch "$skinBranch" "$skinRepoURL" "./skins/$skinSubdirectory" --depth=1;
 	sleep 1;
    apply_mediawiki_skin_settings;
 }
@@ -42,8 +42,8 @@ apply_mediawiki_extension_settings () {
 
 apply_mediawiki_extension () {
    cd "$mediawikiPath";
-	rm -rf "extensions/$extensionDirectory";
-	git clone --branch "$extensionBranch" "$extensionRepoURL" "./extensions/$extensionDirectory" --depth=1;
+	rm -rf "extensions/$extensionSubdirectory";
+	git clone --branch "$extensionBranch" "$extensionRepoURL" "./extensions/$extensionSubdirectory" --depth=1;
 	sleep 1;
 	apply_mediawiki_extension_settings;
 }
