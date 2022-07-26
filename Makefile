@@ -146,16 +146,5 @@ runphpunittests:
 	cd $(mediawiki_dir); \
 	docker compose exec --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php $(if $(testpath), $(testpath),) $(if $(testgroup), --group $(testgroup),) --testdox;
 
-.PHONY: applyextension
-applyextension:
-	@cd $(mediawiki_dir); \
-	rm -rf "extensions/$(extensionDirectory)"; \
-	git clone $(if $(extensionBranch), --branch $(extensionBranch),) $(extensionRepoURL) "./extensions/$(extensionDirectory)" --depth=1; \
-	cd $(makefile_dir); \
-	sleep 1; \
-	make applyextensionsettings;
-
-.PHONY: applyextensionsettings
-applyextensionsettings:
-	@cd $(mediawiki_dir); \
-	grep -qx "^[[:blank:]]*wfLoadExtension[[:blank:]]*([[:blank:]]*[\"']$(wfLoadExtension)[\"'][[:blank:]]*)[[:blank:]]*;[[:blank:]]*$$" LocalSettings.php || echo 'wfLoadExtension("$(wfLoadExtension)");' >> LocalSettings.php;
+# applyextensionexample:
+# 	set -k; ./utility.sh apply_mediawiki_extension mediawikiPath=$(mediawiki_dir) extensionBranch=master extensionDirectory=CampaignEvents extensionRepoURL=https://gerrit.wikimedia.org/r/mediawiki/extensions/CampaignEvents wfLoadExtension=CampaignEvents;

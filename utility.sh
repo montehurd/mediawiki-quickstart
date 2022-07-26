@@ -35,4 +35,17 @@ apply_mediawiki_skin () {
    apply_mediawiki_skin_settings;
 }
 
+apply_mediawiki_extension_settings () {
+	cd "$mediawikiPath";
+	grep -qx "^[[:blank:]]*wfLoadExtension[[:blank:]]*([[:blank:]]*[\"']$wfLoadExtension[\"'][[:blank:]]*)[[:blank:]]*;[[:blank:]]*$" LocalSettings.php || echo "wfLoadExtension(\"$wfLoadExtension\");" >> LocalSettings.php;
+}
+
+apply_mediawiki_extension () {
+   cd "$mediawikiPath";
+	rm -rf "extensions/$extensionDirectory";
+	git clone --branch "$extensionBranch" "$extensionRepoURL" "./extensions/$extensionDirectory" --depth=1;
+	sleep 1;
+	apply_mediawiki_extension_settings;
+}
+
 "$@"
