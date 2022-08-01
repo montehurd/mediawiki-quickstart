@@ -6,7 +6,7 @@ get_response_code () {
 
 is_container_running () {
    is_running=$(docker inspect -f '{{.State.Running}}' $1 2>/dev/null);
-   [ "$is_running" == "true" ] && echo "true" || echo "false";
+   echo "${is_running:=false}";
 }
 
 open_url_when_available () {
