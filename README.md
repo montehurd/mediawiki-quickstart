@@ -74,6 +74,11 @@ Quickly switch skins with these commands (easy to add more if needed):
      ```
     Fetch and switch to the Timeless skin
 
+-   ```
+    make usemonobookskin
+     ```
+    Fetch and switch to the MonoBook skin
+
 Run tests with these commands:
 
 -   ```
