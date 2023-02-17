@@ -110,27 +110,27 @@ bashwb:
 
 .PHONY: usevectorskin
 usevectorskin:
-	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector; \
+	@set -k; $(makefile_dir)/utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector; \
 	make openspecialversionpage;
 
 .PHONY: useapiportalskin
 useapiportalskin:
-	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal; \
+	@set -k; $(makefile_dir)/utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal; \
 	make openspecialversionpage;
 
 .PHONY: useminervaneueskin
 useminervaneueskin:
-	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva; \
+	@set -k; $(makefile_dir)/utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva; \
 	make openspecialversionpage;
 
 .PHONY: usetimelessskin
 usetimelessskin:
-	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless; \
+	@set -k; $(makefile_dir)/utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless; \
 	make openspecialversionpage;
 
 .PHONY: usemonobookskin
 usemonobookskin:
-	@set -k; ./utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=MonoBook skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git skinBranch=master wfLoadSkin=MonoBook wgDefaultSkin=monobook; \
+	@set -k; $(makefile_dir)/utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=MonoBook skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git skinBranch=master wfLoadSkin=MonoBook wgDefaultSkin=monobook; \
 	make openspecialversionpage;
 
 special_version_url = "http://localhost:$(mediawiki_port)/wiki/Special:Version"
