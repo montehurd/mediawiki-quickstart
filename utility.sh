@@ -22,8 +22,7 @@ wait_until_url_available () {
 
 apply_mediawiki_skin_settings () {
 	cd "$mediawikiPath";
-	grep -qx '^wfLoadSkin.*$' LocalSettings.php || echo 'wfLoadSkin("");' >> LocalSettings.php;
-	sed -i -E "s/^wfLoadSkin[[:blank:]]*\(([[:blank:]]*.*[[:blank:]]*)\)[[:blank:]]*;[[:blank:]]*$/wfLoadSkin(\"$wfLoadSkin\");/g" LocalSettings.php;
+  grep -qx "^wfLoadSkin([\"']$wfLoadSkin[\"']); *$" LocalSettings.php || echo "wfLoadSkin(\"$wfLoadSkin\");" >> LocalSettings.php;
 	sed -i -E "s/\\\$wgDefaultSkin.*;[[:blank:]]*$/\\\$wgDefaultSkin = \"$wgDefaultSkin\";/g" LocalSettings.php;
 }
 
