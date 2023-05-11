@@ -10,9 +10,20 @@ is_container_running () {
 }
 
 open_url_when_available () {
-   # TODO: find linux command which can accept name of browser optionally specified in $2 ( it's working for "open" on MacOS below )
    wait_until_url_available "$1";
-   ( open ${2:+-a "$2"} "$1" || xdg-open "$1" || echo "Unable to automatically open '$1', try opening it in a browser" )
+   error_message="Unable to automatically open '$1', try opening it in a browser"
+   if [[ "$OSTYPE" == "darwin"* ]]; then
+      # macOS system
+      open ${2:+-a "$2"} "$1" || echo "$error_message"
+   elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+      # Linux system
+      xdg-open "$1" || echo "$error_message"
+   elif [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+      # Windows system (Cygwin, Git Bash, or WSL)
+      start "" "$1" || echo "$error_message"
+   else
+      echo "Unsupported operating system"
+   fi
 }
 
 wait_until_url_available () {
