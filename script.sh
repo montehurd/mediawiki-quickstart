@@ -69,8 +69,7 @@ start() {
 		docker compose up -d
 		sleep 1
 	fi
-	cd "$SCRIPT_DIR"
-	./utility.sh wait_until_url_available $SPECIAL_VERSION_URL
+	"$SCRIPT_DIR/utility.sh" wait_until_url_available $SPECIAL_VERSION_URL
 	open_special_version_page
 }
 
