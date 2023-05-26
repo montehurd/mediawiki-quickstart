@@ -1,155 +1,55 @@
 SHELL := /bin/bash
 
-# This file is used to spin up a basic dockerized mediawiki instance on your local machine.
-# Comments above the make commands below explain their usage.
-# 
-# For general info on Makefiles see: https://makefiletutorial.com but this Makefile is really
-# just a convenient way to run some commands via simple "make" shortcuts. For a similar
-# example see: https://github.com/graphql-python/graphene/blob/master/docs/Makefile
-# Note: "fresh" here does not reference the excellent "freshnode" container
+.PHONY: fresh_install prepare remove stop start restart bash_mw bash_jr bash_wb use_vector_skin use_apiportal_skin use_minervaneue_skin use_timeless_skin use_monobook_skin open_special_version_page run_parser_tests run_php_unit_tests
 
-makefile_dir = $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
-mediawiki_dir = "$(makefile_dir)/mediawiki"
-mediawiki_port=8080
+.DEFAULT: fresh_install
+fresh_install:
+	./script.sh fresh_install
 
-define MW_ENV
-MW_DOCKER_PORT=$(mediawiki_port)
-MW_DOCKER_UID=$(id -u)
-MW_DOCKER_GID=$(id -g)
-MEDIAWIKI_USER=Admin
-MEDIAWIKI_PASSWORD=dockerpass
-XDEBUG_ENABLE=true
-XHPROF_ENABLE=true
-XDEBUG_CONFIG=''
-endef
-export MW_ENV
-
-# "make freshinstall" (or just "make") fetches, installs and runs a basic mediawiki container. Mediawiki gets saved in a "mediawiki" directory in the parent directory of the Makefile.
-.DEFAULT: freshinstall
-.PHONY: freshinstall
-freshinstall:
-	make stop
-	make remove
-	make prepare
-	make start
-
-.PHONY: prepare
 prepare:
-	@mkdir $(mediawiki_dir); \
-	cd $(mediawiki_dir); \
-	git clone https://gerrit.wikimedia.org/r/mediawiki/core.git . --depth=1; \
-	echo "$$MW_ENV" > .env;
-	-cp ./docker-compose.override.yml $(mediawiki_dir)/docker-compose.override.yml;
+	./script.sh prepare
 
-# "make remove" stops and removes mediawiki containers and files.
-.PHONY: remove
 remove:
-	-@if [ -d "$(mediawiki_dir)" ]; then \
-		read -p "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$(mediawiki_dir)\" (y/n)? " -n 1 -r; \
-		echo ; \
-		if [ "$$REPLY" = "y" ]; then \
-			cd $(mediawiki_dir); \
-			docker compose down; \
-			rm -rf $(mediawiki_dir); \
-			rm $(makefile_dir)/runonce; \
-		fi; \
-	fi
+	./script.sh remove
 
-# "make stop" stops mediawiki containers.
-.PHONY: stop
 stop:
-	-@cd $(mediawiki_dir); \
-	docker compose stop
+	./script.sh stop
 
-# "make start" start mediawiki containers.
-.PHONY: start
-start: $(makefile_dir)/runonce
-	@is_running=$$($(makefile_dir)/utility.sh is_container_running "mediawiki-mediawiki-1"); \
-	if [ "$$is_running" = false ]; then \
-		cd $(mediawiki_dir); \
-		docker compose up -d; \
-		sleep 1; \
-	fi; \
-	cd $(makefile_dir); \
-	./utility.sh wait_until_url_available $(special_version_url); \
-	make openspecialversionpage;
+start:
+	./script.sh start
 
-$(makefile_dir)/runonce:
-	-@cd $(mediawiki_dir); \
-	docker compose up -d; \
-	docker compose exec mediawiki composer update; \
-	docker compose exec mediawiki bash /docker/install.sh; \
-	sleep 2; \
-	cd $(makefile_dir); \
-	touch runonce; \
-	make usevectorskin skipopenspecialversionpage=true;
-
-# "make restart" restarts mediawiki containers.
-.PHONY: restart
 restart:
-	make stop
-	make start
+	./script.sh restart
 
-# "make bashmw" for bash access to the mediawiki container.
-.PHONY: bashmw
-bashmw:
-	cd $(mediawiki_dir); \
-	docker compose exec mediawiki bash
+bash_mw:
+	./script.sh bash_mw
 
-# "make bashjr" for bash access to the job runner container.
-.PHONY: bashjr
-bashjr:
-	cd $(mediawiki_dir); \
-	docker compose exec mediawiki-jobrunner bash
+bash_jr:
+	./script.sh bash_jr
 
-# "make bashwb" for bash access to the web container.
-.PHONY: bashwb
-bashwb:
-	cd $(mediawiki_dir); \
-	docker compose exec mediawiki-web bash
+bash_wb:
+	./script.sh bash_wb
 
-.PHONY: usevectorskin
-usevectorskin:
-	@set -k; $(makefile_dir)/utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector; \
-	make openspecialversionpage;
+use_vector_skin:
+	./script.sh use_vector_skin
 
-.PHONY: useapiportalskin
-useapiportalskin:
-	@set -k; $(makefile_dir)/utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal; \
-	make openspecialversionpage;
+use_apiportal_skin:
+	./script.sh use_apiportal_skin
 
-.PHONY: useminervaneueskin
-useminervaneueskin:
-	@set -k; $(makefile_dir)/utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva; \
-	make openspecialversionpage;
+use_minervaneue_skin:
+	./script.sh use_minervaneue_skin
 
-.PHONY: usetimelessskin
-usetimelessskin:
-	@set -k; $(makefile_dir)/utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless; \
-	make openspecialversionpage;
+use_timeless_skin:
+	./script.sh use_timeless_skin
 
-.PHONY: usemonobookskin
-usemonobookskin:
-	@set -k; $(makefile_dir)/utility.sh apply_mediawiki_skin mediawikiPath=$(mediawiki_dir) skinSubdirectory=MonoBook skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git skinBranch=master wfLoadSkin=MonoBook wgDefaultSkin=monobook; \
-	make openspecialversionpage;
+use_monobook_skin:
+	./script.sh use_monobook_skin
 
-special_version_url = "http://localhost:$(mediawiki_port)/wiki/Special:Version"
+open_special_version_page:
+	./script.sh open_special_version_page
 
-.PHONY: openspecialversionpage
-openspecialversionpage:
-	@if [ "$$skipopenspecialversionpage" != "true" ]; then \
-		$(makefile_dir)/utility.sh open_url_when_available $(special_version_url); \
-	fi
+run_parser_tests:
+	./script.sh run_parser_tests
 
-.PHONY: runparsertests
-runparsertests:
-	@cd $(mediawiki_dir); \
-	docker compose exec mediawiki php tests/parser/parserTests.php;
-
-.PHONY: runphpunittests
-runphpunittests:
-	cd $(mediawiki_dir); \
-	docker compose exec --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php $(if $(testpath), $(testpath),) $(if $(testgroup), --group $(testgroup),) --testdox;
-
-# applyextensionexample:
-# 	set -k; ./utility.sh apply_mediawiki_extension mediawikiPath=$(mediawiki_dir) extensionRepoURL=https://gerrit.wikimedia.org/r/mediawiki/extensions/CampaignEvents extensionBranch=master extensionSubdirectory=CampaignEvents wfLoadExtension=CampaignEvents;
+run_php_unit_tests:
+	./script.sh run_php_unit_tests
