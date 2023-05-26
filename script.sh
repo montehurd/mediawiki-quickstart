@@ -1,11 +1,11 @@
 #!/bin/bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-mediawiki_dir="$script_dir/mediawiki"
-mediawiki_port=8080
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+MEDIAWIKI_DIR="$SCRIPT_DIR/mediawiki"
+MEDIAWIKI_PORT=8080
 
 MW_ENV="
-MW_DOCKER_PORT=$mediawiki_port
+MW_DOCKER_PORT=$MEDIAWIKI_PORT
 MW_DOCKER_UID=$(id -u)
 MW_DOCKER_GID=$(id -g)
 MEDIAWIKI_USER=Admin
@@ -16,7 +16,7 @@ XDEBUG_CONFIG=''
 "
 export MW_ENV
 
-special_version_url="http://localhost:$mediawiki_port/wiki/Special:Version"
+SPECIAL_VERSION_URL="http://localhost:$MEDIAWIKI_PORT/wiki/Special:Version"
 
 fresh_install() {
 	stop
@@ -26,51 +26,51 @@ fresh_install() {
 }
 
 prepare() {
-	mkdir -p "$mediawiki_dir"
-	cd "$mediawiki_dir"
+	mkdir -p "$MEDIAWIKI_DIR"
+	cd "$MEDIAWIKI_DIR"
 	git clone https://gerrit.wikimedia.org/r/mediawiki/core.git . --depth=1
 	echo "$MW_ENV" > .env
-	cp ./docker-compose.override.yml "$mediawiki_dir/docker-compose.override.yml"
+	cp ./docker-compose.override.yml "$MEDIAWIKI_DIR/docker-compose.override.yml"
 }
 
 remove() {
-	if [ -d "$mediawiki_dir" ]; then
-		read -p "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$mediawiki_dir\" (y/n)? " -n 1 -r
+	if [ -d "$MEDIAWIKI_DIR" ]; then
+		read -p "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_DIR\" (y/n)? " -n 1 -r
 		echo
 		if [ "$REPLY" = "y" ]; then
-			cd "$mediawiki_dir"
+			cd "$MEDIAWIKI_DIR"
 			docker compose down
-			rm -rf "$mediawiki_dir"
-			rm "$script_dir/runonce"
+			rm -rf "$MEDIAWIKI_DIR"
+			rm "$SCRIPT_DIR/runonce"
 		fi
 	fi
 }
 
 stop() {
-	cd "$mediawiki_dir"
+	cd "$MEDIAWIKI_DIR"
 	docker compose stop
 }
 
 start() {
-	if [ ! -f "$script_dir/runonce" ]; then
-		cd "$mediawiki_dir"
+	if [ ! -f "$SCRIPT_DIR/runonce" ]; then
+		cd "$MEDIAWIKI_DIR"
 		docker compose up -d
 		docker compose exec mediawiki composer update
 		docker compose exec mediawiki bash /docker/install.sh
 		sleep 2
-		cd "$script_dir"
+		cd "$SCRIPT_DIR"
 		touch runonce
 		use_vector_skin
-    return 0
+		return 0
 	fi
-	is_running=$("$script_dir/utility.sh" is_container_running "mediawiki-mediawiki-1")
+	is_running=$("$SCRIPT_DIR/utility.sh" is_container_running "mediawiki-mediawiki-1")
 	if [ "$is_running" = false ]; then
-		cd "$mediawiki_dir"
+		cd "$MEDIAWIKI_DIR"
 		docker compose up -d
 		sleep 1
 	fi
-	cd "$script_dir"
-	./utility.sh wait_until_url_available $special_version_url
+	cd "$SCRIPT_DIR"
+	./utility.sh wait_until_url_available $SPECIAL_VERSION_URL
 	open_special_version_page
 }
 
@@ -80,63 +80,63 @@ restart() {
 }
 
 bash_mw() {
-	cd "$mediawiki_dir"
+	cd "$MEDIAWIKI_DIR"
 	docker compose exec mediawiki bash
 }
 
 bash_jr() {
-	cd "$mediawiki_dir"
+	cd "$MEDIAWIKI_DIR"
 	docker compose exec mediawiki-jobrunner bash
 }
 
 bash_wb() {
-	cd "$mediawiki_dir"
+	cd "$MEDIAWIKI_DIR"
 	docker compose exec mediawiki-web bash
 }
 
 use_vector_skin() {
 	set -k
-	"$script_dir/utility.sh" apply_mediawiki_skin mediawikiPath=$mediawiki_dir skinSubdirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector
+	"$SCRIPT_DIR/utility.sh" apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector
 	open_special_version_page
 }
 
 use_apiportal_skin() {
 	set -k
-	"$script_dir/utility.sh" apply_mediawiki_skin mediawikiPath=$mediawiki_dir skinSubdirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal
+	"$SCRIPT_DIR/utility.sh" apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal
 	open_special_version_page
 }
 
 use_minervaneue_skin() {
 	set -k
-	"$script_dir/utility.sh" apply_mediawiki_skin mediawikiPath=$mediawiki_dir skinSubdirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva
+	"$SCRIPT_DIR/utility.sh" apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva
 	open_special_version_page
 }
 
 use_timeless_skin() {
 	set -k
-	"$script_dir/utility.sh" apply_mediawiki_skin mediawikiPath=$mediawiki_dir skinSubdirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless
+	"$SCRIPT_DIR/utility.sh" apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless
 	open_special_version_page
 }
 
 use_monobook_skin() {
 	set -k
-	"$script_dir/utility.sh" apply_mediawiki_skin mediawikiPath=$mediawiki_dir skinSubdirectory=MonoBook skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git skinBranch=master wfLoadSkin=MonoBook wgDefaultSkin=monobook
+	"$SCRIPT_DIR/utility.sh" apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=MonoBook skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git skinBranch=master wfLoadSkin=MonoBook wgDefaultSkin=monobook
 	open_special_version_page
 }
 
 open_special_version_page() {
 	if [ "$skipopenspecialversionpage" != "true" ]; then
-		"$script_dir/utility.sh" open_url_when_available $special_version_url
+		"$SCRIPT_DIR/utility.sh" open_url_when_available $SPECIAL_VERSION_URL
 	fi
 }
 
 run_parser_tests() {
-	cd "$mediawiki_dir"
+	cd "$MEDIAWIKI_DIR"
 	docker compose exec mediawiki php tests/parser/parserTests.php
 }
 
 run_php_unit_tests() {
-	cd "$mediawiki_dir"
+	cd "$MEDIAWIKI_DIR"
 	docker compose exec --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php ${testpath:+$testpath} ${testgroup:+--group $testgroup} --testdox
 }
 
