@@ -1,98 +1,119 @@
-Quickly spin up a MediaWiki instance.
+# MediaWiki Docker Quickstart
 
-## Installation 
+Quickly spin up a MediaWiki instance with Docker.
 
-Ensure you have [Docker](https://www.docker.com/products/docker-desktop) installed.
+## Prerequisites 
 
-Clone the repo:
+- [Docker](https://www.docker.com/products/docker-desktop) installed.
 
+## Installation
+
+1. Clone the repository:
+    ```bash
     git clone https://gitlab.wikimedia.org/mhurd/mediawiki-docker-make.git
+    ```
+
+2. Navigate to the repository directory:
+    ```bash
+    cd ~/mediawiki-docker-make
+    ```
 
 ## Usage
 
-Switch to the `mediawiki-docker-make` directory:
+### Start MediaWiki
 
-    cd ~/mediawiki-docker-make
-
-Now you can spin up the MediaWiki with the *make* command:
--   ```
+- Fetches the latest MediaWiki (into `~/mediawiki-docker-make/mediawiki/`) and spins up a Docker container using it:
+    ```bash
     make
-     ```
-    Fetches the latest MediaWiki (into `~/mediawiki-docker-make/mediawiki/`) and spins up a Docker container using it
+    ```
 
-You can stop, start, restart or remove the containers with these commands:
--   ```
+### Manage Containers
+
+You can manage the MediaWiki containers using these commands:
+
+- Stops MediaWiki containers:
+    ```bash
     make stop
-     ```
-    Stops mediawiki containers
+    ```
 
--   ```
+- Starts MediaWiki containers:
+    ```bash
     make start
-     ```
-    Start mediawiki containers
+    ```
 
--   ```
+- Restarts MediaWiki containers:
+    ```bash
     make restart
-     ```
-    Restarts mediawiki containers
+    ```
 
--   ```
+- Stops and removes MediaWiki containers and files:
+    ```bash
     make remove
-     ```
-    Stops and removes mediawiki containers and files
+    ```
+
+### Shell Access
 
 Get quick Bash shell access to running containers with these commands:
--   ```
+
+- Bash access to the MediaWiki container:
+    ```bash
     make bash_mw
-     ```
-    Bash access to the mediawiki container
+    ```
 
--   ```
+- Bash access to the job runner container:
+    ```bash
     make bash_jr
-     ```
-    Bash access to the job runner container
+    ```
 
--   ```
+- Bash access to the web container:
+    ```bash
     make bash_wb
-     ```
-    Bash access to the web container
+    ```
 
-Quickly switch skins with these commands (easy to add more if needed):
+### Skin Management
 
--   ```
+Quickly switch skins with these commands:
+
+- Fetch and switch to the Vector skin:
+    ```bash
     make use_vector_skin
-     ```
-    Fetch and switch to the Vector skin
+    ```
 
--   ```
+- Fetch and switch to the Minerva Neue skin:
+    ```bash
     make use_minervaneue_skin
-     ```
-    Fetch and switch to the Minerva Neue skin
-    
--   ```
-    make use_timeless_skin
-     ```
-    Fetch and switch to the Timeless skin
+    ```
 
--   ```
+- Fetch and switch to the Timeless skin:
+    ```bash
+    make use_timeless_skin
+    ```
+
+- Fetch and switch to the MonoBook skin:
+    ```bash
     make use_monobook_skin
-     ```
-    Fetch and switch to the MonoBook skin
+    ```
+
+### Testing
 
 Run tests with these commands:
 
--   ```
+- Run parser tests:
+    ```bash
     make run_parser_tests
-     ```
-    Run parser tests
+    ```
 
--   ```
+- Run PHP unit tests:
+    ```bash
     make run_php_unit_tests
-     ```
     ```
+
+- Run PHP unit tests with a specific group:
+    ```bash
     make run_php_unit_tests testgroup=Cache
-     ```
     ```
+
+- Run PHP unit tests with a specific path:
+    ```bash
     make run_php_unit_tests testpath=unit/includes/resourceloader/
-     ```
-    Run PHP unit tests
+    ```
