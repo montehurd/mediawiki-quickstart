@@ -43,56 +43,56 @@ You can stop, start, restart or remove the containers with these commands:
 
 Get quick Bash shell access to running containers with these commands:
 -   ```
-    make bashmw
+    make bash_mw
      ```
     Bash access to the mediawiki container
 
 -   ```
-    make bashjr
+    make bash_jr
      ```
     Bash access to the job runner container
 
 -   ```
-    make bashwb
+    make bash_wb
      ```
     Bash access to the web container
 
 Quickly switch skins with these commands (easy to add more if needed):
 
 -   ```
-    make usevectorskin
+    make use_vector_skin
      ```
     Fetch and switch to the Vector skin
 
 -   ```
-    make useminervaneueskin
+    make use_minervaneue_skin
      ```
     Fetch and switch to the Minerva Neue skin
     
 -   ```
-    make usetimelessskin
+    make use_timeless_skin
      ```
     Fetch and switch to the Timeless skin
 
 -   ```
-    make usemonobookskin
+    make use_monobook_skin
      ```
     Fetch and switch to the MonoBook skin
 
 Run tests with these commands:
 
 -   ```
-    make runparsertests
+    make run_parser_tests
      ```
     Run parser tests
 
 -   ```
-    make runphpunittests
+    make run_php_unit_tests
      ```
     ```
-    make runphpunittests testgroup=Cache
+    make run_php_unit_tests testgroup=Cache
      ```
     ```
-    make runphpunittests testpath=unit/includes/resourceloader/
+    make run_php_unit_tests testpath=unit/includes/resourceloader/
      ```
     Run PHP unit tests
