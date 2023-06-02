@@ -144,9 +144,8 @@ make_for_tests() {
   prepare_chromium
 }
 
-CHROMIUM_DIR="$SCRIPT_DIR/docker-chromium-novnc"
-
 prepare_chromium() {
+  CHROMIUM_DIR="$SCRIPT_DIR/docker-chromium-novnc"
 	if [ ! -f "$CHROMIUM_DIR/Makefile" ]; then
 		git submodule update --init
 	fi
