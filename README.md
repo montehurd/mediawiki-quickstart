@@ -117,3 +117,28 @@ Run tests with these commands:
     ```bash
     make run_php_unit_tests testpath=unit/includes/resourceloader/
     ```
+
+- Prepare Selenium environment:
+    ```bash
+    make prepare_selenium
+    ```
+
+- Run Selenium tests:
+    ```bash
+    make run_selenium_tests
+    ```
+
+- Run a specific Selenium test:
+    ```bash
+    make run_selenium_test
+    ```
+
+- Run a specific Selenium test file:
+    ```bash
+    make run_selenium_test_file
+    ```
+
+- Run Selenium tests with wildcard:
+    ```bash
+    make run_selenium_test_wildcard
+    ```
