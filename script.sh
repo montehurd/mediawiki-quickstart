@@ -136,7 +136,7 @@ docker_compose() {
   "$SCRIPT_DIR/docker-compose-wrapper.sh" "$MEDIAWIKI_DIR" "$@"
 }
 
-make_for_tests() {
+prepare_selenium() {
   export USE_SELENIUM=true
   fresh_install
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
