@@ -6,8 +6,8 @@ MEDIAWIKI_PORT=8080
 
 MW_ENV="
 MW_DOCKER_PORT=$MEDIAWIKI_PORT
-MW_DOCKER_UID=$(id -u)
-MW_DOCKER_GID=$(id -g)
+MW_DOCKER_UID=
+MW_DOCKER_GID=
 MEDIAWIKI_USER=Admin
 MEDIAWIKI_PASSWORD=dockerpass
 XDEBUG_ENABLE=true
@@ -30,45 +30,43 @@ prepare() {
   cd "$MEDIAWIKI_DIR"
   git clone https://gerrit.wikimedia.org/r/mediawiki/core.git . --depth=1
   echo "$MW_ENV" >.env
-  cp ./docker-compose.override.yml "$MEDIAWIKI_DIR/docker-compose.override.yml"
+  cp "$SCRIPT_DIR/docker-compose.override.yml" .
+  cp "$SCRIPT_DIR/docker-compose.selenium.yml" .
 }
 
 remove() {
   if [ -d "$MEDIAWIKI_DIR" ]; then
     read -p "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_DIR\" (y/n)? " -n 1 -r
     echo
-    if [ "$REPLY" = "y" ]; then
-      cd "$MEDIAWIKI_DIR"
-      docker compose down
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+      docker_compose down
       rm -rf "$MEDIAWIKI_DIR"
-      rm "$SCRIPT_DIR/runonce"
+      rm -f "$SCRIPT_DIR/runonce"
     fi
   fi
 }
 
 stop() {
-  cd "$MEDIAWIKI_DIR"
-  docker compose stop
+  docker_compose stop
 }
 
 start() {
   if [ ! -f "$SCRIPT_DIR/runonce" ]; then
-    cd "$MEDIAWIKI_DIR"
-    docker compose up -d
-    docker compose exec mediawiki composer update
-    docker compose exec mediawiki bash /docker/install.sh
+    docker_compose up -d
+    docker_compose exec mediawiki composer update
+    docker_compose exec mediawiki bash /docker/install.sh
     sleep 2
-    cd "$SCRIPT_DIR"
-    touch runonce
+    touch "$SCRIPT_DIR/runonce"
     use_vector_skin
     return 0
   fi
+
   is_running=$("$SCRIPT_DIR/utility.sh" is_container_running "mediawiki-mediawiki-1")
   if [ "$is_running" = false ]; then
-    cd "$MEDIAWIKI_DIR"
-    docker compose up -d
+    docker_compose up -d
     sleep 1
   fi
+
   "$SCRIPT_DIR/utility.sh" wait_until_url_available $SPECIAL_VERSION_URL
   open_special_version_page
 }
@@ -79,18 +77,15 @@ restart() {
 }
 
 bash_mw() {
-  cd "$MEDIAWIKI_DIR"
-  docker compose exec mediawiki bash
+  docker_compose exec mediawiki bash
 }
 
 bash_jr() {
-  cd "$MEDIAWIKI_DIR"
-  docker compose exec mediawiki-jobrunner bash
+  docker_compose exec mediawiki-jobrunner bash
 }
 
 bash_wb() {
-  cd "$MEDIAWIKI_DIR"
-  docker compose exec mediawiki-web bash
+  docker_compose exec mediawiki-web bash
 }
 
 use_vector_skin() {
@@ -130,13 +125,52 @@ open_special_version_page() {
 }
 
 run_parser_tests() {
-  cd "$MEDIAWIKI_DIR"
-  docker compose exec mediawiki php tests/parser/parserTests.php
+  docker_compose exec mediawiki php tests/parser/parserTests.php
 }
 
 run_php_unit_tests() {
-  cd "$MEDIAWIKI_DIR"
-  docker compose exec --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php ${testpath:+$testpath} ${testgroup:+--group $testgroup} --testdox
+  docker_compose exec --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php ${testpath:+$testpath} ${testgroup:+--group $testgroup} --testdox
+}
+
+docker_compose() {
+  "$SCRIPT_DIR/docker-compose-wrapper.sh" "$MEDIAWIKI_DIR" "$@"
+}
+
+make_for_tests() {
+	export USE_SELENIUM=true
+	fresh_install
+  docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
+  docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
+  prepare_chromium
+}
+
+CHROMIUM_DIR="$SCRIPT_DIR/docker-chromium-novnc"
+
+prepare_chromium() {
+	if [ ! -f "$CHROMIUM_DIR/Makefile" ]; then
+		git submodule update --init
+	fi
+	export USE_SELENIUM=true
+	CHROMIUM_VERSION=$(docker_compose exec -u root mediawiki /usr/bin/node "./puppeteer-chromium-version-finder.js")
+  echo "$CHROMIUM_VERSION"
+	cd "$CHROMIUM_DIR"
+	CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install
+}
+
+run_selenium_tests() {
+  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js
+}
+
+run_selenium_test_file() {
+  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/user.js
+}
+
+run_selenium_test_wildcard() {
+  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/**/*.js
+}
+
+run_selenium_test() {
+  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/page.js --logLevel debug --mochaOpts.grep 'should be creatable'
 }
 
 "$@"
