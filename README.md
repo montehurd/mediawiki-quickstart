@@ -118,7 +118,7 @@ Run tests with these commands:
     make run_php_unit_tests testpath=unit/includes/resourceloader/
     ```
 
-- Prepare Selenium environment:
+- Prepare Selenium environment that allows you to visually monitor the execution of the tests:
     ```bash
     make prepare_selenium
     ```
