@@ -149,7 +149,6 @@ prepare_chromium() {
   if [ ! -f "$CHROMIUM_DIR/Makefile" ]; then
     git submodule update --init
   fi
-  export USE_SELENIUM=true
   CHROMIUM_VERSION=$(docker_compose exec -u root mediawiki /usr/bin/node "./puppeteer-chromium-version-finder.js")
   echo "$CHROMIUM_VERSION"
   cd "$CHROMIUM_DIR"
