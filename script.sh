@@ -137,8 +137,8 @@ docker_compose() {
 }
 
 make_for_tests() {
-	export USE_SELENIUM=true
-	fresh_install
+  export USE_SELENIUM=true
+  fresh_install
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
   docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
   prepare_chromium
@@ -146,14 +146,14 @@ make_for_tests() {
 
 prepare_chromium() {
   CHROMIUM_DIR="$SCRIPT_DIR/docker-chromium-novnc"
-	if [ ! -f "$CHROMIUM_DIR/Makefile" ]; then
-		git submodule update --init
-	fi
-	export USE_SELENIUM=true
-	CHROMIUM_VERSION=$(docker_compose exec -u root mediawiki /usr/bin/node "./puppeteer-chromium-version-finder.js")
+  if [ ! -f "$CHROMIUM_DIR/Makefile" ]; then
+    git submodule update --init
+  fi
+  export USE_SELENIUM=true
+  CHROMIUM_VERSION=$(docker_compose exec -u root mediawiki /usr/bin/node "./puppeteer-chromium-version-finder.js")
   echo "$CHROMIUM_VERSION"
-	cd "$CHROMIUM_DIR"
-	CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install
+  cd "$CHROMIUM_DIR"
+  CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install
 }
 
 run_selenium_tests() {
