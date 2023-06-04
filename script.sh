@@ -19,19 +19,23 @@ export MW_ENV
 SPECIAL_VERSION_URL="http://localhost:$MEDIAWIKI_PORT/wiki/Special:Version"
 
 fresh_install() {
+  local extra_compose_file_path=${1:-""}
   stop
   remove
-  prepare
+  prepare "$extra_compose_file_path"
   start
 }
 
 prepare() {
+  local extra_compose_file_path=${1:-""}
   mkdir -p "$MEDIAWIKI_DIR"
   cd "$MEDIAWIKI_DIR"
   git clone https://gerrit.wikimedia.org/r/mediawiki/core.git . --depth=1
   echo "$MW_ENV" >.env
   cp "$SCRIPT_DIR/docker-compose.override.yml" .
-  cp "$SCRIPT_DIR/docker-compose.selenium.yml" .
+  if [ -n "$extra_compose_file_path" ] && [ -f "$extra_compose_file_path" ]; then
+    cp "$extra_compose_file_path" .
+  fi
 }
 
 remove() {
