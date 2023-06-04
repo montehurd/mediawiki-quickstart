@@ -53,9 +53,6 @@ run_parser_tests:
 run_php_unit_tests:
 	./script.sh run_php_unit_tests
 
-prepare_selenium:
-	./script.sh prepare_selenium
-
 run_selenium_tests:
 	./script.sh run_selenium_tests
 

@@ -141,15 +141,18 @@ docker_compose() {
 }
 
 prepare_selenium() {
-  export USE_SELENIUM=true
-  fresh_install
+  echo "Preparing Selenium - this may take a few minutes..."
+  export USE_SELENIUM_YML=true
+  fresh_install "$SCRIPT_DIR/docker-compose.selenium.yml"
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
   docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
   prepare_chromium
+  "$SCRIPT_DIR/utility.sh" wait_until_url_available http://localhost:8088
 }
 
+CHROMIUM_DIR="$SCRIPT_DIR/docker-chromium-novnc"
+
 prepare_chromium() {
-  CHROMIUM_DIR="$SCRIPT_DIR/docker-chromium-novnc"
   if [ ! -f "$CHROMIUM_DIR/Makefile" ]; then
     git submodule update --init
   fi
@@ -159,20 +162,62 @@ prepare_chromium() {
   CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install
 }
 
+is_selenium_prepared() {
+  # is novnc container running?
+  if [ "$("$SCRIPT_DIR/utility.sh" is_container_running "docker-chromium-novnc-novnc-1")" != "true" ]; then
+    echo "false"
+    return
+  fi
+  # is novnc url available?
+  if [ $("$SCRIPT_DIR/utility.sh" get_response_code http://localhost:8088) -ne 200 ]; then
+    echo "false"
+    return
+  fi
+  # is chromium container running?
+  cd "$CHROMIUM_DIR"
+  if [ "$("$SCRIPT_DIR/utility.sh" is_container_running "docker-chromium-novnc-chromium-1")" != "true" ]; then
+    echo "false"
+    return
+  fi
+  # is chromium set for automation?
+  if [ $(docker compose exec chromium curl --write-out '%{http_code}' --silent --output /dev/null localhost:9222 2>/dev/null) -ne 200 ]; then
+    echo "false"
+    return
+  fi
+  echo "true"
+}
+
+ensure_selenium_ready() {
+  if [ "$(is_selenium_prepared)" = false ]; then
+    read -s -n 1 -p "Selenium containers need to be prepared. This will perform a fresh install. Do you wish to continue? (y/n) " -r
+    echo
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+      prepare_selenium
+    else
+      echo "Exiting as Selenium containers were not prepared."
+      exit 1
+    fi
+  fi
+}
+
 run_selenium_tests() {
+  ensure_selenium_ready
   docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js
 }
 
 run_selenium_test_file() {
+  ensure_selenium_ready
   docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/user.js
 }
 
 run_selenium_test_wildcard() {
+  ensure_selenium_ready
   docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/**/*.js
 }
 
 run_selenium_test() {
-  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/page.js --logLevel debug --mochaOpts.grep 'should be creatable'
+  ensure_selenium_ready
+  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/spec
 }
 
 "$@"

@@ -9,8 +9,8 @@ if [ -f "$OVERRIDE_FILE" ]; then
   COMPOSE_FILES="$COMPOSE_FILES -f $OVERRIDE_FILE"
 fi
 
-# Check if USE_SELENIUM environment variable is set to true
-if [ "$USE_SELENIUM" = "true" ]; then
+# Check if USE_SELENIUM_YML environment variable is set to true
+if [ "$USE_SELENIUM_YML" = "true" ]; then
   COMPOSE_FILES="$COMPOSE_FILES -f $SELENIUM_FILE"
 fi
 
