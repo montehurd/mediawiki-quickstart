@@ -9,6 +9,41 @@ is_container_running() {
   echo "${is_running:=false}"
 }
 
+are_containers_running() {
+  local containers=$@
+  for container in $containers
+  do
+    is_running=$(is_container_running $container)
+    
+    if [ "$is_running" != "true" ]; then
+      echo "false"
+      return
+    fi
+  done
+  echo "true"
+}
+
+is_container_present() {
+  is_present=$(docker inspect "$1" > /dev/null 2>&1 && echo true || echo false)
+  echo "$is_present"
+}
+
+are_containers_present() {
+  local containers=$@
+
+  for container in $containers
+  do
+    is_present=$(is_container_present $container)
+
+    if [ "$is_present" != "true" ]; then
+      echo "false"
+      return
+    fi
+  done
+
+  echo "true"
+}
+
 open_url_when_available() {
   wait_until_url_available "$1"
   error_message="Unable to automatically open '$1', try opening it in a browser"
