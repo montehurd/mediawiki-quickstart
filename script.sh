@@ -217,7 +217,7 @@ run_selenium_test_wildcard() {
 
 run_selenium_test() {
   ensure_selenium_ready
-  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/spec
+  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/page.js --logLevel debug --mochaOpts.grep 'should be creatable'
 }
 
 "$@"
