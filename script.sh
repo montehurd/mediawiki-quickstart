@@ -19,6 +19,9 @@ export MW_ENV
 SPECIAL_VERSION_URL="http://localhost:$MEDIAWIKI_PORT/wiki/Special:Version"
 
 fresh_install() {
+  if ! "$SCRIPT_DIR/utility.sh" confirm_action "Are you sure you want to do a fresh install"; then
+    return
+  fi
   local extra_compose_file_path=${1:-""}
   stop
   remove
@@ -40,13 +43,12 @@ prepare() {
 
 remove() {
   if [ -d "$MEDIAWIKI_DIR" ]; then
-    read -p "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_DIR\" (y/n)? " -n 1 -r
-    echo
-    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-      docker_compose down
-      rm -rf "$MEDIAWIKI_DIR"
-      rm -f "$SCRIPT_DIR/runonce"
+    if ! "$SCRIPT_DIR/utility.sh" confirm_action "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_DIR\""; then
+      exit 1
     fi
+    docker_compose down
+    rm -rf "$MEDIAWIKI_DIR"
+    rm -f "$SCRIPT_DIR/runonce"
   fi
 }
 
@@ -189,14 +191,11 @@ is_selenium_prepared() {
 
 ensure_selenium_ready() {
   if [ "$(is_selenium_prepared)" = false ]; then
-    read -s -n 1 -p "Selenium containers need to be prepared. This will perform a fresh install. Do you wish to continue? (y/n) " -r
-    echo
-    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-      prepare_selenium
-    else
+    if ! "$SCRIPT_DIR/utility.sh" confirm_action "Selenium containers need to be prepared. This will perform a fresh install. Do you wish to continue"; then
       echo "Exiting as Selenium containers were not prepared."
       exit 1
     fi
+    prepare_selenium
   fi
 }
 
