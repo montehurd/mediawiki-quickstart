@@ -145,7 +145,7 @@ docker_compose() {
 prepare_selenium() {
   echo "Preparing Selenium - this may take a few minutes..."
   export USE_SELENIUM_YML=true
-  fresh_install "$SCRIPT_DIR/docker-compose.selenium.yml"
+  fresh_install "$SCRIPT_DIR/selenium/docker-compose.selenium.yml"
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
   docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
   prepare_chromium

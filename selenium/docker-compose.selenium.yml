@@ -4,9 +4,9 @@ services:
     networks:
       - docker-chromium-novnc_default
     volumes:
-      - ../wdio.conf.override.js:/var/www/html/w/tests/selenium/wdio.conf.override.js
-      - ../selenium-preparation.sh:/var/www/html/w/selenium-preparation.sh
-      - ../puppeteer-chromium-version-finder.js:/var/www/html/w/puppeteer-chromium-version-finder.js
+      - ../selenium/wdio.conf.override.js:/var/www/html/w/tests/selenium/wdio.conf.override.js
+      - ../selenium/selenium-preparation.sh:/var/www/html/w/selenium-preparation.sh
+      - ../selenium/puppeteer-chromium-version-finder.js:/var/www/html/w/puppeteer-chromium-version-finder.js
     environment:
       - MW_SERVER=http://mediawiki-mediawiki-web-1:8080
   mediawiki-web:
