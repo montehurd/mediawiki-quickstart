@@ -93,4 +93,14 @@ apply_mediawiki_extension() {
   apply_mediawiki_extension_settings
 }
 
+confirm_action() {
+  local prompt_message="$1"
+  read -p "${prompt_message} (y/n)? " -n 1 -r
+  echo
+  if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
+    return 1
+  fi
+  return 0
+}
+
 "$@"
