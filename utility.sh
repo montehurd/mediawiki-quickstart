@@ -103,4 +103,15 @@ confirm_action() {
   return 0
 }
 
+negate_boolean() {
+  if [ "$1" = "true" ]; then
+    echo "false"
+  elif [ "$1" = "false" ]; then
+    echo "true"
+  else
+    echo "Error: Invalid boolean value"
+    exit 1
+  fi
+}
+
 "$@"

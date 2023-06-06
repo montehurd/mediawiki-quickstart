@@ -48,7 +48,6 @@ remove() {
     fi
     docker_compose down
     rm -rf "$MEDIAWIKI_DIR"
-    rm -f "$SCRIPT_DIR/runonce"
   fi
 }
 
@@ -57,12 +56,13 @@ stop() {
 }
 
 start() {
-  if [ ! -f "$SCRIPT_DIR/runonce" ]; then
+  container_present=$("$SCRIPT_DIR/utility.sh" is_container_present "mediawiki-mediawiki-1")
+  is_first_run=$("$SCRIPT_DIR/utility.sh" negate_boolean "$container_present")
+  if [ "$is_first_run" = "true" ]; then
     docker_compose up -d
     docker_compose exec mediawiki composer update
     docker_compose exec mediawiki bash /docker/install.sh
     sleep 2
-    touch "$SCRIPT_DIR/runonce"
     use_vector_skin
     return 0
   fi
