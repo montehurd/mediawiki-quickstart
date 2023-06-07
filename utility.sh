@@ -92,16 +92,25 @@ apply_mediawiki_skin() {
 }
 
 apply_mediawiki_extension_settings() {
+  local mediawikiPath="$1"
+  local wfLoadExtension="$2"
+
   cd "$mediawikiPath"
   grep -qx "^[[:blank:]]*wfLoadExtension[[:blank:]]*([[:blank:]]*[\"']$wfLoadExtension[\"'][[:blank:]]*)[[:blank:]]*;[[:blank:]]*$" LocalSettings.php || echo "wfLoadExtension(\"$wfLoadExtension\");" >>LocalSettings.php
 }
 
 apply_mediawiki_extension() {
+  local mediawikiPath="$1"
+  local extensionSubdirectory="$2"
+  local extensionRepoURL="$3"
+  local extensionBranch="$4"
+  local wfLoadExtension="$5"
+
   cd "$mediawikiPath"
   rm -rf "extensions/$extensionSubdirectory"
   git clone --branch "$extensionBranch" "$extensionRepoURL" "./extensions/$extensionSubdirectory" --depth=1
   sleep 1
-  apply_mediawiki_extension_settings
+  apply_mediawiki_extension_settings "$mediawikiPath" "$wfLoadExtension"
 }
 
 confirm_action() {
