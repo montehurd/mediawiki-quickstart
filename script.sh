@@ -1,6 +1,12 @@
 #!/bin/bash
 
+# set -x
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+source "$SCRIPT_DIR/utility.sh"
+source "$SCRIPT_DIR/docker-compose-wrapper.sh"
+
 MEDIAWIKI_DIR="$SCRIPT_DIR/mediawiki"
 MEDIAWIKI_PORT=8080
 
@@ -19,7 +25,7 @@ export MW_ENV
 SPECIAL_VERSION_URL="http://localhost:$MEDIAWIKI_PORT/wiki/Special:Version"
 
 fresh_install() {
-  if ! "$SCRIPT_DIR/utility.sh" confirm_action "Are you sure you want to do a fresh install"; then
+  if ! confirm_action "Are you sure you want to do a fresh install"; then
     return
   fi
   local extra_compose_file_path=${1:-""}
@@ -43,7 +49,7 @@ prepare() {
 
 remove() {
   if [ -d "$MEDIAWIKI_DIR" ]; then
-    if ! "$SCRIPT_DIR/utility.sh" confirm_action "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_DIR\""; then
+    if ! confirm_action "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_DIR\""; then
       exit 1
     fi
     docker_compose down
@@ -56,8 +62,8 @@ stop() {
 }
 
 start() {
-  container_present=$("$SCRIPT_DIR/utility.sh" is_container_present "mediawiki-mediawiki-1")
-  is_first_run=$("$SCRIPT_DIR/utility.sh" negate_boolean "$container_present")
+  container_present=$(is_container_present "mediawiki-mediawiki-1")
+  is_first_run=$(negate_boolean "$container_present")
   if [ "$is_first_run" = "true" ]; then
     docker_compose up -d
     docker_compose exec mediawiki composer update
@@ -67,13 +73,12 @@ start() {
     return 0
   fi
 
-  is_running=$("$SCRIPT_DIR/utility.sh" is_container_running "mediawiki-mediawiki-1")
+  is_running=$(is_container_running "mediawiki-mediawiki-1")
   if [ "$is_running" = false ]; then
     docker_compose up -d
     sleep 1
   fi
-
-  "$SCRIPT_DIR/utility.sh" wait_until_url_available $SPECIAL_VERSION_URL
+  wait_until_url_available $SPECIAL_VERSION_URL
   open_special_version_page
 }
 
@@ -96,37 +101,37 @@ bash_wb() {
 
 use_vector_skin() {
   set -k
-  "$SCRIPT_DIR/utility.sh" apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector
+  apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector
   open_special_version_page
 }
 
 use_apiportal_skin() {
   set -k
-  "$SCRIPT_DIR/utility.sh" apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=WikimediaApiPortal
+  apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=WikimediaApiPortal skinRepoURL=https://github.com/wikimedia/mediawiki-skins-WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=wikimediaapiportal
   open_special_version_page
 }
 
 use_minervaneue_skin() {
   set -k
-  "$SCRIPT_DIR/utility.sh" apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva
+  apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva
   open_special_version_page
 }
 
 use_timeless_skin() {
   set -k
-  "$SCRIPT_DIR/utility.sh" apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless
+  apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless
   open_special_version_page
 }
 
 use_monobook_skin() {
   set -k
-  "$SCRIPT_DIR/utility.sh" apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=MonoBook skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git skinBranch=master wfLoadSkin=MonoBook wgDefaultSkin=monobook
+  apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=MonoBook skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git skinBranch=master wfLoadSkin=MonoBook wgDefaultSkin=monobook
   open_special_version_page
 }
 
 open_special_version_page() {
   if [ "$skipopenspecialversionpage" != "true" ]; then
-    "$SCRIPT_DIR/utility.sh" open_url_when_available $SPECIAL_VERSION_URL
+    open_url_when_available "$SPECIAL_VERSION_URL"
   fi
 }
 
@@ -139,7 +144,7 @@ run_php_unit_tests() {
 }
 
 docker_compose() {
-  "$SCRIPT_DIR/docker-compose-wrapper.sh" "$MEDIAWIKI_DIR" "$@"
+  docker_compose_wrapper "$MEDIAWIKI_DIR" "$@"
 }
 
 prepare_selenium() {
@@ -149,7 +154,7 @@ prepare_selenium() {
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
   docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
   prepare_chromium
-  "$SCRIPT_DIR/utility.sh" wait_until_url_available http://localhost:8088
+  wait_until_url_available http://localhost:8088
 }
 
 CHROMIUM_DIR="$SCRIPT_DIR/docker-chromium-novnc"
@@ -166,18 +171,18 @@ prepare_chromium() {
 
 is_selenium_prepared() {
   # is novnc container running?
-  if [ "$("$SCRIPT_DIR/utility.sh" is_container_running "docker-chromium-novnc-novnc-1")" != "true" ]; then
+  if [ "$(is_container_running "docker-chromium-novnc-novnc-1")" != "true" ]; then
     echo "false"
     return
   fi
   # is novnc url available?
-  if [ $("$SCRIPT_DIR/utility.sh" get_response_code http://localhost:8088) -ne 200 ]; then
+  if [ $(get_response_code http://localhost:8088) -ne 200 ]; then
     echo "false"
     return
   fi
   # is chromium container running?
   cd "$CHROMIUM_DIR"
-  if [ "$("$SCRIPT_DIR/utility.sh" is_container_running "docker-chromium-novnc-chromium-1")" != "true" ]; then
+  if [ "$(is_container_running "docker-chromium-novnc-chromium-1")" != "true" ]; then
     echo "false"
     return
   fi
@@ -191,7 +196,7 @@ is_selenium_prepared() {
 
 ensure_selenium_ready() {
   if [ "$(is_selenium_prepared)" = false ]; then
-    if ! "$SCRIPT_DIR/utility.sh" confirm_action "Selenium containers need to be prepared. This will perform a fresh install. Do you wish to continue"; then
+    if ! confirm_action "Selenium containers need to be prepared. This will perform a fresh install. Do you wish to continue"; then
       echo "Exiting as Selenium containers were not prepared."
       exit 1
     fi

@@ -113,5 +113,3 @@ negate_boolean() {
     exit 1
   fi
 }
-
-"$@"
