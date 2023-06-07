@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: fresh_install prepare remove stop start restart bash_mw bash_jr bash_wb use_vector_skin use_apiportal_skin use_minervaneue_skin use_timeless_skin use_monobook_skin open_special_version_page run_parser_tests run_php_unit_tests prepare_selenium run_selenium_tests run_selenium_test_file run_selenium_test_wildcard run_selenium_test
+.PHONY: fresh_install prepare remove stop start restart bash_mw bash_jr bash_wb use_vector_skin use_apiportal_skin use_minervaneue_skin use_timeless_skin use_monobook_skin open_special_version_page run_parser_tests run_php_unit_tests run_selenium_tests run_selenium_test_file run_selenium_test_wildcard run_selenium_test
 .DEFAULT: fresh_install
 fresh_install:
 	./script.sh fresh_install
