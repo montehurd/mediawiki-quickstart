@@ -100,32 +100,27 @@ bash_wb() {
 }
 
 use_vector_skin() {
-  set -k
-  apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=Vector skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git skinBranch=master wfLoadSkin=Vector wgDefaultSkin=vector
+  apply_mediawiki_skin "$MEDIAWIKI_DIR" "Vector" "https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git" "master" "Vector" "vector"
   open_special_version_page
 }
 
 use_apiportal_skin() {
-  set -k
-  apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=WikimediaApiPortal skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git skinBranch=master wfLoadSkin=WikimediaApiPortal wgDefaultSkin=wikimediaapiportal
+  apply_mediawiki_skin "$MEDIAWIKI_DIR" "WikimediaApiPortal" "https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git" "master" "WikimediaApiPortal" "wikimediaapiportal"
   open_special_version_page
 }
 
 use_minervaneue_skin() {
-  set -k
-  apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=MinervaNeue skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git skinBranch=master wfLoadSkin=MinervaNeue wgDefaultSkin=minerva
+  apply_mediawiki_skin "$MEDIAWIKI_DIR" "MinervaNeue" "https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git" "master" "MinervaNeue" "minerva"
   open_special_version_page
 }
 
 use_timeless_skin() {
-  set -k
-  apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=Timeless skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git skinBranch=master wfLoadSkin=Timeless wgDefaultSkin=timeless
+  apply_mediawiki_skin "$MEDIAWIKI_DIR" "Timeless" "https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git" "master" "Timeless" "timeless"
   open_special_version_page
 }
 
 use_monobook_skin() {
-  set -k
-  apply_mediawiki_skin mediawikiPath=$MEDIAWIKI_DIR skinSubdirectory=MonoBook skinRepoURL=https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git skinBranch=master wfLoadSkin=MonoBook wgDefaultSkin=monobook
+  apply_mediawiki_skin "$MEDIAWIKI_DIR" "MonoBook" "https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git" "master" "MonoBook" "monobook"
   open_special_version_page
 }
 

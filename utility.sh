@@ -67,17 +67,28 @@ wait_until_url_available() {
 }
 
 apply_mediawiki_skin_settings() {
+  local mediawikiPath="$1"
+  local wfLoadSkin="$2"
+  local wgDefaultSkin="$3"
+
   cd "$mediawikiPath"
   grep -qx "^wfLoadSkin([\"']$wfLoadSkin[\"']); *$" LocalSettings.php || echo "wfLoadSkin(\"$wfLoadSkin\");" >>LocalSettings.php
   sed -i -E "s/\\\$wgDefaultSkin.*;[[:blank:]]*$/\\\$wgDefaultSkin = \"$wgDefaultSkin\";/g" LocalSettings.php
 }
 
 apply_mediawiki_skin() {
+  local mediawikiPath="$1"
+  local skinSubdirectory="$2"
+  local skinRepoURL="$3"
+  local skinBranch="$4"
+  local wfLoadSkin="$5"
+  local wgDefaultSkin="$6"
+
   cd "$mediawikiPath"
   rm -rf "skins/$skinSubdirectory"
   git clone --branch "$skinBranch" "$skinRepoURL" "./skins/$skinSubdirectory" --depth=1
   sleep 1
-  apply_mediawiki_skin_settings
+  apply_mediawiki_skin_settings "$mediawikiPath" "$wfLoadSkin" "$wgDefaultSkin"
 }
 
 apply_mediawiki_extension_settings() {
