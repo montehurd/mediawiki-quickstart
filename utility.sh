@@ -11,10 +11,9 @@ is_container_running() {
 
 are_containers_running() {
   local containers=$@
-  for container in $containers
-  do
+  for container in $containers; do
     is_running=$(is_container_running $container)
-    
+
     if [ "$is_running" != "true" ]; then
       echo "false"
       return
@@ -24,15 +23,14 @@ are_containers_running() {
 }
 
 is_container_present() {
-  is_present=$(docker inspect "$1" > /dev/null 2>&1 && echo true || echo false)
+  is_present=$(docker inspect "$1" >/dev/null 2>&1 && echo true || echo false)
   echo "$is_present"
 }
 
 are_containers_present() {
   local containers=$@
 
-  for container in $containers
-  do
+  for container in $containers; do
     is_present=$(is_container_present $container)
 
     if [ "$is_present" != "true" ]; then
