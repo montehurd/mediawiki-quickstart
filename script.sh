@@ -195,6 +195,8 @@ is_selenium_prepared() {
 }
 
 ensure_selenium_ready() {
+  local start=$(date +%s)
+
   if [ "$(is_selenium_prepared)" = false ]; then
     if ! confirm_action "Selenium containers need to be prepared. This will perform a fresh install. Do you wish to continue"; then
       echo "Exiting as Selenium containers were not prepared."
@@ -202,6 +204,8 @@ ensure_selenium_ready() {
     fi
     prepare_selenium
   fi
+
+  print_duration_since_start $start "ensure_selenium_ready took %d minutes and %d seconds"
 }
 
 run_selenium_tests() {
