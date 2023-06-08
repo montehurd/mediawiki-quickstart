@@ -142,19 +142,19 @@ docker_compose() {
   docker_compose_wrapper "$MEDIAWIKI_DIR" "$@"
 }
 
-prepare_selenium() {
-  echo "Preparing Selenium - this may take a few minutes..."
+prepare_for_selenium() {
+  echo "Preparing for Selenium by adding Node and Chromium / noVNC containers - this usually takes 5 to 10 minutes..."
   export USE_SELENIUM_YML=true
   fresh_install "$SCRIPT_DIR/selenium/docker-compose.selenium.yml"
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
   docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
-  prepare_chromium
+  prepare_novnc_and_chromium
   wait_until_url_available http://localhost:8088
 }
 
 CHROMIUM_DIR="$SCRIPT_DIR/docker-chromium-novnc"
 
-prepare_chromium() {
+prepare_novnc_and_chromium() {
   if [ ! -f "$CHROMIUM_DIR/Makefile" ]; then
     git submodule update --init
   fi
@@ -198,11 +198,11 @@ ensure_selenium_ready() {
   local start=$(date +%s)
 
   if [ "$(is_selenium_prepared)" = false ]; then
-    if ! confirm_action "Selenium containers need to be prepared. This will perform a fresh install. Do you wish to continue"; then
-      echo "Exiting as Selenium containers were not prepared."
+    if ! confirm_action "Mediawiki needs to be reconfigured and Chromium / noVNC containers need to be prepared. This will perform a fresh install. Do you wish to continue"; then
+      echo "Exiting as Chromium and noVNC containers were not prepared."
       exit 1
     fi
-    prepare_selenium
+    prepare_for_selenium
   fi
 
   print_duration_since_start $start "ensure_selenium_ready took %d minutes and %d seconds"
