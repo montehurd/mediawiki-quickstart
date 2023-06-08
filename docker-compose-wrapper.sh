@@ -11,7 +11,7 @@ docker_compose_wrapper() {
   fi
 
   # Check if USE_SELENIUM_YML environment variable is set to true
-  if [ "$USE_SELENIUM_YML" = "true" ]; then
+  if [ "$USE_SELENIUM_YML" = "true" ] && [ -f "$SELENIUM_FILE" ]; then
     COMPOSE_FILES="$COMPOSE_FILES -f $SELENIUM_FILE"
   fi
 
