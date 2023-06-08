@@ -42,6 +42,18 @@ are_containers_present() {
   echo "true"
 }
 
+is_container_env_var_set() {
+  local container=$1
+  local var_name=$2
+  local expected_value=$3
+
+  if docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep -q "$var_name=$expected_value"; then
+    echo "true"
+  else
+    echo "false"
+  fi
+}
+
 open_url_when_available() {
   wait_until_url_available "$1"
   error_message="Unable to automatically open '$1', try opening it in a browser"

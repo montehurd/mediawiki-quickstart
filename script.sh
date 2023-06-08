@@ -187,7 +187,7 @@ is_selenium_prepared() {
     return
   fi
   # is MW_SERVER value from docker-compose.selenium.yml in use by mediawiki-mediawiki-1 container?
-  if ! docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' mediawiki-mediawiki-1 | grep -q "MW_SERVER=http://mediawiki-mediawiki-web-1:8080"; then
+  if [ "$(is_container_env_var_set "mediawiki-mediawiki-1" "MW_SERVER" "http://mediawiki-mediawiki-web-1:8080")" != "true" ]; then
     echo "false"
     return
   fi
