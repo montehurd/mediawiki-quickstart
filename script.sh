@@ -207,8 +207,7 @@ is_selenium_prepared() {
 
 ensure_selenium_ready() {
   local start=$(date +%s)
-
-  if [ "$(is_selenium_prepared)" = false ]; then
+  if [ "$(is_selenium_prepared)" = "false" ] || [ "$(is_mediawiki_prepared)" = "false" ]; then
     if ! confirm_action "Mediawiki needs to be reconfigured and Chromium / noVNC containers need to be prepared. This will perform a fresh install. Do you wish to continue"; then
       echo "Exiting as Chromium and noVNC containers were not prepared."
       exit 1
