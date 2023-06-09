@@ -10,7 +10,8 @@ is_container_running() {
 }
 
 are_containers_running() {
-  local containers=$@
+  local containers
+  containers=$@
   for container in $containers; do
     is_running=$(is_container_running $container)
 
@@ -28,7 +29,8 @@ is_container_present() {
 }
 
 are_containers_present() {
-  local containers=$@
+  local containers
+  containers=$@
 
   for container in $containers; do
     is_present=$(is_container_present $container)
@@ -43,9 +45,12 @@ are_containers_present() {
 }
 
 is_container_env_var_set() {
-  local container=$1
-  local var_name=$2
-  local expected_value=$3
+  local container
+  container=$1
+  local var_name
+  var_name=$2
+  local expected_value
+  expected_value=$3
 
   if docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep -q "$var_name=$expected_value"; then
     echo "true"
@@ -77,9 +82,12 @@ wait_until_url_available() {
 }
 
 apply_mediawiki_skin_settings() {
-  local mediawikiPath="$1"
-  local wfLoadSkin="$2"
-  local wgDefaultSkin="$3"
+  local mediawikiPath
+  mediawikiPath="$1"
+  local wfLoadSkin
+  wfLoadSkin="$2"
+  local wgDefaultSkin
+  wgDefaultSkin="$3"
 
   cd "$mediawikiPath"
   grep -qx "^wfLoadSkin([\"']$wfLoadSkin[\"']); *$" LocalSettings.php || echo "wfLoadSkin(\"$wfLoadSkin\");" >>LocalSettings.php
@@ -87,12 +95,18 @@ apply_mediawiki_skin_settings() {
 }
 
 apply_mediawiki_skin() {
-  local mediawikiPath="$1"
-  local skinSubdirectory="$2"
-  local skinRepoURL="$3"
-  local skinBranch="$4"
-  local wfLoadSkin="$5"
-  local wgDefaultSkin="$6"
+  local mediawikiPath
+  mediawikiPath="$1"
+  local skinSubdirectory
+  skinSubdirectory="$2"
+  local skinRepoURL
+  skinRepoURL="$3"
+  local skinBranch
+  skinBranch="$4"
+  local wfLoadSkin
+  wfLoadSkin="$5"
+  local wgDefaultSkin
+  wgDefaultSkin="$6"
 
   cd "$mediawikiPath"
   rm -rf "skins/$skinSubdirectory"
@@ -102,19 +116,26 @@ apply_mediawiki_skin() {
 }
 
 apply_mediawiki_extension_settings() {
-  local mediawikiPath="$1"
-  local wfLoadExtension="$2"
+  local mediawikiPath
+  mediawikiPath="$1"
+  local wfLoadExtension
+  wfLoadExtension="$2"
 
   cd "$mediawikiPath"
   grep -qx "^[[:blank:]]*wfLoadExtension[[:blank:]]*([[:blank:]]*[\"']$wfLoadExtension[\"'][[:blank:]]*)[[:blank:]]*;[[:blank:]]*$" LocalSettings.php || echo "wfLoadExtension(\"$wfLoadExtension\");" >>LocalSettings.php
 }
 
 apply_mediawiki_extension() {
-  local mediawikiPath="$1"
-  local extensionSubdirectory="$2"
-  local extensionRepoURL="$3"
-  local extensionBranch="$4"
-  local wfLoadExtension="$5"
+  local mediawikiPath
+  mediawikiPath="$1"
+  local extensionSubdirectory
+  extensionSubdirectory="$2"
+  local extensionRepoURL
+  extensionRepoURL="$3"
+  local extensionBranch
+  extensionBranch="$4"
+  local wfLoadExtension
+  wfLoadExtension="$5"
 
   cd "$mediawikiPath"
   rm -rf "extensions/$extensionSubdirectory"
@@ -124,7 +145,8 @@ apply_mediawiki_extension() {
 }
 
 confirm_action() {
-  local prompt_message="$1"
+  local prompt_message
+  prompt_message="$1"
   read -p "${prompt_message} (y/n)? " -n 1 -r
   echo
   if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
@@ -146,11 +168,17 @@ negate_boolean() {
 
 # Usage: print_duration_since_start start_time [format]
 print_duration_since_start() {
-  local start=$1
-  local format=${2:-"Execution time: %d minutes, %d seconds."} # Use provided format, or default if not provided
-  local end=$(date +%s)
-  local duration=$((end - start))
-  local minutes=$((duration / 60))
-  local seconds=$((duration % 60))
+  local start
+  start=$1
+  local format
+  format=${2:-"Execution time: %d minutes, %d seconds."} # Use provided format, or default if not provided
+  local end
+  end=$(date +%s)
+  local duration
+  duration=$((end - start))
+  local minutes
+  minutes=$((duration / 60))
+  local seconds
+  seconds=$((duration % 60))
   printf "$format\n" $minutes $seconds
 }
