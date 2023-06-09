@@ -65,7 +65,8 @@ start() {
   container_present=$(is_container_present "mediawiki-mediawiki-1")
   is_first_run=$(negate_boolean "$container_present")
   if [ "$is_first_run" = "true" ]; then
-    docker_compose up -d
+    # docker_compose build --no-cache
+    docker_compose up -d || exit 1
     docker_compose exec mediawiki composer update
     docker_compose exec mediawiki bash /docker/install.sh
     sleep 2
