@@ -165,6 +165,16 @@ prepare_novnc_and_chromium() {
   CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install
 }
 
+
+is_mediawiki_prepared() {
+  # are mediawiki containers running?
+  if [ "$(are_containers_running "mediawiki-mediawiki-1" "mediawiki-mediawiki-web-1" "mediawiki-mediawiki-jobrunner-1")" != "true" ]; then
+    echo "false"
+    return
+  fi
+  echo "true"
+}
+
 is_selenium_prepared() {
   # is novnc container running?
   if [ "$(is_container_running "docker-chromium-novnc-novnc-1")" != "true" ]; then
