@@ -147,7 +147,7 @@ negate_boolean() {
 # Usage: print_duration_since_start start_time [format]
 print_duration_since_start() {
   local start=$1
-  local format=${2:-"Execution time: %d minutes, %d seconds."}  # Use provided format, or default if not provided
+  local format=${2:-"Execution time: %d minutes, %d seconds."} # Use provided format, or default if not provided
   local end=$(date +%s)
   local duration=$((end - start))
   local minutes=$((duration / 60))
