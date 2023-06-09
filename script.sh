@@ -166,11 +166,7 @@ prepare_novnc_and_chromium() {
 }
 
 is_mediawiki_prepared() {
-  if [ "$(are_containers_running "mediawiki-mediawiki-1" "mediawiki-mediawiki-web-1" "mediawiki-mediawiki-jobrunner-1")" != "true" ]; then
-    echo "false"
-    return
-  fi
-  echo "true"
+  are_containers_running "mediawiki-mediawiki-1" "mediawiki-mediawiki-web-1" "mediawiki-mediawiki-jobrunner-1"
 }
 
 is_selenium_prepared() {
