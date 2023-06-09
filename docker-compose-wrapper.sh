@@ -15,7 +15,7 @@ docker_compose_wrapper() {
     COMPOSE_FILES="$COMPOSE_FILES -f $SELENIUM_FILE"
   fi
 
-  cd "$1" || exit 1
+  cd "$1" || return 1
 
   docker compose $COMPOSE_FILES "${@:2}"
 }
