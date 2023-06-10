@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -u
+
 get_response_code() {
   echo "$(curl --write-out '%{http_code}' --silent --output /dev/null "$1")"
 }

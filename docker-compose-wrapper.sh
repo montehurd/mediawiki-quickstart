@@ -1,3 +1,7 @@
+#!/bin/bash
+
+set -u
+
 docker_compose_wrapper() {
   local compose_files
   local override_file
