@@ -2,12 +2,12 @@
 
 # set -x
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-source "$SCRIPT_DIR/utility.sh"
-source "$SCRIPT_DIR/docker-compose-wrapper.sh"
+source "$SCRIPT_PATH/utility.sh"
+source "$SCRIPT_PATH/docker-compose-wrapper.sh"
 
-MEDIAWIKI_DIR="$SCRIPT_DIR/mediawiki"
+MEDIAWIKI_PATH="$SCRIPT_PATH/mediawiki"
 MEDIAWIKI_PORT=8080
 
 MW_ENV="
@@ -39,23 +39,23 @@ fresh_install() {
 prepare() {
   local extra_compose_file_path
   extra_compose_file_path=${1:-""}
-  mkdir -p "$MEDIAWIKI_DIR"
-  cd "$MEDIAWIKI_DIR" || exit
+  mkdir -p "$MEDIAWIKI_PATH"
+  cd "$MEDIAWIKI_PATH" || exit
   git clone https://gerrit.wikimedia.org/r/mediawiki/core.git . --depth=1
   echo "$MW_ENV" >.env
-  cp "$SCRIPT_DIR/docker-compose.override.yml" .
+  cp "$SCRIPT_PATH/docker-compose.override.yml" .
   if [ -n "$extra_compose_file_path" ] && [ -f "$extra_compose_file_path" ]; then
     cp "$extra_compose_file_path" .
   fi
 }
 
 remove() {
-  if [ -d "$MEDIAWIKI_DIR" ]; then
-    if ! confirm_action "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_DIR\""; then
+  if [ -d "$MEDIAWIKI_PATH" ]; then
+    if ! confirm_action "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_PATH\""; then
       exit 1
     fi
     docker_compose down
-    rm -rf "$MEDIAWIKI_DIR"
+    rm -rf "$MEDIAWIKI_PATH"
   fi
 }
 
@@ -104,27 +104,27 @@ bash_wb() {
 }
 
 use_vector_skin() {
-  apply_mediawiki_skin "$MEDIAWIKI_DIR" "Vector" "https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git" "master" "Vector" "vector"
+  apply_mediawiki_skin "$MEDIAWIKI_PATH" "Vector" "https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git" "master" "Vector" "vector"
   open_special_version_page
 }
 
 use_apiportal_skin() {
-  apply_mediawiki_skin "$MEDIAWIKI_DIR" "WikimediaApiPortal" "https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git" "master" "WikimediaApiPortal" "wikimediaapiportal"
+  apply_mediawiki_skin "$MEDIAWIKI_PATH" "WikimediaApiPortal" "https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git" "master" "WikimediaApiPortal" "wikimediaapiportal"
   open_special_version_page
 }
 
 use_minervaneue_skin() {
-  apply_mediawiki_skin "$MEDIAWIKI_DIR" "MinervaNeue" "https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git" "master" "MinervaNeue" "minerva"
+  apply_mediawiki_skin "$MEDIAWIKI_PATH" "MinervaNeue" "https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git" "master" "MinervaNeue" "minerva"
   open_special_version_page
 }
 
 use_timeless_skin() {
-  apply_mediawiki_skin "$MEDIAWIKI_DIR" "Timeless" "https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git" "master" "Timeless" "timeless"
+  apply_mediawiki_skin "$MEDIAWIKI_PATH" "Timeless" "https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git" "master" "Timeless" "timeless"
   open_special_version_page
 }
 
 use_monobook_skin() {
-  apply_mediawiki_skin "$MEDIAWIKI_DIR" "MonoBook" "https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git" "master" "MonoBook" "monobook"
+  apply_mediawiki_skin "$MEDIAWIKI_PATH" "MonoBook" "https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git" "master" "MonoBook" "monobook"
   open_special_version_page
 }
 
@@ -143,20 +143,20 @@ run_php_unit_tests() {
 }
 
 docker_compose() {
-  docker_compose_wrapper "$MEDIAWIKI_DIR" "$@"
+  docker_compose_wrapper "$MEDIAWIKI_PATH" "$@"
 }
 
 prepare_for_selenium() {
   echo "Preparing for Selenium by adding Node and Chromium / noVNC containers - this usually takes 5 to 10 minutes..."
   export USE_SELENIUM_YML=true
-  fresh_install "$SCRIPT_DIR/selenium/docker-compose.selenium.yml"
+  fresh_install "$SCRIPT_PATH/selenium/docker-compose.selenium.yml"
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
   docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
   prepare_docker_chromium_novnc
   wait_until_url_available http://localhost:8088
 }
 
-DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_DIR/docker-chromium-novnc"
+DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_PATH/docker-chromium-novnc"
 
 prepare_docker_chromium_novnc() {
   if [ ! -f "$DOCKER_CHROMIUM_NOVNC_PATH/Makefile" ]; then
