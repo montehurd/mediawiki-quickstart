@@ -152,13 +152,13 @@ prepare_for_selenium() {
   fresh_install "$SCRIPT_DIR/selenium/docker-compose.selenium.yml"
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
   docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
-  prepare_novnc_and_chromium
+  prepare_docker_chromium_novnc
   wait_until_url_available http://localhost:8088
 }
 
 DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_DIR/docker-chromium-novnc"
 
-prepare_novnc_and_chromium() {
+prepare_docker_chromium_novnc() {
   if [ ! -f "$DOCKER_CHROMIUM_NOVNC_PATH/Makefile" ]; then
     git submodule update --init
   fi
