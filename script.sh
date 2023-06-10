@@ -40,7 +40,7 @@ prepare() {
   local extra_compose_file_path
   extra_compose_file_path=${1:-""}
   mkdir -p "$MEDIAWIKI_DIR"
-  cd "$MEDIAWIKI_DIR"
+  cd "$MEDIAWIKI_DIR" || exit
   git clone https://gerrit.wikimedia.org/r/mediawiki/core.git . --depth=1
   echo "$MW_ENV" >.env
   cp "$SCRIPT_DIR/docker-compose.override.yml" .
@@ -87,6 +87,7 @@ start() {
 
 restart() {
   stop
+  sleep 2
   start
 }
 
@@ -128,7 +129,7 @@ use_monobook_skin() {
 }
 
 open_special_version_page() {
-  if [ "$skipopenspecialversionpage" != "true" ]; then
+  if [ "${skipopenspecialversionpage:-false}" != "true" ]; then
     open_url_when_available "$SPECIAL_VERSION_URL"
   fi
 }
@@ -163,7 +164,7 @@ prepare_novnc_and_chromium() {
   fi
   CHROMIUM_VERSION=$(docker_compose exec -u root mediawiki /usr/bin/node "./puppeteer-chromium-version-finder.js")
   echo "$CHROMIUM_VERSION"
-  cd "$CHROMIUM_DIR"
+  cd "$CHROMIUM_DIR" || exit
   CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install
 }
 
@@ -178,18 +179,18 @@ is_selenium_prepared() {
     return
   fi
   # is novnc url available?
-  if [ $(get_response_code http://localhost:8088) -ne 200 ]; then
+  if [ "$(get_response_code http://localhost:8088)" -ne 200 ]; then
     echo "false"
     return
   fi
   # is chromium container running?
-  cd "$CHROMIUM_DIR"
+  cd "$CHROMIUM_DIR" || exit
   if [ "$(is_container_running "docker-chromium-novnc-chromium-1")" != "true" ]; then
     echo "false"
     return
   fi
   # is chromium set for automation?
-  if [ $(docker compose exec chromium curl --write-out '%{http_code}' --silent --output /dev/null localhost:9222 2>/dev/null) -ne 200 ]; then
+  if [ "$(docker compose exec chromium curl --write-out '%{http_code}' --silent --output /dev/null localhost:9222 2>/dev/null)" -ne 200 ]; then
     echo "false"
     return
   fi
@@ -212,7 +213,7 @@ ensure_selenium_ready() {
     prepare_for_selenium
   fi
 
-  print_duration_since_start $start "ensure_selenium_ready took %d minutes and %d seconds"
+  print_duration_since_start "$start" "ensure_selenium_ready took %d minutes and %d seconds"
 }
 
 run_selenium_tests() {

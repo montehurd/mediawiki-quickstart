@@ -17,5 +17,6 @@ docker_compose_wrapper() {
 
   cd "$1" || return 1
 
+  # shellcheck disable=SC2086
   docker compose $COMPOSE_FILES "${@:2}"
 }

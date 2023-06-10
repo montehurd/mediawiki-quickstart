@@ -1,7 +1,7 @@
 #!/bin/bash
 
 get_response_code() {
-  echo $(curl --write-out '%{http_code}' --silent --output /dev/null "$1")
+  echo "$(curl --write-out '%{http_code}' --silent --output /dev/null "$1")"
 }
 
 is_container_running() {
@@ -11,9 +11,10 @@ is_container_running() {
 
 are_containers_running() {
   local containers
-  containers=$@
-  for container in $containers; do
-    is_running=$(is_container_running $container)
+  containers=("$@")
+
+  for container in "${containers[@]}"; do
+    is_running="$(is_container_running "$container")"
 
     if [ "$is_running" != "true" ]; then
       echo "false"
@@ -30,10 +31,10 @@ is_container_present() {
 
 are_containers_present() {
   local containers
-  containers=$@
+  containers=("$@")
 
-  for container in $containers; do
-    is_present=$(is_container_present $container)
+  for container in "${containers[@]}"; do
+    is_present="$(is_container_present "$container")"
 
     if [ "$is_present" != "true" ]; then
       echo "false"
@@ -77,7 +78,7 @@ open_url_when_available() {
 }
 
 wait_until_url_available() {
-  while ! [[ "$(get_response_code $1)" =~ ^(200|301)$ ]]; do sleep 1; done
+  while ! [[ "$(get_response_code "$1")" =~ ^(200|301)$ ]]; do sleep 1; done
   sleep 0.5
 }
 
@@ -89,8 +90,8 @@ apply_mediawiki_skin_settings() {
   local wgDefaultSkin
   wgDefaultSkin="$3"
 
-  cd "$mediawikiPath"
-  grep -qx "^wfLoadSkin([\"']$wfLoadSkin[\"']); *$" LocalSettings.php || echo "wfLoadSkin(\"$wfLoadSkin\");" >>LocalSettings.php
+  cd "$mediawikiPath" || exit
+  grep -qx "^wfLoadSkin(['\"]${wfLoadSkin}['\"]); *$" LocalSettings.php || echo "wfLoadSkin(\"$wfLoadSkin\");" >>LocalSettings.php
   sed -i -E "s/\\\$wgDefaultSkin.*;[[:blank:]]*$/\\\$wgDefaultSkin = \"$wgDefaultSkin\";/g" LocalSettings.php
 }
 
@@ -108,7 +109,7 @@ apply_mediawiki_skin() {
   local wgDefaultSkin
   wgDefaultSkin="$6"
 
-  cd "$mediawikiPath"
+  cd "$mediawikiPath" || exit
   rm -rf "skins/$skinSubdirectory"
   git clone --branch "$skinBranch" "$skinRepoURL" "./skins/$skinSubdirectory" --depth=1
   sleep 1
@@ -121,8 +122,8 @@ apply_mediawiki_extension_settings() {
   local wfLoadExtension
   wfLoadExtension="$2"
 
-  cd "$mediawikiPath"
-  grep -qx "^[[:blank:]]*wfLoadExtension[[:blank:]]*([[:blank:]]*[\"']$wfLoadExtension[\"'][[:blank:]]*)[[:blank:]]*;[[:blank:]]*$" LocalSettings.php || echo "wfLoadExtension(\"$wfLoadExtension\");" >>LocalSettings.php
+  cd "$mediawikiPath" || exit
+  grep -qx "^[[:blank:]]*wfLoadExtension[[:blank:]]*([[:blank:]]*[\"']${wfLoadExtension}[\"'][[:blank:]]*)[[:blank:]]*;[[:blank:]]*$" LocalSettings.php || echo "wfLoadExtension(\"$wfLoadExtension\");" >>LocalSettings.php
 }
 
 apply_mediawiki_extension() {
@@ -137,7 +138,7 @@ apply_mediawiki_extension() {
   local wfLoadExtension
   wfLoadExtension="$5"
 
-  cd "$mediawikiPath"
+  cd "$mediawikiPath" || exit
   rm -rf "extensions/$extensionSubdirectory"
   git clone --branch "$extensionBranch" "$extensionRepoURL" "./extensions/$extensionSubdirectory" --depth=1
   sleep 1
@@ -180,5 +181,6 @@ print_duration_since_start() {
   minutes=$((duration / 60))
   local seconds
   seconds=$((duration % 60))
-  printf "$format\n" $minutes $seconds
+  # shellcheck disable=SC2059
+  printf "$format\n" "$minutes" "$seconds"
 }
