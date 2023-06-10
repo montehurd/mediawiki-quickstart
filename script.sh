@@ -55,7 +55,9 @@ remove() {
       exit 1
     fi
     docker_compose down
-    rm -rf "$MEDIAWIKI_PATH"
+    if [ -n "$MEDIAWIKI_PATH" ] && [ -d "$MEDIAWIKI_PATH" ]; then
+      rm -rf "$MEDIAWIKI_PATH"
+    fi
   fi
 }
 
