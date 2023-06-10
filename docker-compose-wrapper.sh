@@ -1,22 +1,26 @@
 #!/bin/bash
 
 docker_compose_wrapper() {
-  COMPOSE_FILES="-f docker-compose.yml"
-  OVERRIDE_FILE="docker-compose.override.yml"
-  SELENIUM_FILE="docker-compose.selenium.yml"
+  local compose_files
+  local override_file
+  local selenium_file
+
+  compose_files="-f docker-compose.yml"
+  override_file="docker-compose.override.yml"
+  selenium_file="docker-compose.selenium.yml"
 
   # Check if docker-compose.override.yml exists
-  if [ -f "$OVERRIDE_FILE" ]; then
-    COMPOSE_FILES="$COMPOSE_FILES -f $OVERRIDE_FILE"
+  if [ -f "$override_file" ]; then
+    compose_files="$compose_files -f $override_file"
   fi
 
   # Check if USE_SELENIUM_YML environment variable is set to true
-  if [ "$USE_SELENIUM_YML" = "true" ] && [ -f "$SELENIUM_FILE" ]; then
-    COMPOSE_FILES="$COMPOSE_FILES -f $SELENIUM_FILE"
+  if [ "$USE_SELENIUM_YML" = "true" ] && [ -f "$selenium_file" ]; then
+    compose_files="$compose_files -f $selenium_file"
   fi
 
   cd "$1" || return 1
 
   # shellcheck disable=SC2086
-  docker compose $COMPOSE_FILES "${@:2}"
+  docker compose $compose_files "${@:2}"
 }
