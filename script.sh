@@ -156,15 +156,15 @@ prepare_for_selenium() {
   wait_until_url_available http://localhost:8088
 }
 
-CHROMIUM_DIR="$SCRIPT_DIR/docker-chromium-novnc"
+DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_DIR/docker-chromium-novnc"
 
 prepare_novnc_and_chromium() {
-  if [ ! -f "$CHROMIUM_DIR/Makefile" ]; then
+  if [ ! -f "$DOCKER_CHROMIUM_NOVNC_PATH/Makefile" ]; then
     git submodule update --init
   fi
   CHROMIUM_VERSION=$(docker_compose exec -u root mediawiki /usr/bin/node "./puppeteer-chromium-version-finder.js")
   echo "$CHROMIUM_VERSION"
-  cd "$CHROMIUM_DIR" || exit
+  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || exit
   CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install
 }
 
@@ -184,7 +184,7 @@ is_selenium_prepared() {
     return
   fi
   # is chromium container running?
-  cd "$CHROMIUM_DIR" || exit
+  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || exit
   if [ "$(is_container_running "docker-chromium-novnc-chromium-1")" != "true" ]; then
     echo "false"
     return
