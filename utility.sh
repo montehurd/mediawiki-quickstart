@@ -27,7 +27,7 @@ are_containers_running() {
 }
 
 is_container_present() {
-  is_present=$(docker inspect "$1" >/dev/null 2>&1 && echo true || echo false)
+  is_present=$(docker inspect "$1" >/dev/null 2>&1 && echo "true" || echo "false")
   echo "$is_present"
 }
 
