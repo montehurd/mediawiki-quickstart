@@ -1,5 +1,3 @@
-#!/bin/bash
-
 docker_compose_wrapper() {
   local compose_files
   local override_file
@@ -15,7 +13,7 @@ docker_compose_wrapper() {
   fi
 
   # Check if USE_SELENIUM_YML environment variable is set to true
-  if [ "$USE_SELENIUM_YML" = "true" ] && [ -f "$selenium_file" ]; then
+  if [ -n "${USE_SELENIUM_YML:-}" ] && [ "$USE_SELENIUM_YML" = "true" ] && [ -f "$selenium_file" ]; then
     compose_files="$compose_files -f $selenium_file"
   fi
 
