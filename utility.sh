@@ -3,6 +3,7 @@
 set -u
 
 get_response_code() {
+  # shellcheck disable=SC2005
   echo "$(curl --write-out '%{http_code}' --silent --output /dev/null "$1")"
 }
 
