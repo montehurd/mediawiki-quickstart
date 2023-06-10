@@ -83,66 +83,66 @@ wait_until_url_available() {
 }
 
 apply_mediawiki_skin_settings() {
-  local mediawikiPath
-  mediawikiPath="$1"
+  local mediawiki_path
+  mediawiki_path="$1"
   local wfLoadSkin
   wfLoadSkin="$2"
   local wgDefaultSkin
   wgDefaultSkin="$3"
 
-  cd "$mediawikiPath" || exit
+  cd "$mediawiki_path" || exit
   grep -qx "^wfLoadSkin(['\"]${wfLoadSkin}['\"]); *$" LocalSettings.php || echo "wfLoadSkin(\"$wfLoadSkin\");" >>LocalSettings.php
   sed -i -E "s/\\\$wgDefaultSkin.*;[[:blank:]]*$/\\\$wgDefaultSkin = \"$wgDefaultSkin\";/g" LocalSettings.php
 }
 
 apply_mediawiki_skin() {
-  local mediawikiPath
-  mediawikiPath="$1"
-  local skinSubdirectory
-  skinSubdirectory="$2"
-  local skinRepoURL
-  skinRepoURL="$3"
-  local skinBranch
-  skinBranch="$4"
+  local mediawiki_path
+  mediawiki_path="$1"
+  local skin_folder_name
+  skin_folder_name="$2"
+  local skin_repo_url
+  skin_repo_url="$3"
+  local skin_branch
+  skin_branch="$4"
   local wfLoadSkin
   wfLoadSkin="$5"
   local wgDefaultSkin
   wgDefaultSkin="$6"
 
-  cd "$mediawikiPath" || exit
-  rm -rf "skins/$skinSubdirectory"
-  git clone --branch "$skinBranch" "$skinRepoURL" "./skins/$skinSubdirectory" --depth=1
+  cd "$mediawiki_path" || exit
+  rm -rf "skins/$skin_folder_name"
+  git clone --branch "$skin_branch" "$skin_repo_url" "./skins/$skin_folder_name" --depth=1
   sleep 1
-  apply_mediawiki_skin_settings "$mediawikiPath" "$wfLoadSkin" "$wgDefaultSkin"
+  apply_mediawiki_skin_settings "$mediawiki_path" "$wfLoadSkin" "$wgDefaultSkin"
 }
 
 apply_mediawiki_extension_settings() {
-  local mediawikiPath
-  mediawikiPath="$1"
+  local mediawiki_path
+  mediawiki_path="$1"
   local wfLoadExtension
   wfLoadExtension="$2"
 
-  cd "$mediawikiPath" || exit
+  cd "$mediawiki_path" || exit
   grep -qx "^[[:blank:]]*wfLoadExtension[[:blank:]]*([[:blank:]]*[\"']${wfLoadExtension}[\"'][[:blank:]]*)[[:blank:]]*;[[:blank:]]*$" LocalSettings.php || echo "wfLoadExtension(\"$wfLoadExtension\");" >>LocalSettings.php
 }
 
 apply_mediawiki_extension() {
-  local mediawikiPath
-  mediawikiPath="$1"
-  local extensionSubdirectory
-  extensionSubdirectory="$2"
-  local extensionRepoURL
-  extensionRepoURL="$3"
-  local extensionBranch
-  extensionBranch="$4"
+  local mediawiki_path
+  mediawiki_path="$1"
+  local extension_folder_name
+  extension_folder_name="$2"
+  local extension_repo_url
+  extension_repo_url="$3"
+  local extension_branch
+  extension_branch="$4"
   local wfLoadExtension
   wfLoadExtension="$5"
 
-  cd "$mediawikiPath" || exit
-  rm -rf "extensions/$extensionSubdirectory"
-  git clone --branch "$extensionBranch" "$extensionRepoURL" "./extensions/$extensionSubdirectory" --depth=1
+  cd "$mediawiki_path" || exit
+  rm -rf "extensions/$extension_folder_name"
+  git clone --branch "$extension_branch" "$extension_repo_url" "./extensions/$extension_folder_name" --depth=1
   sleep 1
-  apply_mediawiki_extension_settings "$mediawikiPath" "$wfLoadExtension"
+  apply_mediawiki_extension_settings "$mediawiki_path" "$wfLoadExtension"
 }
 
 confirm_action() {
