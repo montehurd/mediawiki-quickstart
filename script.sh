@@ -10,6 +10,7 @@ source "$SCRIPT_PATH/docker-compose-wrapper.sh"
 MEDIAWIKI_PATH="$SCRIPT_PATH/mediawiki"
 MEDIAWIKI_PORT=8080
 
+# shellcheck disable=SC2089
 MW_ENV="
 MW_DOCKER_PORT=$MEDIAWIKI_PORT
 MW_DOCKER_UID=
@@ -20,6 +21,8 @@ XDEBUG_ENABLE=true
 XHPROF_ENABLE=true
 XDEBUG_CONFIG=''
 "
+
+# shellcheck disable=SC2090
 export MW_ENV
 
 SPECIAL_VERSION_URL="http://localhost:$MEDIAWIKI_PORT/wiki/Special:Version"
