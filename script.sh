@@ -53,21 +53,23 @@ prepare() {
 }
 
 remove() {
-  if [ -d "$MEDIAWIKI_PATH" ]; then
-    if ! confirm_action "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_PATH\""; then
-      exit 1
-    fi
-    docker_compose down
-    if [ -n "$MEDIAWIKI_PATH" ] && [ -d "$MEDIAWIKI_PATH" ]; then
-      rm -rf "$MEDIAWIKI_PATH"
-    fi
+  if [ ! -d "$MEDIAWIKI_PATH" ]; then
+    return
+  fi
+  if ! confirm_action "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_PATH\""; then
+    exit 1
+  fi
+  docker_compose down
+  if [ -n "$MEDIAWIKI_PATH" ] && [ -d "$MEDIAWIKI_PATH" ]; then
+    rm -rf "$MEDIAWIKI_PATH"
   fi
 }
 
 stop() {
-  if [ -d "$MEDIAWIKI_PATH" ]; then
-    docker_compose stop
+  if [ ! -d "$MEDIAWIKI_PATH" ]; then
+    return
   fi
+  docker_compose stop
 }
 
 start() {
@@ -136,9 +138,10 @@ use_monobook_skin() {
 }
 
 open_special_version_page() {
-  if [ "${skipopenspecialversionpage:-false}" != "true" ]; then
-    open_url_when_available "$SPECIAL_VERSION_URL"
+  if [ "${skipopenspecialversionpage:-false}" = "true" ]; then
+    return
   fi
+  open_url_when_available "$SPECIAL_VERSION_URL"
 }
 
 run_parser_tests() {
