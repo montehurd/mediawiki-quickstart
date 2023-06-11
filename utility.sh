@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -eu
 
 get_response_code() {
   # shellcheck disable=SC2005

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 apply_patch() {
   echo "apply patch"
   curl "https://gerrit.wikimedia.org/r/changes/915838/revisions/2/patch?download" | base64 --decode >patch.diff
@@ -18,7 +20,7 @@ prepare_node() {
     apt-get install -y nodejs
     npm install puppeteer-chromium-version-finder
     npm ci
-    npm audit fix --force
+    npm audit fix --force || true
   fi
 }
 

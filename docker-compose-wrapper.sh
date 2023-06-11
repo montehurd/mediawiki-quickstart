@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -eu
 
 docker_compose_wrapper() {
   local compose_files

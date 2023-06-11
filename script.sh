@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -eu
 
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
@@ -46,7 +46,7 @@ prepare() {
   cd "$MEDIAWIKI_PATH" || exit
   git clone https://gerrit.wikimedia.org/r/mediawiki/core.git . --depth=1
   echo "$MW_ENV" >.env
-  cp "$SCRIPT_PATH/docker-compose.override.yml" .
+  cp "$SCRIPT_PATH/docker-compose.override.yml" . || true
   if [ -n "$extra_compose_file_path" ] && [ -f "$extra_compose_file_path" ]; then
     cp "$extra_compose_file_path" .
   fi
