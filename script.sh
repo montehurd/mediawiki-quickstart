@@ -65,7 +65,9 @@ remove() {
 }
 
 stop() {
-  docker_compose stop
+  if [ -d "$MEDIAWIKI_PATH" ]; then
+    docker_compose stop
+  fi
 }
 
 start() {
