@@ -168,6 +168,14 @@ prepare_for_selenium() {
 
 DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_PATH/docker-chromium-novnc"
 
+execute_in_chromium_novnc_path() {
+  (
+    cd "$DOCKER_CHROMIUM_NOVNC_PATH" || { echo "Could not change directory"; exit 1; }
+    "$@"
+  )
+  return $?
+}
+
 prepare_docker_chromium_novnc() {
   if [ ! -f "$DOCKER_CHROMIUM_NOVNC_PATH/Makefile" ]; then
     git submodule update --init
@@ -204,13 +212,12 @@ is_docker_chromium_novnc_automation_ready() {
     return
   fi
   # is chromium container running?
-  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || exit
   if [ "$(is_container_running "docker-chromium-novnc-chromium-1")" != "true" ]; then
     echo "false"
     return
   fi
   # is chromium set for automation?
-  if [ "$(docker compose exec chromium curl --write-out '%{http_code}' --silent --output /dev/null localhost:9222 2>/dev/null)" -ne 200 ]; then
+  if [ "$(execute_in_chromium_novnc_path docker compose exec chromium curl --write-out '%{http_code}' --silent --output /dev/null localhost:9222 2>/dev/null)" -ne 200 ]; then
     echo "false"
     return
   fi
@@ -230,8 +237,7 @@ ensure_selenium_ready() {
 
   print_duration_since_start "$start" "ensure_selenium_ready took %d minutes and %d seconds"
 
-  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || exit
-  ./script.sh view_novnc
+  execute_in_chromium_novnc_path ./script.sh view_novnc
 }
 
 run_selenium_tests() {
