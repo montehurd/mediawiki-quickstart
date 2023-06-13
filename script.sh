@@ -168,14 +168,6 @@ prepare_for_selenium() {
 
 DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_PATH/docker-chromium-novnc"
 
-execute_in_chromium_novnc_path() {
-  (
-    cd "$DOCKER_CHROMIUM_NOVNC_PATH" || { echo "Could not change directory"; exit 1; }
-    "$@"
-  )
-  return $?
-}
-
 prepare_docker_chromium_novnc() {
   if [ ! -f "$DOCKER_CHROMIUM_NOVNC_PATH/Makefile" ]; then
     git submodule update --init
@@ -184,6 +176,14 @@ prepare_docker_chromium_novnc() {
   echo "$CHROMIUM_VERSION"
   cd "$DOCKER_CHROMIUM_NOVNC_PATH" || exit
   CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install
+}
+
+execute_in_chromium_novnc_path() {
+  (
+    cd "$DOCKER_CHROMIUM_NOVNC_PATH" || { echo "Could not change directory"; exit 1; }
+    "$@"
+  )
+  return $?
 }
 
 is_mediawiki_selenium_ready() {
