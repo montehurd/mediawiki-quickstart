@@ -229,6 +229,9 @@ ensure_selenium_ready() {
   fi
 
   print_duration_since_start "$start" "ensure_selenium_ready took %d minutes and %d seconds"
+
+  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || exit
+  ./script.sh view_novnc
 }
 
 run_selenium_tests() {
