@@ -73,9 +73,7 @@ stop() {
 }
 
 start() {
-  container_present=$(is_container_present "mediawiki-mediawiki-1")
-  is_first_run=$(negate_boolean "$container_present")
-  if [ "$is_first_run" = "true" ]; then
+  if ! is_container_present "mediawiki-mediawiki-1"; then
     # docker_compose build --no-cache
     docker_compose up -d || exit 1
     docker_compose exec mediawiki composer update
@@ -85,8 +83,7 @@ start() {
     return 0
   fi
 
-  is_running=$(is_container_running "mediawiki-mediawiki-1")
-  if [ "$is_running" = false ]; then
+  if ! is_container_running "mediawiki-mediawiki-1"; then
     docker_compose up -d
     sleep 1
   fi
@@ -188,46 +185,40 @@ execute_in_chromium_novnc_path() {
 
 is_mediawiki_selenium_ready() {
   # are all mediawiki containers up
-  if [ "$(are_containers_running "mediawiki-mediawiki-1" "mediawiki-mediawiki-web-1" "mediawiki-mediawiki-jobrunner-1")" != "true" ]; then
-    echo "false"
-    return
+  if ! are_containers_running "mediawiki-mediawiki-1" "mediawiki-mediawiki-web-1" "mediawiki-mediawiki-jobrunner-1"; then
+    return 1
   fi
   # is MW_SERVER value from docker-compose.selenium.yml in use by mediawiki-mediawiki-1 container?
-  if [ "$(is_container_env_var_set "mediawiki-mediawiki-1" "MW_SERVER" "http://mediawiki-mediawiki-web-1:8080")" != "true" ]; then
-    echo "false"
-    return
+  if ! is_container_env_var_set "mediawiki-mediawiki-1" "MW_SERVER" "http://mediawiki-mediawiki-web-1:8080"; then
+    return 1
   fi
-  echo "true"
+  return 0
 }
 
 is_docker_chromium_novnc_automation_ready() {
   # is novnc container running?
-  if [ "$(is_container_running "docker-chromium-novnc-novnc-1")" != "true" ]; then
-    echo "false"
-    return
+  if ! is_container_running "docker-chromium-novnc-novnc-1"; then
+    return 1
   fi
   # is novnc url available?
   if [ "$(get_response_code http://localhost:8088)" -ne 200 ]; then
-    echo "false"
-    return
+    return 1
   fi
   # is chromium container running?
-  if [ "$(is_container_running "docker-chromium-novnc-chromium-1")" != "true" ]; then
-    echo "false"
-    return
+  if ! is_container_running "docker-chromium-novnc-chromium-1"; then
+    return 1
   fi
   # is chromium set for automation?
   if [ "$(execute_in_chromium_novnc_path docker compose exec chromium curl --write-out '%{http_code}' --silent --output /dev/null localhost:9222 2>/dev/null)" -ne 200 ]; then
-    echo "false"
-    return
+    return 1
   fi
-  echo "true"
+  return 0
 }
 
 ensure_selenium_ready() {
   local start
   start=$(date +%s)
-  if [ "$(is_docker_chromium_novnc_automation_ready)" = "false" ] || [ "$(is_mediawiki_selenium_ready)" = "false" ]; then
+  if ! is_docker_chromium_novnc_automation_ready || ! is_mediawiki_selenium_ready; then
     if ! confirm_action "Mediawiki needs to be reconfigured and Chromium / noVNC containers need to be prepared. This will perform a fresh install. Do you wish to continue"; then
       echo "Exiting as Chromium and noVNC containers were not prepared."
       exit 1

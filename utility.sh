@@ -8,8 +8,11 @@ get_response_code() {
 }
 
 is_container_running() {
-  is_running=$(docker inspect -f '{{.State.Running}}' "$1" 2>/dev/null)
-  echo "${is_running:=false}"
+  if [ "$(docker inspect -f '{{.State.Running}}' "$1" 2>/dev/null)" = "true" ]; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 are_containers_running() {
@@ -17,19 +20,16 @@ are_containers_running() {
   containers=("$@")
 
   for container in "${containers[@]}"; do
-    is_running="$(is_container_running "$container")"
-
-    if [ "$is_running" != "true" ]; then
-      echo "false"
-      return
+    if ! is_container_running "$container"; then
+      return 1
     fi
   done
-  echo "true"
+  return 0
 }
 
 is_container_present() {
-  is_present=$(docker inspect "$1" >/dev/null 2>&1 && echo "true" || echo "false")
-  echo "$is_present"
+  docker inspect "$1" >/dev/null 2>&1
+  return $?
 }
 
 are_containers_present() {
@@ -37,15 +37,11 @@ are_containers_present() {
   containers=("$@")
 
   for container in "${containers[@]}"; do
-    is_present="$(is_container_present "$container")"
-
-    if [ "$is_present" != "true" ]; then
-      echo "false"
-      return
+    if ! is_container_present "$container"; then
+      return 1
     fi
   done
-
-  echo "true"
+  return 0
 }
 
 is_container_env_var_set() {
@@ -57,9 +53,9 @@ is_container_env_var_set() {
   expected_value=$3
 
   if docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep -q "$var_name=$expected_value"; then
-    echo "true"
+    return 0
   else
-    echo "false"
+    return 1
   fi
 }
 
@@ -157,17 +153,6 @@ confirm_action() {
     return 1
   fi
   return 0
-}
-
-negate_boolean() {
-  if [ "$1" = "true" ]; then
-    echo "false"
-  elif [ "$1" = "false" ]; then
-    echo "true"
-  else
-    echo "Error: Invalid boolean value"
-    exit 1
-  fi
 }
 
 # Usage: print_duration_since_start start_time [format]
