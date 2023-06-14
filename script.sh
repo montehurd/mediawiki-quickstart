@@ -225,7 +225,7 @@ ensure_selenium_ready() {
   fi
 
   if ! is_docker_chromium_novnc_automation_ready; then
-    if ! confirm_action "Chromium / noVNC containers need to be prepared. Do you wish to continue"; then
+    if ! confirm_action "Chromium / noVNC containers need to be prepared for Selenium. Do you wish to continue"; then
       exit 1
     fi
     echo "Preparing Chromium / noVNC containers for Selenium..."
