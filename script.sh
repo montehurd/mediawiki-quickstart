@@ -154,7 +154,6 @@ docker_compose() {
 }
 
 prepare_mediawiki_for_selenium() {
-  echo "Preparing Mediawiki container for Selenium by adding Node and setting its MW_SERVER env var..."
   export USE_SELENIUM_YML=true
   fresh_install "$SCRIPT_PATH/selenium/docker-compose.selenium.yml"
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
@@ -164,7 +163,6 @@ prepare_mediawiki_for_selenium() {
 DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_PATH/docker-chromium-novnc"
 
 prepare_docker_chromium_novnc() {
-  echo "Preparing Chromium / noVNC containers for Selenium..."
   if [ ! -f "$DOCKER_CHROMIUM_NOVNC_PATH/Makefile" ]; then
     cd "$SCRIPT_PATH" || { echo "Could not change directory"; return 1; }
     git submodule update --init
@@ -216,12 +214,14 @@ ensure_selenium_ready() {
     if ! confirm_action "Mediawiki needs to be prepared for Selenium. This will perform a fresh install. Do you wish to continue"; then
       exit 1
     fi
+    echo "Preparing Mediawiki container for Selenium by adding Node and setting its MW_SERVER env var..."
     prepare_mediawiki_for_selenium
   fi
   if ! is_docker_chromium_novnc_automation_ready; then
     if ! confirm_action "Chromium / noVNC containers need to be prepared. Do you wish to continue"; then
       exit 1
     fi
+    echo "Preparing Chromium / noVNC containers for Selenium..."
     prepare_docker_chromium_novnc
   fi
   print_duration_since_start "$start" "ensure_selenium_ready took %d minutes and %d seconds"
