@@ -153,19 +153,18 @@ docker_compose() {
   docker_compose_wrapper "$MEDIAWIKI_PATH" "$@"
 }
 
-prepare_for_selenium() {
-  echo "Preparing for Selenium by adding Node and Chromium / noVNC containers - this usually takes 5 to 10 minutes..."
+prepare_mediawiki_for_selenium() {
+  echo "Preparing Mediawiki container for Selenium by adding Node and setting its MW_SERVER env var..."
   export USE_SELENIUM_YML=true
   fresh_install "$SCRIPT_PATH/selenium/docker-compose.selenium.yml"
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
   docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
-  prepare_docker_chromium_novnc
-  wait_until_url_available http://localhost:8088
 }
 
 DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_PATH/docker-chromium-novnc"
 
 prepare_docker_chromium_novnc() {
+  echo "Preparing Chromium / noVNC containers for Selenium..."
   if [ ! -f "$DOCKER_CHROMIUM_NOVNC_PATH/Makefile" ]; then
     cd "$SCRIPT_PATH" || { echo "Could not change directory"; return 1; }
     git submodule update --init
@@ -213,13 +212,21 @@ is_docker_chromium_novnc_automation_ready() {
 ensure_selenium_ready() {
   local start
   start=$(date +%s)
-  if ! is_docker_chromium_novnc_automation_ready || ! is_mediawiki_selenium_ready; then
-    if ! confirm_action "Mediawiki needs to be reconfigured and Chromium / noVNC containers need to be prepared. This will perform a fresh install. Do you wish to continue"; then
-      echo "Exiting as Chromium and noVNC containers were not prepared."
+  if ! is_mediawiki_selenium_ready; then
+    if ! confirm_action "Mediawiki needs to be prepared for Selenium. This will perform a fresh install. Do you wish to continue"; then
       exit 1
     fi
-    prepare_for_selenium
+    prepare_mediawiki_for_selenium
   fi
+
+  if ! is_docker_chromium_novnc_automation_ready; then
+    if ! confirm_action "Chromium / noVNC containers need to be prepared. Do you wish to continue"; then
+      exit 1
+    fi
+    prepare_docker_chromium_novnc
+  fi
+
+  # wait_until_url_available http://localhost:8088
 
   print_duration_since_start "$start" "ensure_selenium_ready took %d minutes and %d seconds"
 
