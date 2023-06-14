@@ -210,6 +210,7 @@ is_docker_chromium_novnc_automation_ready() {
 ensure_selenium_ready() {
   local start
   start=$(date +%s)
+
   if ! is_mediawiki_selenium_ready; then
     if ! confirm_action "Mediawiki needs to be prepared for Selenium. This will perform a fresh install. Do you wish to continue"; then
       exit 1
@@ -217,6 +218,12 @@ ensure_selenium_ready() {
     echo "Preparing Mediawiki container for Selenium by adding Node and setting its MW_SERVER env var..."
     prepare_mediawiki_for_selenium
   fi
+
+  if ! is_mediawiki_selenium_ready; then
+    echo "Unable to prepare Mediawiki for Selenium"
+    exit 1
+  fi
+
   if ! is_docker_chromium_novnc_automation_ready; then
     if ! confirm_action "Chromium / noVNC containers need to be prepared. Do you wish to continue"; then
       exit 1
@@ -224,6 +231,12 @@ ensure_selenium_ready() {
     echo "Preparing Chromium / noVNC containers for Selenium..."
     prepare_docker_chromium_novnc
   fi
+
+  if ! is_docker_chromium_novnc_automation_ready; then
+    echo "Unable to prepare Chromium / noVNC containers for Selenium"
+    exit 1
+  fi
+  
   print_duration_since_start "$start" "ensure_selenium_ready took %d minutes and %d seconds"
   cd "$DOCKER_CHROMIUM_NOVNC_PATH" || { echo "Could not change directory"; return 1; }
   ./script.sh view_novnc
