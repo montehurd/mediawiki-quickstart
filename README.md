@@ -22,7 +22,7 @@ Quickly spin up a MediaWiki instance with Docker.
 
 ### Start MediaWiki
 
-- Fetches the latest MediaWiki (into `~/mediawiki-docker-make/mediawiki/`) and spins up a Docker container using it:
+- Fetches the latest MediaWiki (into `~/mediawiki-docker-make/mediawiki/`) and spins up its Docker containers:
     ```bash
     make
     ```
