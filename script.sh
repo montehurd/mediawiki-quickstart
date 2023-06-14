@@ -218,18 +218,13 @@ ensure_selenium_ready() {
     fi
     prepare_mediawiki_for_selenium
   fi
-
   if ! is_docker_chromium_novnc_automation_ready; then
     if ! confirm_action "Chromium / noVNC containers need to be prepared. Do you wish to continue"; then
       exit 1
     fi
     prepare_docker_chromium_novnc
   fi
-
-  # wait_until_url_available http://localhost:8088
-
   print_duration_since_start "$start" "ensure_selenium_ready took %d minutes and %d seconds"
-
   cd "$DOCKER_CHROMIUM_NOVNC_PATH" || { echo "Could not change directory"; return 1; }
   ./script.sh view_novnc
 }
