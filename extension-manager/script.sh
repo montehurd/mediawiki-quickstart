@@ -18,7 +18,8 @@ yq() {
 
 # Function to validate if all required keys are present in the manifest
 validate_keys() {
-  local manifest_content=$1
+  local manifest_content
+  manifest_content=$1
   for key in "${required_keys[@]}"; do
     value=$(yq ".${key}" "$manifest_content")
     # echo "Key $key has value: $value"
@@ -31,8 +32,10 @@ validate_keys() {
 }
 
 extension_is_enabled() {
-  local extension_name=$1
-  local output=$(docker exec -it mediawiki-mediawiki-1 php maintenance/run.php isExtensionEnabled --extension="$extension_name")
+  local extension_name
+  extension_name=$1
+  local output
+  output=$(docker exec -it mediawiki-mediawiki-1 php maintenance/run.php isExtensionEnabled --extension="$extension_name")
   if [ "$output" == "1" ]; then
     return 0
   else
@@ -42,7 +45,8 @@ extension_is_enabled() {
 
 # Function to process the manifest and install the extension
 process_manifest() {
-  local manifest_content=$1
+  local manifest_content
+  manifest_content=$1
   name=$(yq '.name' "$manifest_content")
   repository=$(yq '.repository' "$manifest_content")
   configuration=$(yq '.configuration' "$manifest_content")
