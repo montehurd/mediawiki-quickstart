@@ -1,0 +1,10 @@
+name: UploadWizard
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/UploadWizard
+configuration: |
+  wfLoadExtension( 'UploadWizard' );
+  $wgEnableUploads = true;
+  $wgUseImageMagick = true;
+  // $wgImageMagickConvertCommand = <path to your convert command>;  # Only needs to be set if different from /usr/bin/convert
+bashScripts: |
+  cd /var/www/html/w/extensions/UploadWizard
+  composer install --no-dev

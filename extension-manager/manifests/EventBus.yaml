@@ -1,0 +1,30 @@
+name: EventBus
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/EventBus
+configuration: |
+  wfLoadExtension( 'EventBus' );
+  // Send all events produced on the server to the event intake service, including
+  // events produced by \EventLogging::submit().
+  $wgEventServices = [
+  '*' => [ 'url' => 'http://eventlogging:8192/v1/events' ],
+  ];
+  $wgEventServiceDefault = '*';
+  $wgEnableEventBus = 'TYPE_EVENT';
+  // EventStreamConfig Configuration
+  // ===============================
+  // When $wgEventLoggingStreamNames is false (not falsy), the EventLogging
+  // JavaScript client will treat all streams as if they are configured and
+  // registered.
+  $wgEventLoggingStreamNames = false;
+  // EventLogging Configuration
+  // ==========================
+  $wgEventLoggingServiceUri = "http://localhost:8192/v1/events";
+  // The EventLogging JavaScript client maintains an queue of events to send to
+  // the event intake service (see $wgEventLoggingServiceUri above). The queue is
+  // flushed every $wgEventLoggingQueueLingerSeconds seconds.
+  //
+  // 1 second is just long enough for you to begin to doubt that your code is
+  // working...
+  $wgEventLoggingQueueLingerSeconds = 1;
+bashScripts: |
+  cd /var/www/html/w/extensions/EventBus
+  composer install --no-dev

@@ -1,0 +1,8 @@
+name: WikimediaEvents
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/WikimediaEvents
+configuration: |
+  wfLoadExtension( 'WikimediaEvents' );
+  $wgWMEStatsdBaseUri = '/beacon/statsv';
+bashScripts: |
+  cd /var/www/html/w/extensions/WikimediaEvents
+  composer install --no-dev

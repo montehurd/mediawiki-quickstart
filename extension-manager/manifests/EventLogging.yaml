@@ -1,0 +1,10 @@
+name: EventLogging
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/EventLogging
+configuration: |
+  wfLoadExtension( 'EventLogging' );
+  $wgEventLoggingBaseUri = '/beacon/event';
+  $wgEventLoggingServiceUri = '/beacon/intake-analytics';
+  $wgEventLoggingStreamNames = false;
+bashScripts: |
+  cd /var/www/html/w/extensions/EventLogging
+  composer install --no-dev

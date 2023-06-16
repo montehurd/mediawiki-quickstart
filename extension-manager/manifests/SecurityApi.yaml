@@ -1,0 +1,10 @@
+name: SecurityApi
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/SecurityApi
+configuration: |
+  wfLoadExtension( 'SecurityApi' );
+  // eg. http://host.docker.internal:6927
+  // $wgSecurityApiUrl = 'http://host.docker.internal:6927';
+  $wgGroupPermissions['sysop']['securityapi-feed'] = true;
+bashScripts: |
+  cd /var/www/html/w/extensions/SecurityApi
+  composer install --no-dev

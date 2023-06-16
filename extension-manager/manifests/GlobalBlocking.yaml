@@ -1,0 +1,10 @@
+name: GlobalBlocking
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalBlocking
+configuration: |
+  wfLoadExtension( 'GlobalBlocking' );
+  $wgGlobalBlockingDatabase = 'globalblocking';
+  $wgApplyGlobalBlocks = true;
+  $wgGlobalBlockingBlockXFF = true;
+bashScripts: |
+  cd /var/www/html/w/extensions/GlobalBlocking
+  composer install --no-dev

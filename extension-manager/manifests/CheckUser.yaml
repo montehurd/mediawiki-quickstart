@@ -1,0 +1,16 @@
+name: CheckUser
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/CheckUser
+configuration: |
+  wfLoadExtension( 'CheckUser' );
+  $wgGroupPermissions['sysop']['checkuser'] = true;
+  $wgGroupPermissions['sysop']['checkuser-log'] = true;
+  $wgGroupPermissions['sysop']['investigate'] = true;
+  $wgCheckUserEnableSpecialInvestigate = true;
+  $wgAutoCreateTempUser['enabled'] = true;
+  //$wgGroupPermissions['checkuser-temporary-account']['checkuser-temporary-account'] = true;
+  $wgGroupPermissions['sysop']['checkuser-temporary-account'] = true;
+  $wgGroupPermissions['*']['checkuser-temporary-account-enable'] = true;
+  $wgCheckUserMaximumRowCount = 3;
+bashScripts: |
+  cd /var/www/html/w/extensions/CheckUser
+  composer install --no-dev
