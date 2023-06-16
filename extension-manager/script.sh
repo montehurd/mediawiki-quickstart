@@ -2,6 +2,11 @@
 
 set -eu
 
+if ! [ "$(docker inspect -f '{{.State.Running}}' mediawiki-mediawiki-1)" = "true" ]; then
+    echo "MediaWiki container is not running"
+    exit 1
+fi
+
 docker cp "$(pwd)/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isExtensionEnabled.php
 
 required_keys=('name' 'repository' 'configuration' 'bashScripts')
@@ -59,13 +64,8 @@ process_manifest() {
     echo -e "\n# Configuration for $name extension" >> "$MEDIAWIKI_PATH/LocalSettings.php"
     echo -e "$configuration" >> "$MEDIAWIKI_PATH/LocalSettings.php"
 
-    # Check if the MediaWiki container is running
-    if [ "$(docker inspect -f '{{.State.Running}}' mediawiki-mediawiki-1)" = "true" ]; then
-        # Run the bash scripts inside the MediaWiki container
-        docker exec mediawiki-mediawiki-1 bash -c "$bashScripts"
-    else
-        echo "MediaWiki container is not running"
-    fi
+    # Run the bash scripts inside the MediaWiki container
+    docker exec mediawiki-mediawiki-1 bash -c "$bashScripts"
 }
 
 process_all_manifests() {
