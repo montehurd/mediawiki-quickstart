@@ -9,7 +9,7 @@ fi
 
 docker cp "$(pwd)/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isExtensionEnabled.php
 
-required_keys=('name' 'repository' 'configuration' 'bashScripts')
+REQUIRED_KEYS=('name' 'repository' 'configuration' 'bashScripts')
 MEDIAWIKI_PATH="../mediawiki"
 
 yq() {
@@ -19,7 +19,7 @@ yq() {
 validate_keys() {
   local manifest_content
   manifest_content=$1
-  for key in "${required_keys[@]}"; do
+  for key in "${REQUIRED_KEYS[@]}"; do
     value=$(yq ".${key}" "$manifest_content")
     if [ -z "$value" ] || [ "$value" = "null" ]; then
       echo "Missing key $key in manifest, skipping..."
