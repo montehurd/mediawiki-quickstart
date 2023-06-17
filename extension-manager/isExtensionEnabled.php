@@ -17,8 +17,7 @@ class isExtensionEnabled extends Maintenance {
     }
 
     private function getAllNormalizedLoadedExtensions() {
-        $registry = ExtensionRegistry::getInstance();
-        return array_map([$this, 'normalizeExtensionName'], array_keys($registry->getAllThings()));
+        return array_map([$this, 'normalizeExtensionName'], array_keys(ExtensionRegistry::getInstance()->getAllThings()));
     }
 }
 
