@@ -9,14 +9,7 @@ class isExtensionEnabled extends Maintenance {
     }
 
     public function execute() {
-        $extension = $this->getOption( 'extension' );
-        $normalizedExtension = $this->normalizeExtensionName($extension);
-        $loadedExtensions = $this->getAllNormalizedLoadedExtensions();
-        if (in_array($normalizedExtension, $loadedExtensions)) {
-            $this->output(1);
-        } else {
-            $this->output(0);
-        }
+        $this->output(in_array($this->normalizeExtensionName($this->getOption('extension')), $this->getAllNormalizedLoadedExtensions()) ? 1 : 0);
     }
 
     private function normalizeExtensionName($extension) {
@@ -25,8 +18,7 @@ class isExtensionEnabled extends Maintenance {
 
     private function getAllNormalizedLoadedExtensions() {
         $registry = ExtensionRegistry::getInstance();
-        $loadedExtensions = array_keys($registry->getAllThings());
-        return array_map([$this, 'normalizeExtensionName'], $loadedExtensions);
+        return array_map([$this, 'normalizeExtensionName'], array_keys($registry->getAllThings()));
     }
 }
 
