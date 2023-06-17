@@ -22,7 +22,7 @@ validate_keys() {
   for key in "${REQUIRED_KEYS[@]}"; do
     value=$(yq ".${key}" "$manifest_content")
     if [ -z "$value" ] || [ "$value" = "null" ]; then
-      echo "Missing key $key in manifest, skipping..."
+      echo "Missing key '$key' in manifest, skipping..."
       return 1
     fi
   done
@@ -42,34 +42,38 @@ extension_is_enabled() {
 }
 
 install_extension() {
-  local manifest_content
-  manifest_content=$1
+  local manifest
+  manifest=$1
+  if [ -z "$manifest" ] || [ ! -f "$manifest" ]; then
+    echo "Manifest is not specified or file '$manifest' does not exist, skipping..."
+    return
+  fi
+  manifest_content=$(cat "$manifest")
+  if ! validate_keys "$manifest_content"; then
+    echo "Invalid manifest '$manifest', skipping..."
+    return
+  fi
   name=$(yq '.name' "$manifest_content")
   if extension_is_enabled "$name"; then
-    echo "Extension $name is already installed and active, skipping..."
+    echo "Extension '$name' is already installed and active, skipping..."
     return
   fi
   repository=$(yq '.repository' "$manifest_content")
   if ! git clone "$repository" "$MEDIAWIKI_PATH/extensions/$name" --depth=1 2>&1; then
-    echo "Failed to clone repository $repository"
+    echo "Failed to clone repository '$repository'"
     exit 1
   fi
-  echo -e "\n# Configuration for $name extension" >>"$MEDIAWIKI_PATH/LocalSettings.php"
+  echo -e "\n# Configuration for '$name' extension" >>"$MEDIAWIKI_PATH/LocalSettings.php"
   configuration=$(yq '.configuration' "$manifest_content")
   echo -e "$configuration" >>"$MEDIAWIKI_PATH/LocalSettings.php"
   bashScripts=$(yq '.bashScripts' "$manifest_content")
   docker exec mediawiki-mediawiki-1 bash -c "$bashScripts"
 }
 
-process_manifests() {
+install_all_extensions() {
   for manifest in ./manifests/*.yaml; do
-    manifest_content=$(cat "$manifest")
-    if validate_keys "$manifest_content"; then
-      install_extension "$manifest_content"
-    else
-      echo "Invalid manifest $manifest, skipping..."
-    fi
+    install_extension "$manifest"
   done
 }
 
-process_manifests
+"$@"
