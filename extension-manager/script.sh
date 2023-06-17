@@ -45,19 +45,19 @@ process_manifest() {
   local manifest_content
   manifest_content=$1
   name=$(yq '.name' "$manifest_content")
-  repository=$(yq '.repository' "$manifest_content")
-  configuration=$(yq '.configuration' "$manifest_content")
-  bashScripts=$(yq '.bashScripts' "$manifest_content")
   if extension_is_enabled "$name"; then
     echo "Extension $name is already installed and active, skipping..."
     return
   fi
+  repository=$(yq '.repository' "$manifest_content")
   if ! git clone "$repository" "$MEDIAWIKI_PATH/extensions/$name" --depth=1 2>&1; then
     echo "Failed to clone repository $repository"
     exit 1
   fi
   echo -e "\n# Configuration for $name extension" >>"$MEDIAWIKI_PATH/LocalSettings.php"
+  configuration=$(yq '.configuration' "$manifest_content")
   echo -e "$configuration" >>"$MEDIAWIKI_PATH/LocalSettings.php"
+  bashScripts=$(yq '.bashScripts' "$manifest_content")
   docker exec mediawiki-mediawiki-1 bash -c "$bashScripts"
 }
 
