@@ -9,7 +9,7 @@ fi
 
 docker cp "$(pwd)/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isExtensionEnabled.php
 
-REQUIRED_KEYS=('name' 'repository' 'configuration' 'bashScripts')
+REQUIRED_KEYS=('name' 'repository' 'configuration' 'bash')
 MEDIAWIKI_PATH="../mediawiki"
 
 yq() {
@@ -66,8 +66,8 @@ install_extension() {
   echo -e "\n# Configuration for '$name' extension" >>"$MEDIAWIKI_PATH/LocalSettings.php"
   configuration=$(yq '.configuration' "$manifest_content")
   echo -e "$configuration" >>"$MEDIAWIKI_PATH/LocalSettings.php"
-  bashScripts=$(yq '.bashScripts' "$manifest_content")
-  docker exec mediawiki-mediawiki-1 bash -c "$bashScripts"
+  bash=$(yq '.bash' "$manifest_content")
+  docker exec mediawiki-mediawiki-1 bash -c "$bash"
 }
 
 install_all_extensions() {

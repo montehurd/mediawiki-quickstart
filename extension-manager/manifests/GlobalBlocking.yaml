@@ -5,6 +5,6 @@ configuration: |
   $wgGlobalBlockingDatabase = 'globalblocking';
   $wgApplyGlobalBlocks = true;
   $wgGlobalBlockingBlockXFF = true;
-bashScripts: |
+bash: |
   cd /var/www/html/w/extensions/GlobalBlocking
   composer install --no-dev

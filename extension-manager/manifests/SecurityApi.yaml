@@ -5,6 +5,6 @@ configuration: |
   // eg. http://host.docker.internal:6927
   // $wgSecurityApiUrl = 'http://host.docker.internal:6927';
   $wgGroupPermissions['sysop']['securityapi-feed'] = true;
-bashScripts: |
+bash: |
   cd /var/www/html/w/extensions/SecurityApi
   composer install --no-dev

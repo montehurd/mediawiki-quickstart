@@ -2,6 +2,6 @@ name: WikimediaMessages
 repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/WikimediaMessages
 configuration: |
   wfLoadExtension( 'WikimediaMessages' );
-bashScripts: |
+bash: |
   cd /var/www/html/w/extensions/WikimediaMessages
   composer install --no-dev

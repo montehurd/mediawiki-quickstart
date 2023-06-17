@@ -25,6 +25,6 @@ configuration: |
   // 1 second is just long enough for you to begin to doubt that your code is
   // working...
   $wgEventLoggingQueueLingerSeconds = 1;
-bashScripts: |
+bash: |
   cd /var/www/html/w/extensions/EventBus
   composer install --no-dev

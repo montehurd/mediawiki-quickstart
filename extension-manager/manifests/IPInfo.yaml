@@ -6,6 +6,6 @@ configuration: |
   $wgGroupPermissions['*']['ipinfo-view-basic'] = true;
   $wgGroupPermissions['*']['ipinfo-view-full'] = true;
   $wgGroupPermissions['*']['ipinfo-view-log'] = true;
-bashScripts: |
+bash: |
   cd /var/www/html/w/extensions/IPInfo
   composer install --no-dev

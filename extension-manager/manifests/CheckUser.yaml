@@ -11,6 +11,6 @@ configuration: |
   $wgGroupPermissions['sysop']['checkuser-temporary-account'] = true;
   $wgGroupPermissions['*']['checkuser-temporary-account-enable'] = true;
   $wgCheckUserMaximumRowCount = 3;
-bashScripts: |
+bash: |
   cd /var/www/html/w/extensions/CheckUser
   composer install --no-dev

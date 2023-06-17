@@ -7,6 +7,6 @@ configuration: |
   # $wgPhonosApiEndpointGoogle = "https://texttospeech.googleapis.com/v1/text:synthesize";
   $wgPhonosAudioGenerationEnabled = false;
   $wgPhonosStoreFilesAsMp3 = true;
-bashScripts: |
+bash: |
   cd /var/www/html/w/extensions/Phonos
   composer install --no-dev

@@ -5,6 +5,6 @@ configuration: |
   $wgEventLoggingBaseUri = '/beacon/event';
   $wgEventLoggingServiceUri = '/beacon/intake-analytics';
   $wgEventLoggingStreamNames = false;
-bashScripts: |
+bash: |
   cd /var/www/html/w/extensions/EventLogging
   composer install --no-dev
