@@ -41,7 +41,7 @@ extension_is_enabled() {
   fi
 }
 
-process_manifest() {
+install_extension() {
   local manifest_content
   manifest_content=$1
   name=$(yq '.name' "$manifest_content")
@@ -61,15 +61,15 @@ process_manifest() {
   docker exec mediawiki-mediawiki-1 bash -c "$bashScripts"
 }
 
-process_all_manifests() {
+process_manifests() {
   for manifest in ./manifests/*.yaml; do
     manifest_content=$(cat "$manifest")
     if validate_keys "$manifest_content"; then
-      process_manifest "$manifest_content"
+      install_extension "$manifest_content"
     else
       echo "Invalid manifest $manifest, skipping..."
     fi
   done
 }
 
-process_all_manifests
+process_manifests
