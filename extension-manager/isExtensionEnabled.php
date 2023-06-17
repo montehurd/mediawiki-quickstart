@@ -13,9 +13,9 @@ class isExtensionEnabled extends Maintenance {
         $normalizedExtension = $this->normalizeExtensionName($extension);
         $loadedExtensions = $this->getAllNormalizedLoadedExtensions();
         if (in_array($normalizedExtension, $loadedExtensions)) {
-            $this->output("1");
+            $this->output(1);
         } else {
-            $this->output("0");
+            $this->output(0);
         }
     }
 
