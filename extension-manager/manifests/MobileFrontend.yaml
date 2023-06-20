@@ -1,0 +1,7 @@
+name: MobileFrontend
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/MobileFrontend
+configuration: |
+  wfLoadExtension( 'MobileFrontend' );
+bash: |
+  cd /var/www/html/w/extensions/MobileFrontend
+  composer install --no-dev
