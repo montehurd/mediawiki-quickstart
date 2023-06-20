@@ -5,11 +5,10 @@ configuration: |
   $wgGroupPermissions['sysop']['checkuser'] = true;
   $wgGroupPermissions['sysop']['checkuser-log'] = true;
   $wgGroupPermissions['sysop']['investigate'] = true;
-  $wgCheckUserEnableSpecialInvestigate = true;
-  $wgAutoCreateTempUser['enabled'] = true;
-  //$wgGroupPermissions['checkuser-temporary-account']['checkuser-temporary-account'] = true;
   $wgGroupPermissions['sysop']['checkuser-temporary-account'] = true;
   $wgGroupPermissions['*']['checkuser-temporary-account-enable'] = true;
+  $wgCheckUserEnableSpecialInvestigate = true;
+  $wgAutoCreateTempUser['enabled'] = true;
   $wgCheckUserMaximumRowCount = 3;
 bash: |
   cd /var/www/html/w/extensions/CheckUser
