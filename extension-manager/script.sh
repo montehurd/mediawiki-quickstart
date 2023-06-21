@@ -2,18 +2,20 @@
 
 set -eu
 
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
 if ! [ "$(docker inspect -f '{{.State.Running}}' mediawiki-mediawiki-1)" = "true" ]; then
   echo "MediaWiki container is not running"
   exit 1
 fi
 
-docker cp "$(pwd)/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isExtensionEnabled.php
+docker cp "$SCRIPT_PATH/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isExtensionEnabled.php
 
 REQUIRED_KEYS=('name' 'repository' 'configuration' 'bash')
-MEDIAWIKI_PATH="../mediawiki"
+MEDIAWIKI_PATH="$SCRIPT_PATH/../mediawiki"
 
 yq() {
-  echo "$2" | docker run --rm -i -v "${PWD}:/workdir" mikefarah/yq eval "$1" -
+  echo "$2" | docker run --rm -i -v "$SCRIPT_PATH:/workdir" mikefarah/yq eval "$1" -
 }
 
 validate_keys() {
@@ -44,6 +46,8 @@ extension_is_enabled() {
 install_extension() {
   local manifest
   manifest=$1
+  # echo "$manifest"
+  # return
   if [ -z "$manifest" ] || [ ! -f "$manifest" ]; then
     echo "Manifest is not specified or file '$manifest' does not exist, skipping..."
     return
@@ -73,7 +77,7 @@ install_extension() {
 install_extensions() {
   for extension in "$@"; do
     local manifest
-    manifest="./manifests/$extension.yaml"
+    manifest="$SCRIPT_PATH/manifests/$extension.yaml"
     if [[ -f "$manifest" ]]; then
       install_extension "$manifest"
     else
@@ -83,7 +87,7 @@ install_extensions() {
 }
 
 install_all_extensions() {
-  for manifest in ./manifests/*.yaml; do
+  for manifest in $SCRIPT_PATH/manifests/*.yaml; do
     install_extension "$manifest"
   done
 }
