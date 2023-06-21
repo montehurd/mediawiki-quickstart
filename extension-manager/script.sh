@@ -46,8 +46,6 @@ extension_is_enabled() {
 install_extension() {
   local manifest
   manifest=$1
-  # echo "$manifest"
-  # return
   if [ -z "$manifest" ] || [ ! -f "$manifest" ]; then
     echo "Manifest is not specified or file '$manifest' does not exist, skipping..."
     return
