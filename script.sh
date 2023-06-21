@@ -262,4 +262,20 @@ run_selenium_test() {
   docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/page.js --logLevel debug --mochaOpts.grep 'should be creatable'
 }
 
+run_selenium_extensions_tests() {
+  ensure_selenium_ready
+  docker_compose exec mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/*/tests/selenium/specs/**/*.js"
+}
+
+run_selenium_extension_tests() {
+  ensure_selenium_ready
+  ./extension-manager/script.sh install_extensions CheckUser
+  docker_compose exec mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/CheckUser/tests/selenium/specs/checkuser.js"
+}
+
+run_selenium_extension_test() {
+  ensure_selenium_ready
+  docker_compose exec mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/CheckUser/tests/selenium/specs/checkuser.js" --logLevel debug --mochaOpts.grep 'Should show target input'
+}
+
 "$@"
