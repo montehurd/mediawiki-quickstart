@@ -70,6 +70,18 @@ install_extension() {
   docker exec mediawiki-mediawiki-1 bash -c "$bash"
 }
 
+install_extensions() {
+  for extension in "$@"; do
+    local manifest
+    manifest="./manifests/$extension.yaml"
+    if [[ -f "$manifest" ]]; then
+      install_extension "$manifest"
+    else
+      echo "No corresponding manifest file found for extension '$extension', skipping..."
+    fi
+  done
+}
+
 install_all_extensions() {
   for manifest in ./manifests/*.yaml; do
     install_extension "$manifest"
