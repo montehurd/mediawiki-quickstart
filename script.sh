@@ -264,6 +264,7 @@ run_selenium_test() {
 
 run_selenium_extensions_tests() {
   ensure_selenium_ready
+  "$SCRIPT_PATH/extension-manager/script.sh" install_all_extensions
   docker_compose exec mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/*/tests/selenium/specs/**/*.js"
 }
 
