@@ -31,7 +31,7 @@ validate_keys() {
   return 0
 }
 
-extension_is_enabled() {
+is_extension_enabled() {
   local extension_name
   extension_name=$1
   local output
@@ -56,7 +56,7 @@ install_extension() {
     return
   fi
   name=$(yq '.name' "$manifest_content")
-  if extension_is_enabled "$name"; then
+  if is_extension_enabled "$name"; then
     echo "Extension '$name' is already installed and active, skipping..."
     return
   fi
