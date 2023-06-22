@@ -77,7 +77,7 @@ install() {
     local manifest
     manifest="$SCRIPT_PATH/manifests/$extension.yaml"
     if [[ -f "$manifest" ]]; then
-      install_from_manifest "$manifest"
+      _install_from_manifest "$manifest"
     else
       echo "No corresponding manifest file found for extension '$extension', skipping..."
     fi
@@ -86,7 +86,7 @@ install() {
 
 install_all() {
   for manifest in $SCRIPT_PATH/manifests/*.yaml; do
-    install_from_manifest "$manifest"
+    _install_from_manifest "$manifest"
   done
 }
 
