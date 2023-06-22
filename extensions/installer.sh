@@ -9,7 +9,7 @@ if ! [ "$(docker inspect -f '{{.State.Running}}' mediawiki-mediawiki-1)" = "true
   exit 1
 fi
 
-docker cp "$SCRIPT_PATH/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isExtensionEnabled.php
+docker cp "$SCRIPT_PATH/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isExtensionEnabled.php > /dev/null
 
 REQUIRED_KEYS=('name' 'repository' 'configuration' 'bash')
 MEDIAWIKI_PATH="$SCRIPT_PATH/../mediawiki"
