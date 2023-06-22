@@ -14,7 +14,7 @@ docker cp "$SCRIPT_PATH/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/h
 REQUIRED_KEYS=('name' 'repository' 'configuration' 'bash')
 MEDIAWIKI_PATH="$SCRIPT_PATH/../mediawiki"
 
-yq() {
+_yq() {
   echo "$2" | docker run --rm -i -v "$SCRIPT_PATH:/workdir" mikefarah/yq eval "$1" -
 }
 
@@ -22,7 +22,7 @@ _validate_keys() {
   local manifest_content
   manifest_content=$1
   for key in "${REQUIRED_KEYS[@]}"; do
-    value=$(yq ".${key}" "$manifest_content")
+    value=$(_yq ".${key}" "$manifest_content")
     if [ -z "$value" ] || [ "$value" = "null" ]; then
       echo "Missing key '$key' in manifest, skipping..."
       return 1
@@ -55,20 +55,20 @@ _install_from_manifest() {
     echo "Invalid manifest '$manifest', skipping..."
     return
   fi
-  name=$(yq '.name' "$manifest_content")
+  name=$(_yq '.name' "$manifest_content")
   if _is_extension_enabled "$name"; then
     echo "Extension '$name' is already installed and active, skipping..."
     return
   fi
-  repository=$(yq '.repository' "$manifest_content")
+  repository=$(_yq '.repository' "$manifest_content")
   if ! git clone "$repository" "$MEDIAWIKI_PATH/extensions/$name" --depth=1 2>&1; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
   echo -e "\n# Configuration for '$name' extension" >>"$MEDIAWIKI_PATH/LocalSettings.php"
-  configuration=$(yq '.configuration' "$manifest_content")
+  configuration=$(_yq '.configuration' "$manifest_content")
   echo -e "$configuration" >>"$MEDIAWIKI_PATH/LocalSettings.php"
-  bash=$(yq '.bash' "$manifest_content")
+  bash=$(_yq '.bash' "$manifest_content")
   docker exec mediawiki-mediawiki-1 bash -c "$bash"
 }
 
