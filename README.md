@@ -137,3 +137,18 @@ Run tests with these commands:
     ```bash
     make run_selenium_test_wildcard
     ```
+
+- Run Selenium tests for installed extensions:
+    ```bash
+    make run_selenium_extensions_tests
+    ```
+
+- Run Selenium tests for a specific extension:
+    ```bash
+    make run_selenium_extension_tests
+    ```
+
+- Run Selenium test for a specific extension:
+    ```bash
+    make run_selenium_extension_test
+    ```

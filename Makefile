@@ -64,3 +64,12 @@ run_selenium_test_wildcard:
 
 run_selenium_test:
 	./script.sh run_selenium_test
+
+run_selenium_extensions_tests:
+	./script.sh run_selenium_extensions_tests
+
+run_selenium_extension_tests:
+	./script.sh run_selenium_extension_tests
+
+run_selenium_extension_test:
+	./script.sh run_selenium_extension_test
