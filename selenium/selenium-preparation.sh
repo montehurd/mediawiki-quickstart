@@ -20,7 +20,6 @@ prepare_node() {
     apt-get install -y nodejs
     npm install puppeteer-chromium-version-finder
     npm ci
-    npm audit fix --force || true
   fi
 }
 
