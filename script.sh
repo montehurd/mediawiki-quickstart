@@ -264,19 +264,19 @@ run_selenium_test() {
 
 run_selenium_extensions_tests() {
   ensure_selenium_ready
-  "$SCRIPT_PATH/extensions/install.sh" install_all
+  "$SCRIPT_PATH/extensions/installer.sh" install_all
   docker_compose exec mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/*/tests/selenium/specs/**/*.js"
 }
 
 run_selenium_extension_tests() {
   ensure_selenium_ready
-  "$SCRIPT_PATH/extensions/install.sh" install CheckUser
+  "$SCRIPT_PATH/extensions/installer.sh" install CheckUser
   docker_compose exec mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/CheckUser/tests/selenium/specs/checkuser.js"
 }
 
 run_selenium_extension_test() {
   ensure_selenium_ready
-  "$SCRIPT_PATH/extensions/install.sh" install CheckUser
+  "$SCRIPT_PATH/extensions/installer.sh" install CheckUser
   docker_compose exec mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/CheckUser/tests/selenium/specs/checkuser.js" --logLevel debug --mochaOpts.grep 'Should show target input'
 }
 
