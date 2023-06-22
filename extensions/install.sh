@@ -18,7 +18,7 @@ yq() {
   echo "$2" | docker run --rm -i -v "$SCRIPT_PATH:/workdir" mikefarah/yq eval "$1" -
 }
 
-validate_keys() {
+_validate_keys() {
   local manifest_content
   manifest_content=$1
   for key in "${REQUIRED_KEYS[@]}"; do
@@ -31,7 +31,7 @@ validate_keys() {
   return 0
 }
 
-is_extension_enabled() {
+_is_extension_enabled() {
   local extension_name
   extension_name=$1
   local output
@@ -43,7 +43,7 @@ is_extension_enabled() {
   fi
 }
 
-install_extension() {
+_install_from_manifest() {
   local manifest
   manifest=$1
   if [ -z "$manifest" ] || [ ! -f "$manifest" ]; then
@@ -51,12 +51,12 @@ install_extension() {
     return
   fi
   manifest_content=$(cat "$manifest")
-  if ! validate_keys "$manifest_content"; then
+  if ! _validate_keys "$manifest_content"; then
     echo "Invalid manifest '$manifest', skipping..."
     return
   fi
   name=$(yq '.name' "$manifest_content")
-  if is_extension_enabled "$name"; then
+  if _is_extension_enabled "$name"; then
     echo "Extension '$name' is already installed and active, skipping..."
     return
   fi
@@ -72,21 +72,21 @@ install_extension() {
   docker exec mediawiki-mediawiki-1 bash -c "$bash"
 }
 
-install_extensions() {
+install() {
   for extension in "$@"; do
     local manifest
     manifest="$SCRIPT_PATH/manifests/$extension.yaml"
     if [[ -f "$manifest" ]]; then
-      install_extension "$manifest"
+      install_from_manifest "$manifest"
     else
       echo "No corresponding manifest file found for extension '$extension', skipping..."
     fi
   done
 }
 
-install_all_extensions() {
+install_all() {
   for manifest in $SCRIPT_PATH/manifests/*.yaml; do
-    install_extension "$manifest"
+    install_from_manifest "$manifest"
   done
 }
 
