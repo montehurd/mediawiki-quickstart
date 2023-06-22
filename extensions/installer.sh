@@ -68,7 +68,7 @@ _install_from_manifest() {
   if [ -n "$dependencies" ]; then
     for dependency in $dependencies; do
       echo "Installing '$name' dependency '$dependency'"
-      _install_from_manifest "$SCRIPT_PATH/manifests/$dependency.yaml"
+      _install_from_manifest "$SCRIPT_PATH/manifests/$dependency.yml"
     done
   fi
   local repository
@@ -89,7 +89,7 @@ _install_from_manifest() {
 install() {
   for extension in "$@"; do
     local manifest
-    manifest="$SCRIPT_PATH/manifests/$extension.yaml"
+    manifest="$SCRIPT_PATH/manifests/$extension.yml"
     if [[ -f "$manifest" ]]; then
       _install_from_manifest "$manifest"
     else
@@ -99,7 +99,7 @@ install() {
 }
 
 install_all() {
-  for manifest in $SCRIPT_PATH/manifests/*.yaml; do
+  for manifest in $SCRIPT_PATH/manifests/*.yml; do
     _install_from_manifest "$manifest"
   done
 }
