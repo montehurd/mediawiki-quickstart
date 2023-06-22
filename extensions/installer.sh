@@ -19,6 +19,7 @@ _yq() {
 }
 
 _validate_keys() {
+  local value
   local manifest_content
   manifest_content=$1
   for key in "${REQUIRED_KEYS[@]}"; do
@@ -50,24 +51,37 @@ _install_from_manifest() {
     echo "Manifest is not specified or file '$manifest' does not exist, skipping..."
     return
   fi
+  local manifest_content
   manifest_content=$(cat "$manifest")
   if ! _validate_keys "$manifest_content"; then
     echo "Invalid manifest '$manifest', skipping..."
     return
   fi
+  local name
   name=$(_yq '.name' "$manifest_content")
   if _is_extension_enabled "$name"; then
     echo "Extension '$name' is already installed and active, skipping..."
     return
   fi
+  local dependencies  
+  dependencies=$(_yq '.dependencies[]' "$manifest_content")
+  if [ -n "$dependencies" ]; then
+    for dependency in $dependencies; do
+      echo "Installing '$name' dependency '$dependency'"
+      _install_from_manifest "$SCRIPT_PATH/manifests/$dependency.yaml"
+    done
+  fi
+  local repository
   repository=$(_yq '.repository' "$manifest_content")
   if ! git clone "$repository" "$MEDIAWIKI_PATH/extensions/$name" --depth=1 2>&1; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
   echo -e "\n# Configuration for '$name' extension" >>"$MEDIAWIKI_PATH/LocalSettings.php"
+  local configuration
   configuration=$(_yq '.configuration' "$manifest_content")
   echo -e "$configuration" >>"$MEDIAWIKI_PATH/LocalSettings.php"
+  local bash
   bash=$(_yq '.bash' "$manifest_content")
   docker exec mediawiki-mediawiki-1 bash -c "$bash"
 }
