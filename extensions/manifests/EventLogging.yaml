@@ -1,5 +1,7 @@
 name: EventLogging
 repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/EventLogging
+dependencies:
+  - EventStreamConfig
 configuration: |
   wfLoadExtension( 'EventLogging' );
   $wgEventLoggingBaseUri = '/beacon/event';

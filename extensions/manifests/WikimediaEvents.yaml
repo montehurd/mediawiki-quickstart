@@ -1,5 +1,7 @@
 name: WikimediaEvents
 repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/WikimediaEvents
+dependencies:
+  - EventLogging
 configuration: |
   wfLoadExtension( 'WikimediaEvents' );
   $wgWMEStatsdBaseUri = '/beacon/statsv';

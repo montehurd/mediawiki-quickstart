@@ -1,5 +1,7 @@
 name: EventBus
 repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/EventBus
+dependencies:
+  - EventStreamConfig
 configuration: |
   wfLoadExtension( 'EventBus' );
 bash: |
