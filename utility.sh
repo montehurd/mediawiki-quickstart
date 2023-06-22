@@ -115,35 +115,6 @@ apply_mediawiki_skin() {
   apply_mediawiki_skin_settings "$mediawiki_path" "$wfLoadSkin" "$wgDefaultSkin"
 }
 
-apply_mediawiki_extension_settings() {
-  local mediawiki_path
-  mediawiki_path="$1"
-  local wfLoadExtension
-  wfLoadExtension="$2"
-
-  cd "$mediawiki_path" || exit
-  grep -qx "^[[:blank:]]*wfLoadExtension[[:blank:]]*([[:blank:]]*[\"']${wfLoadExtension}[\"'][[:blank:]]*)[[:blank:]]*;[[:blank:]]*$" LocalSettings.php || echo "wfLoadExtension(\"$wfLoadExtension\");" >>LocalSettings.php
-}
-
-apply_mediawiki_extension() {
-  local mediawiki_path
-  mediawiki_path="$1"
-  local extension_folder_name
-  extension_folder_name="$2"
-  local extension_repo_url
-  extension_repo_url="$3"
-  local extension_branch
-  extension_branch="$4"
-  local wfLoadExtension
-  wfLoadExtension="$5"
-
-  cd "$mediawiki_path" || exit
-  rm -rf "extensions/$extension_folder_name"
-  git clone --branch "$extension_branch" "$extension_repo_url" "./extensions/$extension_folder_name" --depth=1
-  sleep 1
-  apply_mediawiki_extension_settings "$mediawiki_path" "$wfLoadExtension"
-}
-
 confirm_action() {
   local prompt_message
   prompt_message="$1"
