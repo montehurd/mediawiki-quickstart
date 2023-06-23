@@ -1,0 +1,5 @@
+name: Timeless
+repository: https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git
+branch: master
+wfLoadSkin: Timeless
+wgDefaultSkin: timeless

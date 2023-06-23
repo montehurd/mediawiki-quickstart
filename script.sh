@@ -110,27 +110,27 @@ bash_wb() {
 }
 
 use_vector_skin() {
-  apply_mediawiki_skin "$MEDIAWIKI_PATH" "Vector" "https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git" "master" "Vector" "vector"
+  "$SCRIPT_PATH/skins/installer.sh" install Vector
   open_special_version_page
 }
 
 use_apiportal_skin() {
-  apply_mediawiki_skin "$MEDIAWIKI_PATH" "WikimediaApiPortal" "https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git" "master" "WikimediaApiPortal" "wikimediaapiportal"
+  "$SCRIPT_PATH/skins/installer.sh" install WikimediaApiPortal
   open_special_version_page
 }
 
 use_minervaneue_skin() {
-  apply_mediawiki_skin "$MEDIAWIKI_PATH" "MinervaNeue" "https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git" "master" "MinervaNeue" "minerva"
+  "$SCRIPT_PATH/skins/installer.sh" install MinervaNeue
   open_special_version_page
 }
 
 use_timeless_skin() {
-  apply_mediawiki_skin "$MEDIAWIKI_PATH" "Timeless" "https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git" "master" "Timeless" "timeless"
+  "$SCRIPT_PATH/skins/installer.sh" install Timeless
   open_special_version_page
 }
 
 use_monobook_skin() {
-  apply_mediawiki_skin "$MEDIAWIKI_PATH" "MonoBook" "https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git" "master" "MonoBook" "monobook"
+  "$SCRIPT_PATH/skins/installer.sh" install MonoBook
   open_special_version_page
 }
 

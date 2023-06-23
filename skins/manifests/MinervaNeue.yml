@@ -1,0 +1,5 @@
+name: MinervaNeue
+repository: https://gerrit.wikimedia.org/r/mediawiki/skins/MinervaNeue.git
+branch: master
+wfLoadSkin: MinervaNeue
+wgDefaultSkin: minerva

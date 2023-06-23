@@ -1,0 +1,5 @@
+name: WikimediaApiPortal
+repository: https://gerrit.wikimedia.org/r/mediawiki/skins/WikimediaApiPortal.git
+branch: master
+wfLoadSkin: WikimediaApiPortal
+wgDefaultSkin: wikimediaapiportal
