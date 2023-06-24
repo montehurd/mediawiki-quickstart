@@ -2,13 +2,12 @@
 
 set -eu
 
-SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-
 if ! [ "$(docker inspect -f '{{.State.Running}}' mediawiki-mediawiki-1)" = "true" ]; then
   echo "MediaWiki container is not running"
   exit 1
 fi
 
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 REQUIRED_KEYS=('name' 'repository' 'branch' 'wfLoadSkin' 'wgDefaultSkin')
 MEDIAWIKI_PATH="$SCRIPT_PATH/../mediawiki"
 
