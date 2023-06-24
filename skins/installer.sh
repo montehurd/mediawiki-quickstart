@@ -113,7 +113,7 @@ install() {
 }
 
 install_all() {
-  for manifest in $SCRIPT_PATH/manifests/*.yml; do
+  for manifest in "${SCRIPT_PATH}/manifests/"*.yml; do
     _install_from_manifest "$manifest"
   done
 }
