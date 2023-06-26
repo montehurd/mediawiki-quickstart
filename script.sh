@@ -163,7 +163,7 @@ prepare_mediawiki_for_selenium() {
 DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_PATH/docker-chromium-novnc"
 
 prepare_docker_chromium_novnc() {
-  if [ ! -f "$DOCKER_CHROMIUM_NOVNC_PATH/Makefile" ]; then
+  if is_dir_empty "$DOCKER_CHROMIUM_NOVNC_PATH"; then
     cd "$SCRIPT_PATH" || { echo "Could not change directory"; return 1; }
     git submodule update --init
     sleep 1
@@ -187,6 +187,10 @@ is_mediawiki_selenium_ready() {
 }
 
 is_docker_chromium_novnc_automation_ready() {
+  # are novnc files present?
+  if is_dir_empty "$DOCKER_CHROMIUM_NOVNC_PATH"; then
+    return 1
+  fi
   # is novnc container running?
   if ! is_container_running "docker-chromium-novnc-novnc-1"; then
     return 1

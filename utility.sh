@@ -109,3 +109,11 @@ print_duration_since_start() {
   # shellcheck disable=SC2059
   printf "$format\n" "$minutes" "$seconds"
 }
+
+is_dir_empty() {
+  if [ ! "$(ls "$1")" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
