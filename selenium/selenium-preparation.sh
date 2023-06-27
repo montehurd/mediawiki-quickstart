@@ -4,7 +4,7 @@ set -eu
 
 apply_patch() {
   echo "apply patch"
-  curl "https://gerrit.wikimedia.org/r/changes/915838/revisions/2/patch?download" | base64 --decode >patch.diff
+  curl "https://gerrit.wikimedia.org/r/changes/915838/revisions/4/patch?download" | base64 --decode >patch.diff
   if patch --dry-run -p1 -N <patch.diff; then
     patch -p1 -N <patch.diff
   else
