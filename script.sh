@@ -79,7 +79,7 @@ start() {
     docker_compose exec mediawiki composer update
     docker_compose exec mediawiki bash /docker/install.sh
     sleep 2
-    use_vector_skin
+    use_skin Vector
     return 0
   fi
 
@@ -109,28 +109,10 @@ bash_wb() {
   docker_compose exec mediawiki-web bash
 }
 
-use_vector_skin() {
-  "$SCRIPT_PATH/skins/installer.sh" install Vector
-  open_special_version_page
-}
-
-use_apiportal_skin() {
-  "$SCRIPT_PATH/skins/installer.sh" install WikimediaApiPortal
-  open_special_version_page
-}
-
-use_minervaneue_skin() {
-  "$SCRIPT_PATH/skins/installer.sh" install MinervaNeue
-  open_special_version_page
-}
-
-use_timeless_skin() {
-  "$SCRIPT_PATH/skins/installer.sh" install Timeless
-  open_special_version_page
-}
-
-use_monobook_skin() {
-  "$SCRIPT_PATH/skins/installer.sh" install MonoBook
+use_skin() {
+  local skin_name
+  skin_name=$1
+  "$SCRIPT_PATH/skins/installer.sh" install "$skin_name"
   open_special_version_page
 }
 

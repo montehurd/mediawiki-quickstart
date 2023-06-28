@@ -31,19 +31,19 @@ bash_wb:
 	./script.sh bash_wb
 
 use_vector_skin:
-	./script.sh use_vector_skin
+	./script.sh use_skin Vector
 
 use_apiportal_skin:
-	./script.sh use_apiportal_skin
+	./script.sh use_skin WikimediaApiPortal
 
 use_minervaneue_skin:
-	./script.sh use_minervaneue_skin
+	./script.sh use_skin MinervaNeue
 
 use_timeless_skin:
-	./script.sh use_timeless_skin
+	./script.sh use_skin Timeless
 
 use_monobook_skin:
-	./script.sh use_monobook_skin
+	./script.sh use_skin Monobook
 
 open_special_version_page:
 	./script.sh open_special_version_page
