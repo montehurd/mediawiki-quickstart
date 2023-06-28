@@ -4,35 +4,41 @@ set -eu
 
 apply_patch() {
   echo "apply patch"
-  curl -f "https://gerrit.wikimedia.org/r/changes/915838/revisions/4/patch?download" | base64 --decode >patch.diff
-  if [ $? -ne 0 ]; then
+  if ! curl -f "https://gerrit.wikimedia.org/r/changes/915838/revisions/4/patch?download" | base64 --decode >patch.diff; then
     echo "Failed to download patch"
     return 1
   fi
   if patch --dry-run -p1 -N <patch.diff; then
-    patch -p1 -N <patch.diff && return 0 || return 1
+    if ! patch -p1 -N <patch.diff; then
+      return 1
+    fi
   else
     echo "Patch has already been applied or cannot be applied."
     return 1
   fi
+  return 0
 }
 
 prepare_node() {
   echo "prepare node"
   if ! command -v node > /dev/null; then
-    curl -sL https://deb.nodesource.com/setup_16.x | bash -
-    apt-get update && apt-get install -y nodejs
-    if [ $? -ne 0 ]; then
+    if ! curl -sL https://deb.nodesource.com/setup_16.x | bash -; then
+      echo "Failed to fetch node setup bits"
+      return 1
+    fi
+    if ! apt-get update; then
+      echo "Failed to update package list"
+      return 1
+    fi
+    if ! apt-get install -y nodejs; then
       echo "Failed to install nodejs"
       return 1
     fi
-    npm install puppeteer-chromium-version-finder
-    if [ $? -ne 0 ]; then
+    if ! npm install puppeteer-chromium-version-finder; then
       echo "Failed to install puppeteer-chromium-version-finder"
       return 1
     fi
-    npm ci
-    if [ $? -ne 0 ]; then
+    if ! npm ci; then
       echo "Failed to install node packages"
       return 1
     fi
