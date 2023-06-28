@@ -157,7 +157,16 @@ prepare_mediawiki_for_selenium() {
   export USE_SELENIUM_YML=true
   fresh_install "$SCRIPT_PATH/selenium/docker-compose.selenium.yml"
   docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
+  if [ $? -ne 0 ]; then
+    echo "Failed to apply patch"
+    return 1
+  fi
+
   docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
+  if [ $? -ne 0 ]; then
+    echo "Failed to prepare node"
+    return 1
+  fi
 }
 
 DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_PATH/docker-chromium-novnc"
@@ -166,12 +175,20 @@ prepare_docker_chromium_novnc() {
   if is_dir_empty "$DOCKER_CHROMIUM_NOVNC_PATH"; then
     cd "$SCRIPT_PATH" || { echo "Could not change directory"; return 1; }
     git submodule update --init
+    if [ $? -ne 0 ]; then
+      echo "Failed to update git submodule"
+      return 1
+    fi
     sleep 1
   fi
   CHROMIUM_VERSION=$(docker_compose exec -u root mediawiki /usr/bin/node "./puppeteer-chromium-version-finder.js")
   echo "$CHROMIUM_VERSION"
   cd "$DOCKER_CHROMIUM_NOVNC_PATH" || { echo "Could not change directory"; return 1; }
   CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install
+  if [ $? -ne 0 ]; then
+    echo "Failed to perform fresh install"
+    return 1
+  fi
 }
 
 is_mediawiki_selenium_ready() {
@@ -221,6 +238,10 @@ ensure_selenium_ready() {
     fi
     echo "Preparing Mediawiki container for Selenium by adding Node and setting its MW_SERVER env var..."
     prepare_mediawiki_for_selenium
+    if [ $? -ne 0 ]; then
+      echo "Failed to prepare Mediawiki for Selenium"
+      exit 1
+    fi
   fi
 
   if ! is_mediawiki_selenium_ready; then
@@ -234,6 +255,10 @@ ensure_selenium_ready() {
     fi
     echo "Preparing Chromium / noVNC containers for Selenium..."
     prepare_docker_chromium_novnc
+    if [ $? -ne 0 ]; then
+      echo "Failed to prepare Chromium / noVNC containers for Selenium"
+      exit 1
+    fi
   fi
 
   if ! is_docker_chromium_novnc_automation_ready; then
