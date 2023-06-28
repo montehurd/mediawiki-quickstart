@@ -21,7 +21,7 @@ apply_patch() {
 
 prepare_node() {
   echo "prepare node"
-  if ! command -v node > /dev/null; then
+  if ! command -v node >/dev/null; then
     if ! curl -sL https://deb.nodesource.com/setup_16.x | bash -; then
       echo "Failed to fetch node setup bits"
       return 1

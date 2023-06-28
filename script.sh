@@ -155,7 +155,10 @@ DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_PATH/docker-chromium-novnc"
 
 prepare_docker_chromium_novnc() {
   if is_dir_empty "$DOCKER_CHROMIUM_NOVNC_PATH"; then
-    cd "$SCRIPT_PATH" || { echo "Could not change directory"; return 1; }
+    cd "$SCRIPT_PATH" || {
+      echo "Could not change directory"
+      return 1
+    }
     if ! git submodule update --init; then
       echo "Failed to update git submodule"
       return 1
@@ -164,7 +167,10 @@ prepare_docker_chromium_novnc() {
   fi
   CHROMIUM_VERSION=$(docker_compose exec -u root mediawiki /usr/bin/node "./puppeteer-chromium-version-finder.js")
   echo "$CHROMIUM_VERSION"
-  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || { echo "Could not change directory"; return 1; }
+  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || {
+    echo "Could not change directory"
+    return 1
+  }
   if ! CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install; then
     echo "Failed to perform fresh install"
     return 1
@@ -201,7 +207,10 @@ is_docker_chromium_novnc_automation_ready() {
     return 1
   fi
   # is chromium set for automation?
-  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || { echo "Could not change directory"; return 1; }
+  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || {
+    echo "Could not change directory"
+    return 1
+  }
   if [ "$(docker compose exec chromium curl --write-out '%{http_code}' --silent --output /dev/null localhost:9222 2>/dev/null)" -ne 200 ]; then
     return 1
   fi
@@ -243,9 +252,12 @@ ensure_selenium_ready() {
     echo "Unable to prepare Chromium / noVNC containers for Selenium"
     exit 1
   fi
-  
+
   print_duration_since_start "$start" "ensure_selenium_ready took %d minutes and %d seconds"
-  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || { echo "Could not change directory"; return 1; }
+  cd "$DOCKER_CHROMIUM_NOVNC_PATH" || {
+    echo "Could not change directory"
+    return 1
+  }
   ./script.sh view_novnc
 }
 
