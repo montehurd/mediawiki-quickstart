@@ -137,15 +137,15 @@ docker_compose() {
 
 prepare_mediawiki_for_selenium() {
   export USE_SELENIUM_YML=true
-  fresh_install "$SCRIPT_PATH/selenium/docker-compose.selenium.yml"
-  docker_compose exec mediawiki ./selenium-preparation.sh apply_patch
-  if [ $? -ne 0 ]; then
+  if ! fresh_install "$SCRIPT_PATH/selenium/docker-compose.selenium.yml"; then
+    echo "Failed to do a fresh install"
+    return 1
+  fi
+  if ! docker_compose exec mediawiki ./selenium-preparation.sh apply_patch; then
     echo "Failed to apply patch"
     return 1
   fi
-
-  docker_compose exec mediawiki ./selenium-preparation.sh prepare_node
-  if [ $? -ne 0 ]; then
+  if ! docker_compose exec mediawiki ./selenium-preparation.sh prepare_node; then
     echo "Failed to prepare node"
     return 1
   fi
@@ -156,8 +156,7 @@ DOCKER_CHROMIUM_NOVNC_PATH="$SCRIPT_PATH/docker-chromium-novnc"
 prepare_docker_chromium_novnc() {
   if is_dir_empty "$DOCKER_CHROMIUM_NOVNC_PATH"; then
     cd "$SCRIPT_PATH" || { echo "Could not change directory"; return 1; }
-    git submodule update --init
-    if [ $? -ne 0 ]; then
+    if ! git submodule update --init; then
       echo "Failed to update git submodule"
       return 1
     fi
@@ -166,8 +165,7 @@ prepare_docker_chromium_novnc() {
   CHROMIUM_VERSION=$(docker_compose exec -u root mediawiki /usr/bin/node "./puppeteer-chromium-version-finder.js")
   echo "$CHROMIUM_VERSION"
   cd "$DOCKER_CHROMIUM_NOVNC_PATH" || { echo "Could not change directory"; return 1; }
-  CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install
-  if [ $? -ne 0 ]; then
+  if ! CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install; then
     echo "Failed to perform fresh install"
     return 1
   fi
@@ -219,8 +217,7 @@ ensure_selenium_ready() {
       exit 1
     fi
     echo "Preparing Mediawiki container for Selenium by adding Node and setting its MW_SERVER env var..."
-    prepare_mediawiki_for_selenium
-    if [ $? -ne 0 ]; then
+    if ! prepare_mediawiki_for_selenium; then
       echo "Failed to prepare Mediawiki for Selenium"
       exit 1
     fi
@@ -236,8 +233,7 @@ ensure_selenium_ready() {
       exit 1
     fi
     echo "Preparing Chromium / noVNC containers for Selenium..."
-    prepare_docker_chromium_novnc
-    if [ $? -ne 0 ]; then
+    if ! prepare_docker_chromium_novnc; then
       echo "Failed to prepare Chromium / noVNC containers for Selenium"
       exit 1
     fi
