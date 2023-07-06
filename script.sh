@@ -254,6 +254,10 @@ ensure_selenium_ready() {
     exit 1
   fi
 
+  sleep 2
+  connect_network_to_container "docker-chromium-novnc_default" "mediawiki-mediawiki-1"
+  connect_network_to_container "docker-chromium-novnc_default" "mediawiki-mediawiki-web-1"
+
   print_duration_since_start "$start" "ensure_selenium_ready took %d minutes and %d seconds"
   cd "$DOCKER_CHROMIUM_NOVNC_PATH" || {
     echo "Could not change directory"
