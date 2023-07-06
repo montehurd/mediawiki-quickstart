@@ -5,6 +5,7 @@ set -eu
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 source "$SCRIPT_PATH/utility.sh"
+source "$SCRIPT_PATH/docker.sh"
 source "$SCRIPT_PATH/docker-compose-wrapper.sh"
 
 MEDIAWIKI_PATH="$SCRIPT_PATH/mediawiki"
