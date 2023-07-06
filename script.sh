@@ -175,6 +175,7 @@ prepare_docker_chromium_novnc() {
     echo "Failed to perform fresh install"
     return 1
   fi
+  return 0
 }
 
 is_mediawiki_selenium_ready() {
