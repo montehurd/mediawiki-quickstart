@@ -213,7 +213,7 @@ is_docker_chromium_novnc_automation_ready() {
     echo "Could not change directory"
     return 1
   }
-  if [ "$(docker compose exec chromium curl --write-out '%{http_code}' --silent --output /dev/null localhost:9222 2>/dev/null)" -ne 200 ]; then
+  if [ "$(docker compose exec chromium curl --retry 10 --retry-delay 10 --write-out '%{http_code}' --silent --output /dev/null localhost:9222 2>/dev/null)" -ne 200 ]; then
     return 1
   fi
   return 0

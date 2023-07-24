@@ -4,7 +4,7 @@ set -eu
 
 apply_patch() {
   echo "apply patch"
-  if ! curl -f "https://gerrit.wikimedia.org/r/changes/915838/revisions/4/patch?download" | base64 --decode >patch.diff; then
+  if ! curl --retry 10 --retry-delay 10 -f "https://gerrit.wikimedia.org/r/changes/915838/revisions/4/patch?download" | base64 --decode >patch.diff; then
     echo "Failed to download patch"
     return 1
   fi
@@ -22,7 +22,7 @@ apply_patch() {
 prepare_node() {
   echo "prepare node"
   if ! command -v node >/dev/null; then
-    if ! curl -sL https://deb.nodesource.com/setup_16.x | bash -; then
+    if ! curl --retry 10 --retry-delay 10 -sL https://deb.nodesource.com/setup_16.x | bash -; then
       echo "Failed to fetch node setup bits"
       return 1
     fi
