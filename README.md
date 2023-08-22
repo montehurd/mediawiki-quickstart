@@ -100,7 +100,7 @@ Look at the skin manifest files in `~/mediawiki-quickstart/skins/manifests`
 
 Copy one of them and name it for your skin and edit it to use your skin's settings
 
-- Fetch and switch to your skin:
+- Then you can fetch and switch to your skin:
     ```bash
     ./mw use_skin #your_skin_filename_without_extension#
     ```
