@@ -1,6 +1,6 @@
 # MediaWiki Docker Quickstart
 
-Quickly spin up a MediaWiki instance with Docker.
+ Quickly spin up a MediaWiki instance with Docker.
 
 ## Prerequisites 
 
@@ -10,21 +10,21 @@ Quickly spin up a MediaWiki instance with Docker.
 
 1. Clone the repository:
     ```bash
-    git clone https://gitlab.wikimedia.org/mhurd/mediawiki-docker-make.git
+    git clone https://gitlab.wikimedia.org/mhurd/mediawiki-quickstart.git
     ```
 
 2. Navigate to the repository directory:
     ```bash
-    cd ~/mediawiki-docker-make
+    cd ~/mediawiki-quickstart
     ```
 
 ## Usage
 
 ### Start MediaWiki
 
-- Fetches the latest MediaWiki (into `~/mediawiki-docker-make/mediawiki/`) and spins up its Docker containers:
+- Fetches the latest MediaWiki (into `~/mediawiki-quickstart/mediawiki/`) and spins up its Docker containers:
     ```bash
-    make
+    ./mw fresh_install
     ```
 
 ### Manage Containers
@@ -33,22 +33,22 @@ You can manage the MediaWiki containers using these commands:
 
 - Stops MediaWiki containers:
     ```bash
-    make stop
+    ./mw stop
     ```
 
 - Starts MediaWiki containers:
     ```bash
-    make start
+    ./mw start
     ```
 
 - Restarts MediaWiki containers:
     ```bash
-    make restart
+    ./mw restart
     ```
 
 - Stops and removes MediaWiki containers and files:
     ```bash
-    make remove
+    ./mw remove
     ```
 
 ### Shell Access
@@ -57,17 +57,17 @@ Get quick Bash shell access to running containers with these commands:
 
 - Bash access to the MediaWiki container:
     ```bash
-    make bash_mw
+    ./mw bash_mw
     ```
 
 - Bash access to the job runner container:
     ```bash
-    make bash_jr
+    ./mw bash_jr
     ```
 
 - Bash access to the web container:
     ```bash
-    make bash_wb
+    ./mw bash_wb
     ```
 
 ### Skin Management
@@ -76,22 +76,22 @@ Quickly switch skins with these commands:
 
 - Fetch and switch to the Vector skin:
     ```bash
-    make use_vector_skin
+    ./mw use_vector_skin
     ```
 
 - Fetch and switch to the Minerva Neue skin:
     ```bash
-    make use_minervaneue_skin
+    ./mw use_minervaneue_skin
     ```
 
 - Fetch and switch to the Timeless skin:
     ```bash
-    make use_timeless_skin
+    ./mw use_timeless_skin
     ```
 
 - Fetch and switch to the MonoBook skin:
     ```bash
-    make use_monobook_skin
+    ./mw use_monobook_skin
     ```
 
 ### Testing
@@ -100,55 +100,55 @@ Run tests with these commands:
 
 - Run parser tests:
     ```bash
-    make run_parser_tests
+    ./mw run_parser_tests
     ```
 
 - Run PHP unit tests:
     ```bash
-    make run_php_unit_tests
+    ./mw run_php_unit_tests
     ```
 
 - Run PHP unit tests with a specific group:
     ```bash
-    make run_php_unit_tests testgroup=Cache
+    ./mw run_php_unit_tests testgroup=Cache
     ```
 
 - Run PHP unit tests with a specific path:
     ```bash
-    make run_php_unit_tests testpath=unit/includes/resourceloader/
+    ./mw run_php_unit_tests testpath=unit/includes/resourceloader/
     ```
 
 - Run Selenium tests:
     ```bash
-    make run_selenium_tests
+    ./mw run_selenium_tests
     ```
 
 - Run a specific Selenium test:
     ```bash
-    make run_selenium_test
+    ./mw run_selenium_test
     ```
 
 - Run a specific Selenium test file:
     ```bash
-    make run_selenium_test_file
+    ./mw run_selenium_test_file
     ```
 
 - Run Selenium tests with wildcard:
     ```bash
-    make run_selenium_test_wildcard
+    ./mw run_selenium_test_wildcard
     ```
 
 - Run Selenium tests for installed extensions:
     ```bash
-    make run_selenium_extensions_tests
+    ./mw run_selenium_extensions_tests
     ```
 
 - Run Selenium tests for a specific extension:
     ```bash
-    make run_selenium_extension_tests
+    ./mw run_selenium_extension_tests
     ```
 
 - Run Selenium test for a specific extension:
     ```bash
-    make run_selenium_extension_test
+    ./mw run_selenium_extension_test
     ```
