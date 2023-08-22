@@ -109,10 +109,14 @@ Copy one of them and name it for your skin and edit it to use your skin's settin
 
 Run tests with these commands:
 
+#### Parser
+
 - Run parser tests:
     ```bash
     ./mw run_parser_tests
     ```
+
+#### PHP
 
 - Run PHP unit tests:
     ```bash
@@ -128,6 +132,8 @@ Run tests with these commands:
     ```bash
     ./mw run_php_unit_tests testpath=unit/includes/resourceloader/
     ```
+
+#### Selenium
 
 - Run Selenium tests:
     ```bash
