@@ -96,22 +96,22 @@ Run tests with these commands:
 
 These functions provide examples you can examine and customize if needed
 
-- Run Selenium tests:
+- Run MediaWiki core Selenium tests:
     ```bash
     ./mw run_selenium_tests
     ```
 
-- Run a specific Selenium test:
+- Run a specific MediaWiki core Selenium test:
     ```bash
     ./mw run_selenium_test
     ```
 
-- Run a specific Selenium test file:
+- Run all tests in a specific MediaWiki core Selenium test file:
     ```bash
     ./mw run_selenium_test_file
     ```
 
-- Run Selenium tests with wildcard:
+- Run MediaWiki core Selenium tests with wildcard:
     ```bash
     ./mw run_selenium_test_wildcard
     ```
