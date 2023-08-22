@@ -64,6 +64,8 @@ Copy one of them and name it for your skin and edit it to use your skin's settin
     ./mw use_skin #your_skin_filename_without_extension#
     ```
 
+`use_skin` is safe to call more than once for a skin - so you can use it and / or the other skin functions above to quickly toggle between skins
+
 ## Testing
 
 Run tests with these commands:
