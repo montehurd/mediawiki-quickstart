@@ -94,6 +94,8 @@ Run tests with these commands:
 
 ### Selenium
 
+These functions provide examples you can examine and customize if needed
+
 - Run Selenium tests:
     ```bash
     ./mw run_selenium_tests
