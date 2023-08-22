@@ -72,7 +72,7 @@ Get quick Bash shell access to running containers with these commands:
 
 ### Skin Management
 
-Quickly switch skins with these commands:
+#### Switch skin:
 
 - Fetch and switch to the Vector skin:
     ```bash
@@ -92,6 +92,17 @@ Quickly switch skins with these commands:
 - Fetch and switch to the MonoBook skin:
     ```bash
     ./mw use_monobook_skin
+    ```
+
+#### Add skin:
+
+Look at the skin manifest files in `~/mediawiki-quickstart/skins/manifests`
+
+Copy one of them and name it for your skin and edit it to use your skin's settings
+
+- Install it:
+    ```bash
+    ./mw use_skin #your_skin_filename_without_extension#
     ```
 
 ### Testing
