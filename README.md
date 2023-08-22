@@ -1,10 +1,10 @@
 # MediaWiki Docker Quickstart
 
- Quickly spin up a MediaWiki instance with Docker.
+Quickly spin up a MediaWiki instance with Docker
 
 ## Prerequisites 
 
-- [Docker](https://www.docker.com/products/docker-desktop) installed.
+- [Docker](https://www.docker.com/products/docker-desktop) installed
 
 ## Installation
 
@@ -20,14 +20,14 @@
 
 ## Usage
 
-### Start MediaWiki
+### Fetch, configure and start MediaWiki
 
 - Fetches the latest MediaWiki (into `~/mediawiki-quickstart/mediawiki/`) and spins up its Docker containers:
     ```bash
     ./mw fresh_install
     ```
 
-### Manage Containers
+### Manage containers
 
 You can manage the MediaWiki containers using these commands:
 
