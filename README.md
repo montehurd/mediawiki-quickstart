@@ -1,12 +1,14 @@
-# MediaWiki Docker Quickstart
-
 Quickly spin up a MediaWiki instance with Docker
 
-## Prerequisites 
+Easy skin and extension configuration via manifest files
+
+Test running including Selenium tests you can watch as they execute
+
+# Prerequisites 
 
 - [Docker](https://www.docker.com/products/docker-desktop) installed
 
-## Installation
+# Installation
 
 1. Clone the repository:
     ```bash
@@ -18,16 +20,16 @@ Quickly spin up a MediaWiki instance with Docker
     cd ~/mediawiki-quickstart
     ```
 
-## Usage
+# Usage
 
-### Fetch, configure and start MediaWiki
+## Fetch, configure and start MediaWiki
 
 - Fetches the latest MediaWiki (into `~/mediawiki-quickstart/mediawiki/`) and spins up its Docker containers:
     ```bash
     ./mw fresh_install
     ```
 
-### Manage containers
+## Manage containers
 
 You can manage the MediaWiki containers using these commands:
 
@@ -51,7 +53,7 @@ You can manage the MediaWiki containers using these commands:
     ./mw remove
     ```
 
-### Shell Access
+## Shell Access
 
 Get quick Bash shell access to running containers with these commands:
 
@@ -70,9 +72,9 @@ Get quick Bash shell access to running containers with these commands:
     ./mw bash_wb
     ```
 
-### Skin Management
+## Skin Management
 
-#### Switch skin:
+### Switch skin:
 
 - Fetch and switch to the Vector skin:
     ```bash
@@ -94,7 +96,7 @@ Get quick Bash shell access to running containers with these commands:
     ./mw use_monobook_skin
     ```
 
-#### Add skin:
+### Add skin:
 
 Look at the skin manifest files in `~/mediawiki-quickstart/skins/manifests`
 
@@ -105,18 +107,18 @@ Copy one of them and name it for your skin and edit it to use your skin's settin
     ./mw use_skin #your_skin_filename_without_extension#
     ```
 
-### Testing
+## Testing
 
 Run tests with these commands:
 
-#### Parser
+### Parser
 
 - Run parser tests:
     ```bash
     ./mw run_parser_tests
     ```
 
-#### PHP
+### PHP
 
 - Run PHP unit tests:
     ```bash
@@ -133,7 +135,7 @@ Run tests with these commands:
     ./mw run_php_unit_tests testpath=unit/includes/resourceloader/
     ```
 
-#### Selenium
+### Selenium
 
 - Run Selenium tests:
     ```bash
