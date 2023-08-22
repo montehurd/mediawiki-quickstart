@@ -29,49 +29,6 @@ Test running including Selenium tests you can watch as they execute
     ./mw fresh_install
     ```
 
-## Manage containers
-
-You can manage the MediaWiki containers using these commands:
-
-- Stops MediaWiki containers:
-    ```bash
-    ./mw stop
-    ```
-
-- Starts MediaWiki containers:
-    ```bash
-    ./mw start
-    ```
-
-- Restarts MediaWiki containers:
-    ```bash
-    ./mw restart
-    ```
-
-- Stops and removes MediaWiki containers and files:
-    ```bash
-    ./mw remove
-    ```
-
-## Shell Access
-
-Get quick Bash shell access to running containers with these commands:
-
-- Bash access to the MediaWiki container:
-    ```bash
-    ./mw bash_mw
-    ```
-
-- Bash access to the job runner container:
-    ```bash
-    ./mw bash_jr
-    ```
-
-- Bash access to the web container:
-    ```bash
-    ./mw bash_wb
-    ```
-
 ## Skin Management
 
 ### Switch skin:
@@ -170,4 +127,47 @@ Run tests with these commands:
 - Run Selenium test for a specific extension:
     ```bash
     ./mw run_selenium_extension_test
+    ```
+
+## Manage containers
+
+You can manage the MediaWiki containers using these commands:
+
+- Stops MediaWiki containers:
+    ```bash
+    ./mw stop
+    ```
+
+- Starts MediaWiki containers:
+    ```bash
+    ./mw start
+    ```
+
+- Restarts MediaWiki containers:
+    ```bash
+    ./mw restart
+    ```
+
+- Stops and removes MediaWiki containers and files:
+    ```bash
+    ./mw remove
+    ```
+
+## Shell Access
+
+Get quick Bash shell access to running containers with these commands:
+
+- Bash access to the MediaWiki container:
+    ```bash
+    ./mw bash_mw
+    ```
+
+- Bash access to the job runner container:
+    ```bash
+    ./mw bash_jr
+    ```
+
+- Bash access to the web container:
+    ```bash
+    ./mw bash_wb
     ```
