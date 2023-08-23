@@ -35,22 +35,22 @@ Test running including Selenium tests you can watch as they execute
 
 - Fetch and switch to the Vector skin:
     ```bash
-    ./mw use_vector_skin
+    ./mw use_skin vector
     ```
 
 - Fetch and switch to the Minerva Neue skin:
     ```bash
-    ./mw use_minervaneue_skin
+    ./mw use_skin minervaneue
     ```
 
 - Fetch and switch to the Timeless skin:
     ```bash
-    ./mw use_timeless_skin
+    ./mw use_skin timeless
     ```
 
 - Fetch and switch to the MonoBook skin:
     ```bash
-    ./mw use_monobook_skin
+    ./mw use_skin monobook
     ```
 
 ### Adding skins:
