@@ -79,7 +79,7 @@ Copy one of them and rename it for your skin and edit it to use your skin's sett
     ./skins/installer.sh install_all
     ```
 
-skin installers are also safe to call more than once for a given skin
+Skin installers are also safe to call more than once for a given skin
 
 ## Testing
 
