@@ -58,12 +58,13 @@ _apply_mediawiki_skin() {
 
   cd "$mediawiki_path" || exit
   rm -rf "skins/$skin_folder_name"
-  git clone --branch "$skin_branch" "$skin_repo_url" "./skins/$skin_folder_name" --depth=1
+  git clone --quiet --branch "$skin_branch" "$skin_repo_url" "./skins/$skin_folder_name" --depth=1
   sleep 1
   _apply_mediawiki_skin_settings "$mediawiki_path" "$wfLoadSkin" "$wgDefaultSkin"
 }
 
 _install_from_manifest() {
+  echo -e "\nInstalling $manifest"
   local manifest
   manifest=$1
   if [ -z "$manifest" ] || [ ! -f "$manifest" ]; then
