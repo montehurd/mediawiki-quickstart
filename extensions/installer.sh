@@ -73,7 +73,7 @@ _install_from_manifest() {
   fi
   local repository
   repository=$(_yq '.repository' "$manifest_content")
-  if ! git clone "$repository" "$MEDIAWIKI_PATH/extensions/$name" --depth=1 2>&1; then
+  if ! git clone --recurse-submodules "$repository" "$MEDIAWIKI_PATH/extensions/$name" --depth=1 2>&1; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
