@@ -58,15 +58,18 @@ _apply_mediawiki_skin() {
 
   cd "$mediawiki_path" || exit
   rm -rf "skins/$skin_folder_name"
-  git clone --quiet --branch "$skin_branch" "$skin_repo_url" "./skins/$skin_folder_name" --depth=1
+  if ! git clone --quiet --branch "$skin_branch" "$skin_repo_url" "./skins/$skin_folder_name" --depth=1; then
+    echo "Failed to clone the repository."
+    return 1
+  fi
   sleep 1
   _apply_mediawiki_skin_settings "$mediawiki_path" "$wfLoadSkin" "$wgDefaultSkin"
 }
 
 _install_from_manifest() {
-  echo -e "\nInstalling $manifest"
   local manifest
-  manifest=$1
+  manifest="$1"
+  echo -e "\nInstalling $manifest"
   if [ -z "$manifest" ] || [ ! -f "$manifest" ]; then
     echo "Manifest is not specified or file '$manifest' does not exist, skipping..."
     return
@@ -97,7 +100,11 @@ _install_from_manifest() {
 
   echo "$repository"
 
-  _apply_mediawiki_skin "$MEDIAWIKI_PATH" "$name" "$repository" "$branch" "$wfLoadSkin" "$wgDefaultSkin"
+  if _apply_mediawiki_skin "$MEDIAWIKI_PATH" "$name" "$repository" "$branch" "$wfLoadSkin" "$wgDefaultSkin"; then
+    echo "Successfully installed $name"
+  else
+    echo "Failed to install $name"
+  fi
 }
 
 install() {
