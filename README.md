@@ -83,7 +83,7 @@ Skin installers are also safe to call more than once for a given skin
 
 ## Testing
 
-Run tests with these commands:
+Run a variety of tests using the commands below
 
 ### Parser
 
