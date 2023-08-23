@@ -150,7 +150,7 @@ These functions provide examples you can examine and customize if needed
 
 ## Manage containers
 
-You can manage the MediaWiki containers using these commands:
+You can manage the MediaWiki containers using these commands
 
 - Stops MediaWiki containers:
     ```bash
@@ -174,7 +174,7 @@ You can manage the MediaWiki containers using these commands:
 
 ## Shell Access
 
-Get quick Bash shell access to running containers with these commands:
+Get quick Bash shell access to running containers with these commands
 
 - Bash access to the MediaWiki container:
     ```bash
