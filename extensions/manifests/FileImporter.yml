@@ -1,0 +1,10 @@
+name: FileImporter
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/FileImporter
+configuration: |
+  wfLoadExtension( 'FileImporter' );
+bash: |
+  cd /var/www/html/w/extensions/FileImporter
+  composer install --no-dev
+  cd /var/www/html/w
+  composer update
+  php maintenance/update.php
