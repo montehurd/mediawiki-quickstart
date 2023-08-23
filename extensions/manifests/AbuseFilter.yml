@@ -1,0 +1,18 @@
+name: AbuseFilter
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/AbuseFilter
+configuration: |
+  wfLoadExtension( 'AbuseFilter' );
+  $wgGroupPermissions['sysop']['abusefilter-modify'] = true;
+  $wgGroupPermissions['sysop']['abusefilter-view'] = true;
+  $wgGroupPermissions['sysop']['abusefilter-log-detail'] = true;
+  $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
+  $wgGroupPermissions['*']['abusefilter-log'] = true;
+  $wgGroupPermissions['*']['abusefilter-view'] = true;
+  $wgGroupPermissions['*']['abusefilter-log-detail'] = true;
+  # You can add more configuration for the AbuseFilter extension as needed
+bash: |
+  cd /var/www/html/w/extensions/AbuseFilter
+  composer install --no-dev
+  cd /var/www/html/w
+  composer update
+  php maintenance/update.php
