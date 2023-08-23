@@ -72,7 +72,7 @@ Copy one of them and rename it for your skin and edit it to use your skin's sett
 
 
     ```bash
-    ./skins/installer.sh install #one or more extensionless skin filenames#
+    ./skins/installer.sh install #one_or_more_extensionless_skin_filename_separated_by_spaces#
     ```
 
     ```bash
