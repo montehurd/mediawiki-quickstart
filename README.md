@@ -35,7 +35,7 @@ Test running including Selenium tests you can watch as they execute
 
 `use_skin` fetches and switches to a skin and refreshes the browser to show the skin in use
 
-it's safe to call more than once for a given skin, so you can use it to quickly toggle between skins
+It's safe to call more than once for a given skin, so you can use it to quickly toggle between skins
 
 - Vector skin:
     ```bash
