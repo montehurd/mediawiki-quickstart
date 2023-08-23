@@ -1,0 +1,15 @@
+name: Math
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/Math
+configuration: |
+  wfLoadExtension( 'Math' );
+  # Basic configurations for Math extension
+  $wgUseTeX = true;
+  $wgMathValidModes[] = 'latexml'; # or other modes such as 'mathjax', 'mathml'
+  $wgDefaultUserOptions['math'] = 'latexml'; # or 'mathjax', 'mathml'
+bash: |
+  cd /var/www/html/w/extensions/Math
+  composer install --no-dev
+  npm install
+  cd /var/www/html/w
+  composer update
+  php maintenance/update.php
