@@ -33,38 +33,40 @@ Test running including Selenium tests you can watch as they execute
 
 ### Switching skins:
 
-- Fetch and switch to the Vector skin:
+`use_skin` fetches and switches to a skin and refreshes the browser to show the skin in use
+
+it's safe to call more than once for a given skin, so you can use it to quickly toggle between skins
+
+- Vector skin:
     ```bash
     ./mw use_skin vector
     ```
 
-- Fetch and switch to the Minerva Neue skin:
+- Minerva Neue skin:
     ```bash
     ./mw use_skin minervaneue
     ```
 
-- Fetch and switch to the Timeless skin:
+- Timeless skin:
     ```bash
     ./mw use_skin timeless
     ```
 
-- Fetch and switch to the MonoBook skin:
+- MonoBook skin:
     ```bash
     ./mw use_skin monobook
     ```
 
-### Adding skins:
+### Adding more skins:
 
 Look at the skin manifest files in `~/mediawiki-quickstart/skins/manifests`
 
-Copy one of them and name it for your skin and edit it to use your skin's settings
+Copy one of them and rename it for your skin and edit it to use your skin's settings
 
 - Then you can fetch and switch to your skin:
     ```bash
     ./mw use_skin #your_skin_filename_without_extension#
     ```
-
-`use_skin` is safe to call more than once for a skin - so you can use it and / or the other skin functions above to quickly toggle between skins
 
 - You can also call the skin installers directly:
 
