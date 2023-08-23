@@ -9,7 +9,6 @@ configuration: |
   $wgGroupPermissions['*']['abusefilter-log'] = true;
   $wgGroupPermissions['*']['abusefilter-view'] = true;
   $wgGroupPermissions['*']['abusefilter-log-detail'] = true;
-  # You can add more configuration for the AbuseFilter extension as needed
 bash: |
   cd /var/www/html/w/extensions/AbuseFilter
   composer install --no-dev
