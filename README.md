@@ -31,7 +31,7 @@ Test running including Selenium tests you can watch as they execute
 
 ## Skin Management
 
-### Switch skin:
+### Switching skins:
 
 - Fetch and switch to the Vector skin:
     ```bash
@@ -53,7 +53,7 @@ Test running including Selenium tests you can watch as they execute
     ./mw use_monobook_skin
     ```
 
-### Add skin:
+### Adding skins:
 
 Look at the skin manifest files in `~/mediawiki-quickstart/skins/manifests`
 
@@ -65,6 +65,19 @@ Copy one of them and name it for your skin and edit it to use your skin's settin
     ```
 
 `use_skin` is safe to call more than once for a skin - so you can use it and / or the other skin functions above to quickly toggle between skins
+
+- You can also call the skin installers directly:
+
+
+    ```bash
+    ./skins/installer.sh install #one or more extensionless skin filenames#
+    ```
+
+    ```bash
+    ./skins/installer.sh install_all
+    ```
+
+skin installers are also safe to call more than once for a given skin
 
 ## Testing
 
