@@ -37,9 +37,10 @@ _apply_mediawiki_skin_settings() {
   local wgDefaultSkin
   wgDefaultSkin="$3"
 
-  cd "$mediawiki_path" || exit
-  grep -qx "^wfLoadSkin(['\"]${wfLoadSkin}['\"]); *$" LocalSettings.php || echo -e "\n# Configuration for '$wfLoadSkin' skin\nwfLoadSkin(\"$wfLoadSkin\");" >>LocalSettings.php
-  sed -i -E "s/\\\$wgDefaultSkin.*;[[:blank:]]*$/\\\$wgDefaultSkin = \"$wgDefaultSkin\";/g" LocalSettings.php
+  cd "$mediawiki_path" || return 1
+  grep -qx "^wfLoadSkin(['\"]${wfLoadSkin}['\"]); *$" LocalSettings.php || echo -e "\n# Configuration for '$wfLoadSkin' skin\nwfLoadSkin(\"$wfLoadSkin\");" >>LocalSettings.php || return 1
+  sed -i -E "s/\\\$wgDefaultSkin.*;[[:blank:]]*$/\\\$wgDefaultSkin = \"$wgDefaultSkin\";/g" LocalSettings.php || return 1
+  return 0
 }
 
 _apply_mediawiki_skin() {
@@ -59,11 +60,14 @@ _apply_mediawiki_skin() {
   cd "$mediawiki_path" || exit
   rm -rf "skins/$skin_folder_name"
   if ! git clone --quiet --branch "$skin_branch" "$skin_repo_url" "./skins/$skin_folder_name" --depth=1; then
-    echo "Failed to clone the repository."
+    echo "Failed to clone the repository"
     return 1
   fi
   sleep 1
-  _apply_mediawiki_skin_settings "$mediawiki_path" "$wfLoadSkin" "$wgDefaultSkin"
+  if ! _apply_mediawiki_skin_settings "$mediawiki_path" "$wfLoadSkin" "$wgDefaultSkin"; then
+    echo "Failed to apply skin settings"
+    return 1
+  fi
 }
 
 _install_from_manifest() {
