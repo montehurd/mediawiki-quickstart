@@ -29,6 +29,7 @@ export MW_ENV
 SPECIAL_VERSION_URL="http://localhost:$MEDIAWIKI_PORT/wiki/Special:Version"
 
 fresh_install() {
+  verify_compose_version 2 || return 1
   if ! confirm_action "Are you sure you want to do a fresh install"; then
     return
   fi

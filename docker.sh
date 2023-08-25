@@ -76,3 +76,38 @@ connect_network_to_container() {
   echo "Failed to connect $container_name to $network_name"
   return 1
 }
+
+get_compose_version() {
+  docker compose version --short 2>/dev/null
+}
+
+verify_compose_version() {
+  echo -e "\nVerifying 'docker compose' version..."
+
+  local required_major_version
+  local error_message
+  local compose_version
+  local major_version
+
+  required_major_version="${1:-}"
+  if [ -z "$required_major_version" ]; then
+    echo -e "Error: Required major version is not provided!\n"
+    return 1
+  fi
+
+  error_message="Failure! 'docker compose version' must be $required_major_version or greater\nTo update see: https://docs.docker.com/compose/migrate/\n"
+
+  compose_version=$(get_compose_version)
+  if [ -z "$compose_version" ]; then
+    echo -e "$error_message"
+    return 1
+  fi
+
+  major_version=$(echo "$compose_version" | cut -d '.' -f 1)
+  if [ -n "$major_version" ] && [ "$major_version" -ge "$required_major_version" ]; then
+    echo -e "Success! 'docker compose version' is at least $required_major_version\n"
+    return 0
+  fi
+  echo -e "$error_message"
+  return 1
+}
