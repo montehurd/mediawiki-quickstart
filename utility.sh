@@ -7,19 +7,40 @@ get_response_code() {
   echo "$(curl --write-out '%{http_code}' --silent --output /dev/null "$1")"
 }
 
+open_url_with_linux_browser() {
+  local url
+  url="$1"
+  if command -v google-chrome &> /dev/null; then
+    google-chrome "$url" &> /dev/null &
+    return 0
+  elif command -v chromium &> /dev/null; then
+    chromium "$url" &> /dev/null &
+    return 0
+  fi
+  if command -v xdg-open &> /dev/null; then
+    xdg-open "$url" &> /dev/null
+    return 0
+  fi
+  return 1
+}
+
 open_url_when_available() {
-  wait_until_url_available "$1"
-  error_message="Unable to automatically open '$1', try opening it in a browser"
+  local error_message
+  local url
+  url="$1"
+  wait_until_url_available "$url"
+  error_message="Unable to automatically open '$url', try opening it in a browser"
   if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS system
-    open ${2:+-a "$2"} "$1" || echo "$error_message"
+    open ${2:+-a "$2"} "$url" || echo "$error_message"
   elif [[ "$OSTYPE" == "linux-gnu" ]]; then
     # Linux system
-    xdg-open "$1" || echo "$error_message"
+    open_url_with_linux_browser "$url" || echo "$error_message"
   elif [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
     # Windows system (Cygwin, Git Bash, or WSL)
-    start "" "$1" || echo "$error_message"
+    start "" "$url" || echo "$error_message"
   else
+    echo "$error_message"
     echo "Unsupported operating system"
   fi
 }
