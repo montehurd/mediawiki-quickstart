@@ -11,11 +11,14 @@ source "$SCRIPT_PATH/docker-compose-wrapper.sh"
 MEDIAWIKI_PATH="$SCRIPT_PATH/mediawiki"
 MEDIAWIKI_PORT=8080
 
+HOST_UID=$(id -u)
+HOST_GID=$(id -g)
+
 # shellcheck disable=SC2089
 MW_ENV="
 MW_DOCKER_PORT=$MEDIAWIKI_PORT
-MW_DOCKER_UID=
-MW_DOCKER_GID=
+MW_DOCKER_UID=$HOST_UID
+MW_DOCKER_GID=$HOST_GID
 MEDIAWIKI_USER=Admin
 MEDIAWIKI_PASSWORD=dockerpass
 XDEBUG_ENABLE=true
@@ -78,8 +81,8 @@ start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
     # docker_compose build --no-cache
     docker_compose up -d || exit 1
-    docker_compose exec mediawiki composer update
-    docker_compose exec mediawiki bash /docker/install.sh
+    docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki composer update
+    docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki bash /docker/install.sh
     sleep 2
     use_skin Vector
     return 0
@@ -100,15 +103,15 @@ restart() {
 }
 
 bash_mw() {
-  docker_compose exec mediawiki bash
+  docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki bash
 }
 
 bash_jr() {
-  docker_compose exec mediawiki-jobrunner bash
+  docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki-jobrunner bash
 }
 
 bash_wb() {
-  docker_compose exec mediawiki-web bash
+  docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki-web bash
 }
 
 use_skin() {
@@ -126,11 +129,11 @@ open_special_version_page() {
 }
 
 run_parser_tests() {
-  docker_compose exec mediawiki php tests/parser/parserTests.php
+  docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki php tests/parser/parserTests.php
 }
 
 run_php_unit_tests() {
-  docker_compose exec --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php ${testpath:+$testpath} ${testgroup:+--group $testgroup} --testdox
+  docker_compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php ${testpath:+$testpath} ${testgroup:+--group $testgroup} --testdox
 }
 
 docker_compose() {
@@ -143,7 +146,7 @@ prepare_mediawiki_for_selenium() {
     echo "Failed to do a fresh install"
     return 1
   fi
-  if ! docker_compose exec mediawiki ./selenium-preparation.sh apply_patch; then
+  if ! docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki ./selenium-preparation.sh apply_patch; then
     echo "Failed to apply patch"
     return 1
   fi
