@@ -13,6 +13,8 @@ docker cp "$SCRIPT_PATH/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/h
 
 REQUIRED_KEYS=('name' 'repository' 'configuration' 'bash')
 MEDIAWIKI_PATH="$SCRIPT_PATH/../mediawiki"
+HOST_UID=$(id -u)
+HOST_GID=$(id -g)
 
 _yq() {
   echo "$2" | docker run --rm -i -v "$SCRIPT_PATH:/workdir" mikefarah/yq eval "$1" -
