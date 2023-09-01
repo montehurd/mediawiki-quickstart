@@ -25,8 +25,23 @@ open_url_when_available() {
 }
 
 wait_until_url_available() {
-  while ! [[ "$(get_response_code "$1")" =~ ^(200|301)$ ]]; do sleep 1; done
-  sleep 0.5
+  local url
+  local max_wait
+  local elapsed_time
+  url="$1"
+  max_wait="${2:-}" # Provide a default value for max_wait if $2 is not set (unset means we want infinite wait)
+  elapsed_time=0
+  while ! [[ "$(get_response_code "$url")" =~ ^(200|301)$ ]]; do
+    sleep 1
+    if [ -n "$max_wait" ]; then
+      ((elapsed_time++))
+      if [ "$elapsed_time" -ge "$max_wait" ]; then
+        echo "Timed out waiting for URL to be available."
+        return 1
+      fi
+    fi
+  done
+  sleep 1
 }
 
 confirm_action() {
