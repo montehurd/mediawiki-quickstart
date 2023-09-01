@@ -13,8 +13,6 @@ docker cp "$SCRIPT_PATH/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/h
 
 REQUIRED_KEYS=('name' 'repository' 'configuration' 'bash')
 MEDIAWIKI_PATH="$SCRIPT_PATH/../mediawiki"
-HOST_UID=$(id -u)
-HOST_GID=$(id -g)
 
 _yq() {
   echo "$2" | docker run --rm -i -v "$SCRIPT_PATH:/workdir" mikefarah/yq eval "$1" -
@@ -85,7 +83,7 @@ _install_from_manifest() {
   echo -e "$configuration" >>"$MEDIAWIKI_PATH/LocalSettings.php"
   local bash
   bash=$(_yq '.bash' "$manifest_content")
-  docker exec -u "$HOST_UID:$HOST_GID" mediawiki-mediawiki-1 bash -c "$bash"
+  docker exec -u root mediawiki-mediawiki-1 bash -c "$bash"
 }
 
 install() {
