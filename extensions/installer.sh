@@ -85,7 +85,7 @@ _install_from_manifest() {
   echo -e "$configuration" >>"$MEDIAWIKI_PATH/LocalSettings.php"
   local bash
   bash=$(_yq '.bash' "$manifest_content")
-  docker exec mediawiki-mediawiki-1 bash -c "$bash"
+  docker exec -u "$HOST_UID:$HOST_GID" mediawiki-mediawiki-1 bash -c "$bash"
 }
 
 install() {
