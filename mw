@@ -268,40 +268,40 @@ ensure_selenium_ready() {
 
 run_selenium_tests() {
   ensure_selenium_ready
-  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js
+  docker_compose exec -u root mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js
 }
 
 run_selenium_test_file() {
   ensure_selenium_ready
-  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/user.js
+  docker_compose exec -u root mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/user.js
 }
 
 run_selenium_test_wildcard() {
   ensure_selenium_ready
-  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/**/*.js
+  docker_compose exec -u root mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/**/*.js
 }
 
 run_selenium_test() {
   ensure_selenium_ready
-  docker_compose exec mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/page.js --logLevel debug --mochaOpts.grep 'should be creatable'
+  docker_compose exec -u root mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/page.js --logLevel debug --mochaOpts.grep 'should be creatable'
 }
 
 run_selenium_extensions_tests() {
   ensure_selenium_ready
   "$SCRIPT_PATH/extensions/installer.sh" install_all
-  docker_compose exec mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/*/tests/selenium/specs/**/*.js"
+  docker_compose exec -u root mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/*/tests/selenium/specs/**/*.js"
 }
 
 run_selenium_extension_tests() {
   ensure_selenium_ready
   "$SCRIPT_PATH/extensions/installer.sh" install CheckUser
-  docker_compose exec mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/CheckUser/tests/selenium/specs/**/*.js"
+  docker_compose exec -u root mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/CheckUser/tests/selenium/specs/**/*.js"
 }
 
 run_selenium_extension_test() {
   ensure_selenium_ready
   "$SCRIPT_PATH/extensions/installer.sh" install CheckUser
-  docker_compose exec mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/CheckUser/tests/selenium/specs/checkuser.js" --logLevel debug --mochaOpts.grep 'Should show target input'
+  docker_compose exec -u root mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/CheckUser/tests/selenium/specs/checkuser.js" --logLevel debug --mochaOpts.grep 'Should show target input'
 }
 
 "$@"
