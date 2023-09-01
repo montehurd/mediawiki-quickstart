@@ -77,12 +77,27 @@ stop() {
   docker_compose stop
 }
 
+prepare_node() {
+  docker cp "$SCRIPT_PATH/node-preparation.sh" mediawiki-mediawiki-1:/var/www/html/w/
+  docker exec -it -u root mediawiki-mediawiki-1 sh -c "
+    ./node-preparation.sh ensure_node_major_version_installed 16 &&
+    npm install puppeteer-chromium-version-finder &&
+    npm ci
+  "
+}
+
 start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
     # docker_compose build --no-cache
     docker_compose up -d || exit 1
     docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki composer update
     docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki bash /docker/install.sh
+    if prepare_node; then
+      echo "Node prepared successfully"
+    else
+      echo "Node wasn't prepared successfully"
+      exit 1
+    fi
     sleep 2
     use_skin Vector
     return 0
@@ -148,10 +163,6 @@ prepare_mediawiki_for_selenium() {
   fi
   if ! docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki ./selenium-preparation.sh apply_patch; then
     echo "Failed to apply patch"
-    return 1
-  fi
-  if ! docker_compose exec mediawiki ./selenium-preparation.sh prepare_node; then
-    echo "Failed to prepare node"
     return 1
   fi
 }
@@ -226,7 +237,7 @@ ensure_selenium_ready() {
     if ! confirm_action "Mediawiki needs to be prepared for Selenium. This will perform a fresh install. Do you wish to continue"; then
       exit 1
     fi
-    echo "Preparing Mediawiki container for Selenium by adding Node and setting its MW_SERVER env var..."
+    echo "Preparing Mediawiki container for Selenium by setting its MW_SERVER env var..."
     if ! prepare_mediawiki_for_selenium; then
       echo "Failed to prepare Mediawiki for Selenium"
       exit 1
@@ -238,6 +249,7 @@ ensure_selenium_ready() {
     exit 1
   fi
 
+  sleep 2
   if ! is_docker_chromium_novnc_automation_ready; then
     if ! confirm_action "Chromium / noVNC containers need to be prepared for Selenium. Do you wish to continue"; then
       exit 1

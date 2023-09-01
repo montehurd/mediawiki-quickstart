@@ -19,33 +19,6 @@ apply_patch() {
   return 0
 }
 
-prepare_node() {
-  echo "prepare node"
-  if ! command -v node >/dev/null; then
-    if ! curl --retry 10 --retry-delay 10 -sL https://deb.nodesource.com/setup_16.x | bash -; then
-      echo "Failed to fetch node setup bits"
-      return 1
-    fi
-    if ! apt-get update; then
-      echo "Failed to update package list"
-      return 1
-    fi
-    if ! apt-get install -y nodejs; then
-      echo "Failed to install nodejs"
-      return 1
-    fi
-    if ! npm install puppeteer-chromium-version-finder; then
-      echo "Failed to install puppeteer-chromium-version-finder"
-      return 1
-    fi
-    if ! npm ci; then
-      echo "Failed to install node packages"
-      return 1
-    fi
-  fi
-  return 0
-}
-
 # prepare_chromium () {
 #   echo "prepare chromium"
 #   VERSION=$(node ./puppeteer-chromium-version-finder.js | tr -d '\r');
