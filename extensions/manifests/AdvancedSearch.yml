@@ -2,10 +2,3 @@ name: AdvancedSearch
 repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/AdvancedSearch
 configuration: |
   wfLoadExtension( 'AdvancedSearch' );
-bash: |
-  cd /var/www/html/w/extensions/AdvancedSearch
-  composer install --no-dev
-  npm install
-  cd /var/www/html/w
-  composer update
-  php maintenance/update.php

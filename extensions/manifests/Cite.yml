@@ -2,9 +2,3 @@ name: Cite
 repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/Cite
 configuration: |
   wfLoadExtension( 'Cite' );
-bash: |
-  cd /var/www/html/w/extensions/Cite
-  composer install --no-dev
-  cd /var/www/html/w
-  composer update
-  php maintenance/update.php

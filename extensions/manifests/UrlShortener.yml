@@ -2,6 +2,3 @@ name: UrlShortener
 repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/UrlShortener
 configuration: |
   wfLoadExtension( 'UrlShortener' );
-bash: |
-  cd /var/www/html/w/extensions/UrlShortener
-  composer install --no-dev

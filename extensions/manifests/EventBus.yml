@@ -4,6 +4,3 @@ dependencies:
   - EventStreamConfig
 configuration: |
   wfLoadExtension( 'EventBus' );
-bash: |
-  cd /var/www/html/w/extensions/EventBus
-  composer install --no-dev

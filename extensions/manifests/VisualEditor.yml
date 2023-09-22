@@ -5,10 +5,3 @@ configuration: |
   $wgDefaultUserOptions['visualeditor-enable'] = 1;
   # Optional: Set it as the default for anonymous users
   $wgDefaultUserOptions['visualeditor-editor'] = "visualeditor";
-bash: |
-  cd /var/www/html/w/extensions/VisualEditor
-  composer install --no-dev
-  npm install
-  cd /var/www/html/w
-  composer update
-  php maintenance/update.php

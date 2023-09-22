@@ -5,6 +5,3 @@ dependencies:
 configuration: |
   wfLoadExtension( 'WikimediaEvents' );
   $wgWMEStatsdBaseUri = '/beacon/statsv';
-bash: |
-  cd /var/www/html/w/extensions/WikimediaEvents
-  composer install --no-dev

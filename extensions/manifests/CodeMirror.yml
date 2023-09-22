@@ -6,10 +6,3 @@ configuration: |
   wfLoadExtension( 'CodeMirror' );
   # This configuration enables syntax highlighting by default for all users
   $wgDefaultUserOptions['usecodemirror'] = 1;
-bash: |
-  cd /var/www/html/w/extensions/CodeMirror
-  composer install --no-dev
-  npm install
-  cd /var/www/html/w
-  composer update
-  php maintenance/update.php

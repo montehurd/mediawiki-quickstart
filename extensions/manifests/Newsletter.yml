@@ -6,9 +6,3 @@ configuration: |
   $wgNewsletterPublisherGroupName = 'newsletter-publisher';  # Name of the user group that can manage newsletters
   $wgNewsletterPublisherRight = 'newsletter-manage';  # Right that is required to manage newsletters
   $wgNewsletterMinimumHtml2TextVersion = '2.04';  # Minimum version of html2text utility required by Newsletter
-bash: |
-  cd /var/www/html/w/extensions/Newsletter
-  composer install --no-dev
-  cd /var/www/html/w
-  composer update
-  php maintenance/update.php

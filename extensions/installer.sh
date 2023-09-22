@@ -11,8 +11,11 @@ SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 docker cp "$SCRIPT_PATH/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isExtensionEnabled.php >/dev/null
 
-REQUIRED_KEYS=('name' 'repository' 'configuration' 'bash')
+REQUIRED_KEYS=('name' 'repository' 'configuration')
 MEDIAWIKI_PATH="$SCRIPT_PATH/../mediawiki"
+
+source "$SCRIPT_PATH/php.sh"
+source "$SCRIPT_PATH/node.sh"
 
 _yq() {
   echo "$2" | docker run --rm -i -v "$SCRIPT_PATH:/workdir" mikefarah/yq eval "$1" -
@@ -73,7 +76,7 @@ _install_from_manifest() {
   fi
   local repository
   repository=$(_yq '.repository' "$manifest_content")
-  if ! git clone --recurse-submodules "$repository" "$MEDIAWIKI_PATH/extensions/$name" --depth=1 2>&1; then
+  if ! git clone --recurse-submodules "$repository" "$MEDIAWIKI_PATH/extensions/$name" --depth=1 >/dev/null 2>&1; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
@@ -83,10 +86,25 @@ _install_from_manifest() {
   echo -e "$configuration" >>"$MEDIAWIKI_PATH/LocalSettings.php"
   local bash
   bash=$(_yq '.bash' "$manifest_content")
-  docker exec -u root mediawiki-mediawiki-1 bash -c "$bash"
+  if [ -n "$bash" ] && [ "$bash" != "null" ]; then
+    docker exec -u root mediawiki-mediawiki-1 bash -c "$bash"
+  fi
+
+  INSTALLED_EXTENSIONS+=("$name")
+}
+
+declare -a INSTALLED_EXTENSIONS=()
+
+_install_php_and_node_dependencies() {
+  if [[ ${#INSTALLED_EXTENSIONS[@]} -eq 0 ]]; then
+    return
+  fi
+  install_php_dependencies_for_extensions "${INSTALLED_EXTENSIONS[@]}"
+  install_node_dependencies_for_extensions "${INSTALLED_EXTENSIONS[@]}"
 }
 
 install() {
+  INSTALLED_EXTENSIONS=()
   for extension in "$@"; do
     local manifest
     manifest="$SCRIPT_PATH/manifests/$extension.yml"
@@ -96,12 +114,15 @@ install() {
       echo "No corresponding manifest file found for extension '$extension', skipping..."
     fi
   done
+  _install_php_and_node_dependencies
 }
 
 install_all() {
+  INSTALLED_EXTENSIONS=()
   for manifest in "${SCRIPT_PATH}/manifests/"*.yml; do
     _install_from_manifest "$manifest"
   done
+  _install_php_and_node_dependencies
 }
 
 "$@"
