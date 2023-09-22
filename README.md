@@ -98,19 +98,19 @@ Skin installers are also safe to call more than once for a given skin
 
 - `name` required
 
-    skin name
+    Skin name
 - `repository` required
 
-    skin git repo url
+    Skin git repo url
 - `branch` required
 
-    skin branch to use
+    Skin branch to use
 - `wfLoadSkin` required
 
-    skin key value pair which will be added to LocalSettings.php
+    Skin key value pair which will be added to LocalSettings.php
 - `wgDefaultSkin` required
 
-    skin key value pair which will be added to LocalSettings.php
+    Skin key value pair which will be added to LocalSettings.php
 
 ## Extension Management
 
@@ -186,19 +186,19 @@ Then use the `install` command above to install it
 
 - `name` required
 
-    extension name
+    Extension name
 - `repository` required
 
-    extension git repo url
+    Extension git repo url
 - `configuration` required
 
-    extension configuration php which will be added to LocalSettings.php
+    Extension configuration php which will be added to LocalSettings.php
 - `bash` optional
 
-    extension scripting to execute on installation
+    Extension scripting to execute on installation
 - `dependencies` optional
 
-    other extension yml file(s) to install when installing this extension
+    Other extension yml file(s) to install when installing this extension
 
 ### Important Extension manifest yml note
 
