@@ -83,6 +83,30 @@ Copy one of them and rename it for your skin and edit it to use your skin's sett
 
 Skin installers are also safe to call more than once for a given skin
 
+## Extension Management
+
+- Install one or more extensions for which manifest files exist in `~/mediawiki-quickstart/extensions/manifests`:
+    ```bash
+    ./extensions/installer.sh install Echo
+    ```
+
+    ```bash
+    ./extensions/installer.sh install Echo IPInfo
+    ```
+
+- Install all extensions for which manifest files exist in `~/mediawiki-quickstart/extensions/manifests`:
+    ```bash
+    ./extensions/installer.sh install_all
+    ```
+
+### Adding more extensions:
+
+Look at the extension manifest files in `~/mediawiki-quickstart/extensions/manifests`
+
+Copy one of them and rename it for your extension and edit it to use your extension's settings
+
+Then use the `install` command above to install it
+
 ## Testing
 
 Run a variety of tests using the commands below
