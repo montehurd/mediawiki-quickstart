@@ -61,7 +61,7 @@ It's safe to call more than once for a given skin, so you can use it to quickly 
 
 ### Adding more skins:
 
-Look at the skin manifest files in `~/mediawiki-quickstart/skins/manifests`
+Look at the skin manifest yml files in `~/mediawiki-quickstart/skins/manifests`
 
 Copy one of them and rename it for your skin and edit it to use your skin's settings
 
@@ -101,7 +101,7 @@ Skin installers are also safe to call more than once for a given skin
 
 ### Adding more extensions:
 
-Look at the extension manifest files in `~/mediawiki-quickstart/extensions/manifests`
+Look at the extension manifest yml files in `~/mediawiki-quickstart/extensions/manifests`
 
 Copy one of them and rename it for your extension and edit it to use your extension's settings
 
