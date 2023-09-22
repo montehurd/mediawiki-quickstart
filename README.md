@@ -82,9 +82,17 @@ Copy one of them and rename it for your skin and edit it to use your skin's sett
 Skin installers are also safe to call more than once for a given skin
 
 ### Skin yml example:
-```yaml
-key: value
-```
+
+- Here's an example skin manifest yml ( `~/mediawiki-quickstart/skins/manifests/Vector.yml` )
+    ```yaml
+    name: Vector
+    repository: https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git
+    branch: master
+    wfLoadSkin: Vector
+    wgDefaultSkin: vector
+    ```
+
+    Note: all keys in the above example are required. For skins there are no optional keys
 
 ## Extension Management
 
@@ -110,10 +118,52 @@ Copy one of them and rename it for your extension and edit it to use your extens
 
 Then use the `install` command above to install it
 
-### Extension yml example:
-```yaml
-key: value
-```
+### Extension yml examples:
+
+- Here's an example of a minimal extension manifest yml ( `~/mediawiki-quickstart/skins/manifests/IPInfo.yml` )
+    ```yaml
+    name: IPInfo
+    repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/IPInfo
+    configuration: |
+      wfLoadExtension( 'IPInfo' );
+      $wgGroupPermissions['*']['ipinfo'] = true;
+      $wgGroupPermissions['*']['ipinfo-view-basic'] = true;
+      $wgGroupPermissions['*']['ipinfo-view-full'] = true;
+      $wgGroupPermissions['*']['ipinfo-view-log'] = true;
+    ```
+
+    Note: all keys in the above example are required. For extensions the following keys are optional:
+    - `dependencies`
+    - `bash`
+
+
+- Here's an example extension manifest yml using the optional `bash` key ( `~/mediawiki-quickstart/skins/manifests/GlobalBlocking.yml` )
+    ```yaml
+    name: GlobalBlocking
+    repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalBlocking
+    configuration: |
+      wfLoadExtension( 'GlobalBlocking' );
+      $wgGlobalBlockingDatabase = 'globalblocking';
+      $wgApplyGlobalBlocks = true;
+      $wgGlobalBlockingBlockXFF = true;
+    bash: |
+      apt update
+      apt install sqlite3
+      sqlite3 cache/sqlite/globalblocking.sqlite < extensions/GlobalBlocking/sql/sqlite/tables-generated-globalblocks.sql
+   
+    ```
+
+- Here's an example extension manifest yml using the optional `dependencies` key ( `~/mediawiki-quickstart/skins/manifests/CodeMirror.yml` )
+    ```yaml
+    name: CodeMirror
+    repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/CodeMirror
+    dependencies:
+      - VisualEditor
+    configuration: |
+      wfLoadExtension( 'CodeMirror' );
+      # This configuration enables syntax highlighting by default for all users
+      $wgDefaultUserOptions['usecodemirror'] = 1;   
+    ```
 
 ## Testing
 
