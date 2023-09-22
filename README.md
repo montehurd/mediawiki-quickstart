@@ -71,8 +71,6 @@ Copy one of them and rename it for your skin and edit it to use your skin's sett
     ```
 
 - You can also call the skin installers directly:
-
-
     ```bash
     ./skins/installer.sh install #one_or_more_extensionless_skin_filename_separated_by_spaces#
     ```
@@ -82,6 +80,11 @@ Copy one of them and rename it for your skin and edit it to use your skin's sett
     ```
 
 Skin installers are also safe to call more than once for a given skin
+
+### Skin yml example:
+    ```yaml
+    key: value
+    ```
 
 ## Extension Management
 
@@ -107,6 +110,10 @@ Copy one of them and rename it for your extension and edit it to use your extens
 
 Then use the `install` command above to install it
 
+### Extension yml example:
+    ```yaml
+    key: value
+    ```
 ## Testing
 
 Run a variety of tests using the commands below
