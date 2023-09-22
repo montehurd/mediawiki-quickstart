@@ -83,7 +83,7 @@ Skin installers are also safe to call more than once for a given skin
 
 ### Skin yml example:
 
-- Here's an example skin manifest yml ( [~/mediawiki-quickstart/skins/manifests/Vector.yml](./skins/manifests/Vector.yml) )
+- Example skin manifest yml ( [~/mediawiki-quickstart/skins/manifests/Vector.yml](./skins/manifests/Vector.yml) )
     ```yaml
     name: Vector
     repository: https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git
@@ -120,7 +120,7 @@ Then use the `install` command above to install it
 
 ### Extension yml examples:
 
-- Here's an example of a minimal extension manifest yml ( [~/mediawiki-quickstart/extensions/manifests/IPInfo.yml](./extensions/manifests/IPInfo.yml) )
+- Example of a minimal extension manifest yml ( [~/mediawiki-quickstart/extensions/manifests/IPInfo.yml](./extensions/manifests/IPInfo.yml) )
     ```yaml
     name: IPInfo
     repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/IPInfo
@@ -136,7 +136,7 @@ Then use the `install` command above to install it
     - `dependencies`
     - `bash`
 
-- Here's an example extension manifest yml using the optional `bash` key ( [~/mediawiki-quickstart/extensions/manifests/GlobalBlocking.yml](./extensions/manifests/GlobalBlocking.yml) )
+- Example extension manifest yml using the optional `bash` key ( [~/mediawiki-quickstart/extensions/manifests/GlobalBlocking.yml](./extensions/manifests/GlobalBlocking.yml) )
     ```yaml
     name: GlobalBlocking
     repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalBlocking
@@ -152,7 +152,7 @@ Then use the `install` command above to install it
    
     ```
 
-- Here's an example extension manifest yml using the optional `dependencies` key ( [~/mediawiki-quickstart/extensions/manifests/CodeMirror.yml](./extensions/manifests/CodeMirror.yml) )
+- Example extension manifest yml using the optional `dependencies` key ( [~/mediawiki-quickstart/extensions/manifests/CodeMirror.yml](./extensions/manifests/CodeMirror.yml) )
     ```yaml
     name: CodeMirror
     repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/CodeMirror
