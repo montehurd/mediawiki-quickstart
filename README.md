@@ -1,6 +1,6 @@
 Quickly spin up a MediaWiki instance with Docker
 
-Easy skin and extension configuration via manifest files
+Easy skin and extension configuration via manifest yml files
 
 Test running including Selenium tests you can watch as they execute
 
@@ -28,6 +28,8 @@ Test running including Selenium tests you can watch as they execute
     ```bash
     ./mw fresh_install
     ```
+
+# Optional
 
 ## Skin Management
 
@@ -148,7 +150,7 @@ These functions provide examples you can examine and customize if needed
     ./mw run_selenium_extension_test
     ```
 
-## Manage containers
+## Container Management
 
 You can manage the MediaWiki containers using these commands
 
@@ -172,7 +174,7 @@ You can manage the MediaWiki containers using these commands
     ./mw remove
     ```
 
-## Shell Access
+## Container Shell Access
 
 Get quick Bash shell access to running containers with these commands
 
