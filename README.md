@@ -94,6 +94,24 @@ Skin installers are also safe to call more than once for a given skin
 
     Note: all keys in the above example are required. For skins there are no optional keys
 
+### Skin yml keys
+
+- `name` required
+
+    skin name
+- `repository` required
+
+    skin git repo url
+- `branch` required
+
+    skin branch to use
+- `wfLoadSkin` required
+
+    skin key value pair which will be added to LocalSettings.php
+- `wgDefaultSkin` required
+
+    skin key value pair which will be added to LocalSettings.php
+
 ## Extension Management
 
 - Install one or more extensions for which manifest files exist in `~/mediawiki-quickstart/extensions/manifests`
@@ -163,6 +181,30 @@ Then use the `install` command above to install it
       # This configuration enables syntax highlighting by default for all users
       $wgDefaultUserOptions['usecodemirror'] = 1;   
     ```
+
+### Extension yml keys
+
+- `name` required
+
+    extension name
+- `repository` required
+
+    extension git repo url
+- `configuration` required
+
+    extension configuration php which will be added to LocalSettings.php
+- `bash` optional
+
+    extension scripting to execute on installation
+- `dependencies` optional
+
+    other extension yml file(s) to install when installing this extension
+
+### Important Extension manifest yml note
+
+- Do not use `composer install` or `npm install` in your extension `bash` key's value
+
+  The extension installer script takes care of this automatically if it sees your extension contains `composer.json` / `package.json`
 
 ## Testing
 
