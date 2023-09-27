@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source "./config"
-source "./docker-compose-wrapper.sh"
+source "./docker/docker-compose-wrapper.sh"
 
 run_parser_tests() {
   docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki php tests/parser/parserTests.php

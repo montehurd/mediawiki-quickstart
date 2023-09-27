@@ -3,7 +3,7 @@
 source "./config"
 source "./common/utility.sh"
 source "./docker/docker.sh"
-source "./docker-compose-wrapper.sh"
+source "./docker/docker-compose-wrapper.sh"
 source "./use_skin"
 
 prepare_node() {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "./docker-compose-wrapper.sh"
+source "./docker/docker-compose-wrapper.sh"
 source "./selenium/selenium.sh"
 
 run_selenium_extension_test() {

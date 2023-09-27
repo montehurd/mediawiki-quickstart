@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source "./config"
-source "./docker-compose-wrapper.sh"
+source "./docker/docker-compose-wrapper.sh"
 
 run_php_unit_tests() {
   docker_compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php ${testpath:+$testpath} ${testgroup:+--group $testgroup} --testdox
