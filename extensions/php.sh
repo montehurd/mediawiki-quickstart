@@ -76,9 +76,14 @@ install_php_dependencies_for_extensions() {
 
     sleep 1
 
-    if ! docker exec -it -u root mediawiki-mediawiki-1 sh -c "composer install" > /dev/null 2>&1; then
+    if ! docker exec -it -u root mediawiki-mediawiki-1 sh -c "composer install --no-dev" > /dev/null 2>&1; then
         echo "Composer install failed. Exiting."
         _restore_composer_local_json
+        return 1
+    fi
+
+    if ! docker exec -it -u root mediawiki-mediawiki-1 sh -c "php maintenance/update.php" > /dev/null 2>&1; then
+        echo "PHP maintenance update failed. Exiting."
         return 1
     fi
 
