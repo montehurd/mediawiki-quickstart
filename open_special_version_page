@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source "./config"
-source "./utility.sh"
+source "./common/utility.sh"
 
 open_special_version_page() {
   if [ "${skipopenspecialversionpage:-false}" = "true" ]; then
