@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source "./config"
+source "./docker-compose-wrapper.sh"
+
+stop() {
+  if [ ! -d "$MEDIAWIKI_PATH" ]; then
+    return
+  fi
+  docker_compose stop
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  stop "$@"
+fi

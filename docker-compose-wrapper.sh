@@ -2,6 +2,8 @@
 
 set -eu
 
+source "./config"
+
 docker_compose_wrapper() {
   local compose_files
   local override_file
@@ -25,4 +27,8 @@ docker_compose_wrapper() {
 
   # shellcheck disable=SC2086
   docker compose $compose_files "${@:2}"
+}
+
+docker_compose() {
+  docker_compose_wrapper "$MEDIAWIKI_PATH" "$@"
 }

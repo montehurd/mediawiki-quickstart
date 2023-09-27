@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source "./config"
+source "./open_special_version_page"
+
+use_skin() {
+  local skin_name
+  skin_name=$1
+  "$SCRIPT_PATH/skins/installer.sh" install "$skin_name"
+  open_special_version_page
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  use_skin "$@"
+fi

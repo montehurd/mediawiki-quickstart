@@ -1,0 +1,12 @@
+#!/bin/bash
+
+source "./config"
+source "./docker-compose-wrapper.sh"
+
+run_php_unit_tests() {
+  docker_compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php ${testpath:+$testpath} ${testgroup:+--group $testgroup} --testdox
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  run_php_unit_tests "$@"
+fi

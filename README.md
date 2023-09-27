@@ -26,7 +26,7 @@ Test running including Selenium tests you can watch as they execute
 
 - Fetches the latest MediaWiki (into `~/mediawiki-quickstart/mediawiki/`) and spins up its Docker containers
     ```bash
-    ./mw fresh_install
+    ./fresh_install
     ```
 
 # Optional
@@ -41,22 +41,22 @@ It's safe to call more than once for a given skin, so you can use it to quickly 
 
 - Vector skin
     ```bash
-    ./mw use_skin vector
+    ./use_skin vector
     ```
 
 - Minerva Neue skin
     ```bash
-    ./mw use_skin minervaneue
+    ./use_skin minervaneue
     ```
 
 - Timeless skin
     ```bash
-    ./mw use_skin timeless
+    ./use_skin timeless
     ```
 
 - MonoBook skin
     ```bash
-    ./mw use_skin monobook
+    ./use_skin monobook
     ```
 
 ### Adding more skins
@@ -67,7 +67,7 @@ Copy one of them and rename it for your skin and edit it to use your skin's sett
 
 - Then you can fetch and switch to your skin
     ```bash
-    ./mw use_skin #your_skin_filename_without_extension#
+    ./use_skin #your_skin_filename_without_extension#
     ```
 
 - You can also call the skin installers directly
@@ -214,24 +214,24 @@ Run a variety of tests using the commands below
 
 - Run parser tests
     ```bash
-    ./mw run_parser_tests
+    ./run_parser_tests
     ```
 
 ### PHP
 
 - Run PHP unit tests
     ```bash
-    ./mw run_php_unit_tests
+    ./run_php_unit_tests
     ```
 
 - Run PHP unit tests with a specific group
     ```bash
-    ./mw run_php_unit_tests testgroup=Cache
+    ./run_php_unit_tests testgroup=Cache
     ```
 
 - Run PHP unit tests with a specific path
     ```bash
-    ./mw run_php_unit_tests testpath=unit/includes/resourceloader/
+    ./run_php_unit_tests testpath=unit/includes/resourceloader/
     ```
 
 ### Selenium
@@ -240,37 +240,37 @@ These functions provide examples you can examine and customize if needed
 
 - Run MediaWiki core Selenium tests
     ```bash
-    ./mw run_selenium_tests
+    ./run_selenium_tests
     ```
 
 - Run a specific MediaWiki core Selenium test
     ```bash
-    ./mw run_selenium_test
+    ./run_selenium_test
     ```
 
 - Run all tests in a specific MediaWiki core Selenium test file
     ```bash
-    ./mw run_selenium_test_file
+    ./run_selenium_test_file
     ```
 
 - Run MediaWiki core Selenium tests with wildcard
     ```bash
-    ./mw run_selenium_test_wildcard
+    ./run_selenium_test_wildcard
     ```
 
 - Run Selenium tests for installed extensions
     ```bash
-    ./mw run_selenium_extensions_tests
+    ./run_selenium_extensions_tests
     ```
 
 - Run Selenium tests for a specific extension
     ```bash
-    ./mw run_selenium_extension_tests
+    ./run_selenium_extension_tests
     ```
 
 - Run Selenium test for a specific extension
     ```bash
-    ./mw run_selenium_extension_test
+    ./run_selenium_extension_test
     ```
 
 ## Container Management
@@ -279,22 +279,22 @@ You can manage the MediaWiki containers using these commands
 
 - Stops MediaWiki containers
     ```bash
-    ./mw stop
+    ./stop
     ```
 
 - Starts MediaWiki containers
     ```bash
-    ./mw start
+    ./start
     ```
 
 - Restarts MediaWiki containers
     ```bash
-    ./mw restart
+    ./restart
     ```
 
 - Stops and removes MediaWiki containers and files
     ```bash
-    ./mw remove
+    ./remove
     ```
 
 ## Container Shell Access
@@ -303,15 +303,15 @@ Get quick Bash shell access to running containers with these commands
 
 - Bash access to the MediaWiki container
     ```bash
-    ./mw bash_mw
+    ./bash_m
     ```
 
 - Bash access to the job runner container
     ```bash
-    ./mw bash_jr
+    ./bash_j
     ```
 
 - Bash access to the web container
     ```bash
-    ./mw bash_wb
+    ./bash_w
     ```

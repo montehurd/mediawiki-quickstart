@@ -1,0 +1,20 @@
+#!/bin/bash
+
+source "./config"
+
+prepare() {
+  local extra_compose_file_path
+  extra_compose_file_path=${1:-""}
+  mkdir -p "$MEDIAWIKI_PATH"
+  cd "$MEDIAWIKI_PATH" || exit
+  git clone https://gerrit.wikimedia.org/r/mediawiki/core.git . --depth=1
+  echo "$MW_ENV" >.env
+  cp "$SCRIPT_PATH/docker-compose.override.yml" . || true
+  if [ -n "$extra_compose_file_path" ] && [ -f "$extra_compose_file_path" ]; then
+    cp "$extra_compose_file_path" .
+  fi
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  prepare "$@"
+fi

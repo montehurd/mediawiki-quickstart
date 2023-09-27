@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source "./stop"
+source "./start"
+
+restart() {
+  stop
+  sleep 2
+  start
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  restart "$@"
+fi

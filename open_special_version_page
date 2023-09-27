@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source "./config"
+source "./utility.sh"
+
+open_special_version_page() {
+  if [ "${skipopenspecialversionpage:-false}" = "true" ]; then
+    return
+  fi
+  open_url_when_available "$SPECIAL_VERSION_URL"
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  open_special_version_page "$@"  
+fi

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source "./docker-compose-wrapper.sh"
+source "./selenium.sh"
+
+run_selenium_test() {
+  ensure_selenium_ready
+  docker_compose exec -u root mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js --spec /var/www/html/w/tests/selenium/specs/page.js --logLevel debug --mochaOpts.grep 'should be creatable'
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  run_selenium_test "$@"
+fi

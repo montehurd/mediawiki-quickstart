@@ -1,0 +1,12 @@
+#!/bin/bash
+
+source "./config"
+source "./docker-compose-wrapper.sh"
+
+run_parser_tests() {
+  docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki php tests/parser/parserTests.php
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  run_parser_tests "$@"
+fi

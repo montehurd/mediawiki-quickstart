@@ -1,0 +1,26 @@
+#!/bin/bash
+
+source "./config"
+source "./utility.sh"
+source "./docker.sh"
+source "./stop"
+source "./remove"
+source "./prepare"
+source "./start"
+
+fresh_install() {
+  verify_compose_version 2 || return 1
+  if ! confirm_action "Are you sure you want to do a fresh install"; then
+    return
+  fi
+  local extra_compose_file_path
+  extra_compose_file_path=${1:-""}
+  stop
+  remove
+  prepare "$extra_compose_file_path"
+  start
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  fresh_install "$@"
+fi

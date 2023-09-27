@@ -1,0 +1,22 @@
+#!/bin/bash
+
+source "./config"
+source "./utility.sh"
+source "./docker-compose-wrapper.sh"
+
+remove() {
+  if [ ! -d "$MEDIAWIKI_PATH" ]; then
+    return
+  fi
+  if ! confirm_action "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_PATH\""; then
+    exit 1
+  fi
+  docker_compose down
+  if [ -n "$MEDIAWIKI_PATH" ] && [ -d "$MEDIAWIKI_PATH" ]; then
+    rm -rf "$MEDIAWIKI_PATH"
+  fi
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  remove "$@"
+fi

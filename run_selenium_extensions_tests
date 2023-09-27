@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source "./docker-compose-wrapper.sh"
+source "./selenium.sh"
+
+run_selenium_extensions_tests() {
+  ensure_selenium_ready
+  "$SCRIPT_PATH/extensions/installer.sh" install_all
+  docker_compose exec -u root mediawiki npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/extensions/*/tests/selenium/specs/**/*.js"
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  run_selenium_extensions_tests "$@"
+fi
