@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source "./docker-compose-wrapper.sh"
-source "./selenium.sh"
+source "./selenium/selenium.sh"
 
 run_selenium_tests() {
   ensure_selenium_ready
