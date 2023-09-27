@@ -2,7 +2,7 @@
 
 source "./config"
 source "./common/utility.sh"
-source "./docker.sh"
+source "./docker/docker.sh"
 source "./docker-compose-wrapper.sh"
 source "./use_skin"
 
