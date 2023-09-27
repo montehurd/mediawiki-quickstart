@@ -4,7 +4,7 @@ set -eu
 
 source "./config"
 
-docker_compose_wrapper() {
+_docker_compose_wrapper() {
   local compose_files
   local override_file
   local selenium_file
@@ -30,5 +30,5 @@ docker_compose_wrapper() {
 }
 
 docker_compose() {
-  docker_compose_wrapper "$MEDIAWIKI_PATH" "$@"
+  _docker_compose_wrapper "$MEDIAWIKI_PATH" "$@"
 }
