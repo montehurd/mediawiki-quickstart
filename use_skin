@@ -1,12 +1,12 @@
 #!/bin/bash
 
-source "./config"
 source "./open_special_version_page"
+source "./skins/install"
 
 use_skin() {
   local skin_name
   skin_name=$1
-  "$SCRIPT_PATH/skins/installer.sh" install "$skin_name"
+  install "$skin_name"
   open_special_version_page
 }
 

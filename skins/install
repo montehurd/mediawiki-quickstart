@@ -1,0 +1,22 @@
+#!/bin/bash
+
+source "./skins/common.sh"
+
+install() {
+  if ! _ensure_containers_running; then
+    exit 1
+  fi
+  for skin in "$@"; do
+    local manifest
+    manifest="$(_get_script_path)/manifests/$skin.yml"
+    if [[ -f "$manifest" ]]; then
+      _install_from_manifest "$manifest"
+    else
+      echo "No corresponding manifest file found for skin '$skin', skipping..."
+    fi
+  done
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  install "$@"
+fi

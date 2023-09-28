@@ -72,11 +72,11 @@ Copy one of them and rename it for your skin and edit it to use your skin's sett
 
 - You can also call the skin installers directly
     ```bash
-    ./skins/installer.sh install #one_or_more_extensionless_skin_filename_separated_by_spaces#
+    ./skins/install #one_or_more_extensionless_skin_filename_separated_by_spaces#
     ```
 
     ```bash
-    ./skins/installer.sh install_all
+    ./skins/install_all
     ```
 
 Skin installers are also safe to call more than once for a given skin
