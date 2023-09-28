@@ -6,8 +6,10 @@ _get_required_keys() {
   echo 'name' 'repository' 'branch' 'wfLoadSkin' 'wgDefaultSkin'
 }
 
+_SKINS_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
 _get_script_path() {
-  echo "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+  echo "$_SKINS_PATH"
 }
 
 _get_mediawiki_path() {
