@@ -2,30 +2,41 @@
 
 set -eu
 
-if ! [ "$(docker inspect -f '{{.State.Running}}' mediawiki-mediawiki-1)" = "true" ]; then
-  echo "MediaWiki container is not running"
-  exit 1
-fi
+_get_required_keys() {
+  echo 'name' 'repository' 'configuration'
+}
 
-SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+_EXTENSIONS_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-docker cp "$SCRIPT_PATH/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isExtensionEnabled.php >/dev/null
+_get_script_path() {
+  echo "$_EXTENSIONS_PATH"
+}
 
-REQUIRED_KEYS=('name' 'repository' 'configuration')
-MEDIAWIKI_PATH="$SCRIPT_PATH/../mediawiki"
+source "$(_get_script_path)/php.sh"
+source "$(_get_script_path)/node.sh"
+docker cp "$(_get_script_path)/isExtensionEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isExtensionEnabled.php >/dev/null
 
-source "$SCRIPT_PATH/php.sh"
-source "$SCRIPT_PATH/node.sh"
+_get_mediawiki_path() {
+  echo "$(_get_script_path)/../mediawiki"
+}
+
+_ensure_containers_running() {
+  if ! [ "$(docker inspect -f '{{.State.Running}}' mediawiki-mediawiki-1)" = "true" ]; then
+    echo "MediaWiki container is not running"
+    return 1
+  fi
+  return 0
+}
 
 _yq() {
-  echo "$2" | docker run --rm -i -v "$SCRIPT_PATH:/workdir" mikefarah/yq eval "$1" -
+  echo "$2" | docker run --rm -i -v "$(_get_script_path):/workdir" mikefarah/yq eval "$1" -
 }
 
 _validate_keys() {
   local value
   local manifest_content
   manifest_content=$1
-  for key in "${REQUIRED_KEYS[@]}"; do
+  for key in $(_get_required_keys); do
     value=$(_yq ".${key}" "$manifest_content")
     if [ -z "$value" ] || [ "$value" = "null" ]; then
       echo "Missing key '$key' in manifest, skipping..."
@@ -47,9 +58,12 @@ _is_extension_enabled() {
   fi
 }
 
+# Note: caller must declare the following:
+#   declare -a INSTALLED_EXTENSIONS=()
 _install_from_manifest() {
   local manifest
   manifest=$1
+  echo -e "\nInstalling $manifest"
   if [ -z "$manifest" ] || [ ! -f "$manifest" ]; then
     echo "Manifest is not specified or file '$manifest' does not exist, skipping..."
     return
@@ -71,19 +85,19 @@ _install_from_manifest() {
   if [ -n "$dependencies" ]; then
     for dependency in $dependencies; do
       echo "Installing '$name' dependency '$dependency'"
-      _install_from_manifest "$SCRIPT_PATH/manifests/$dependency.yml"
+      _install_from_manifest "$(_get_script_path)/manifests/$dependency.yml"
     done
   fi
   local repository
   repository=$(_yq '.repository' "$manifest_content")
-  if ! git clone --recurse-submodules "$repository" "$MEDIAWIKI_PATH/extensions/$name" --depth=1 >/dev/null 2>&1; then
+  if ! git clone --recurse-submodules "$repository" "$(_get_mediawiki_path)/extensions/$name" --depth=1 >/dev/null 2>&1; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
-  echo -e "\n# Configuration for '$name' extension" >>"$MEDIAWIKI_PATH/LocalSettings.php"
+  echo -e "\n# Configuration for '$name' extension" >>"$(_get_mediawiki_path)/LocalSettings.php"
   local configuration
   configuration=$(_yq '.configuration' "$manifest_content")
-  echo -e "$configuration" >>"$MEDIAWIKI_PATH/LocalSettings.php"
+  echo -e "$configuration" >>"$(_get_mediawiki_path)/LocalSettings.php"
   local bash
   bash=$(_yq '.bash' "$manifest_content")
   if [ -n "$bash" ] && [ "$bash" != "null" ]; then
@@ -93,36 +107,16 @@ _install_from_manifest() {
   INSTALLED_EXTENSIONS+=("$name")
 }
 
-declare -a INSTALLED_EXTENSIONS=()
-
 _install_php_and_node_dependencies() {
   if [[ ${#INSTALLED_EXTENSIONS[@]} -eq 0 ]]; then
     return
   fi
-  install_php_dependencies_for_extensions "${INSTALLED_EXTENSIONS[@]}"
-  install_node_dependencies_for_extensions "${INSTALLED_EXTENSIONS[@]}"
+  if ! install_php_dependencies_for_extensions "${INSTALLED_EXTENSIONS[@]}"; then
+    echo "Failed to install php dependencies"
+    exit 1
+  fi
+  if ! install_node_dependencies_for_extensions "${INSTALLED_EXTENSIONS[@]}"; then
+    echo "Failed to install node dependencies"
+    exit 1
+  fi
 }
-
-install() {
-  INSTALLED_EXTENSIONS=()
-  for extension in "$@"; do
-    local manifest
-    manifest="$SCRIPT_PATH/manifests/$extension.yml"
-    if [[ -f "$manifest" ]]; then
-      _install_from_manifest "$manifest"
-    else
-      echo "No corresponding manifest file found for extension '$extension', skipping..."
-    fi
-  done
-  _install_php_and_node_dependencies
-}
-
-install_all() {
-  INSTALLED_EXTENSIONS=()
-  for manifest in "${SCRIPT_PATH}/manifests/"*.yml; do
-    _install_from_manifest "$manifest"
-  done
-  _install_php_and_node_dependencies
-}
-
-"$@"

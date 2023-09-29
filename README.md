@@ -120,16 +120,16 @@ Skin installers are also safe to call more than once for a given skin
 
 - Install one or more extensions for which manifest files exist in `~/mediawiki-quickstart/extensions/manifests`
     ```bash
-    ./extensions/installer.sh install Echo
+    ./extensions/install Echo
     ```
 
     ```bash
-    ./extensions/installer.sh install Echo IPInfo
+    ./extensions/install Echo IPInfo
     ```
 
 - Install all extensions for which manifest files exist in `~/mediawiki-quickstart/extensions/manifests`
     ```bash
-    ./extensions/installer.sh install_all
+    ./extensions/install_all
     ```
 
 ### Adding more extensions
