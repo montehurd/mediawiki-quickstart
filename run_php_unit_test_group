@@ -1,0 +1,19 @@
+#!/bin/bash
+
+source "./config"
+source "./docker/docker-compose-wrapper.sh"
+
+run_php_unit_test_group() {
+  local testgroup=$1
+
+  if [ -z "$testgroup" ]; then
+    echo "Please provide a test group"
+    exit 1
+  fi
+
+  docker_compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php --group "$testgroup" --testdox
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  run_php_unit_test_group "$@"
+fi

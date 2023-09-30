@@ -230,12 +230,12 @@ Run a variety of tests using the commands below
 
 - Run PHP unit tests with a specific group
     ```bash
-    ./run_php_unit_tests testgroup=Cache
+    ./run_php_unit_test_group Cache
     ```
 
 - Run PHP unit tests with a specific path
     ```bash
-    ./run_php_unit_tests testpath=unit/includes/resourceloader/
+    ./run_php_unit_test_path unit/includes/resourceloader/
     ```
 
 ### Selenium
