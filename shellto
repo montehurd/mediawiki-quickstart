@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# shellto: Script to run bash in specified docker service.
+# Usage: ./shellto [w|m|j]
+
+source "./config"
+source "./docker/docker-compose-wrapper.sh"
+
+# Check if argument is provided
+if [ -z "${1:-}" ]; then
+    echo "Usage: $0 [w|m|j]"
+    exit 1
+fi
+
+case "$1" in
+  w)
+    service="mediawiki-web"
+    ;;
+  m)
+    service="mediawiki"
+    ;;
+  j)
+    service="mediawiki-jobrunner"
+    ;;
+  *)
+    echo "Invalid argument. Use 'w', 'm', or 'j'."
+    exit 1
+    ;;
+esac
+
+docker_compose exec -u "$HOST_UID:$HOST_GID" $service bash

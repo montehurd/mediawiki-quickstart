@@ -1,6 +1,0 @@
-#!/bin/bash
-
-source "./config"
-source "./docker/docker-compose-wrapper.sh"
-
-docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki-web bash

@@ -303,19 +303,19 @@ You can manage the MediaWiki containers using these commands
 
 ## Container Shell Access
 
-Get quick Bash shell access to running containers with these commands
+Get quick Bash shell access to running MediaWiki containers with these commands
 
 - Bash access to the MediaWiki container
     ```bash
-    ./bash_m
+    ./shellto m
     ```
 
 - Bash access to the job runner container
     ```bash
-    ./bash_j
+    ./shellto j
     ```
 
 - Bash access to the web container
     ```bash
-    ./bash_w
+    ./shellto w
     ```
