@@ -111,3 +111,24 @@ verify_compose_version() {
   echo -e "$error_message"
   return 1
 }
+
+is_user_in_docker_group() {
+  groups $USER | grep -q '\bdocker\b'
+}
+
+verify_docker_group() {
+  if [[ "$(uname -s)" != "Linux" ]]; then
+    echo "Skipping Linux user group check"
+    return 0
+  fi
+  if is_user_in_docker_group; then
+    echo "User '$USER' is in the 'docker' group"
+    return 0
+  else
+    echo "Error: User '$USER' is not in the 'docker' group"
+    echo "Please run the following command to add '$USER' to the 'docker' group:"
+    printf "\e[33msudo usermod -aG docker $USER\e[0m\n"
+    echo -e "Afterwards, log out and log back in or reboot for the changes to take effect\n"
+    return 1
+  fi
+}
