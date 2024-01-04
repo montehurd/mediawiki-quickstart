@@ -36,9 +36,9 @@ open_url_when_available() {
   elif [[ "$OSTYPE" == "linux-gnu" ]]; then
     # Linux system
     open_url_with_linux_browser "$url" || echo "$error_message"
-  elif [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
-    # Windows system (Cygwin, Git Bash, or WSL)
-    start "" "$url" || echo "$error_message"
+  elif [[ "$(uname -r)" == *microsoft* ]]; then
+    # Windows Subsystem for Linux
+    explorer.exe "$url" || echo "$error_message"
   else
     echo "$error_message"
     echo "Unsupported operating system"
