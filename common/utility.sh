@@ -35,9 +35,7 @@ open_url_when_available() {
     open ${2:+-a "$2"} "$url" || echo "$error_message"
   elif [[ "$(uname -r)" == *microsoft* ]]; then
     # Windows Subsystem for Linux
-    if ! explorer.exe "$url"; then
-      echo "$error_message"
-    fi
+    explorer.exe "$url" || true # Assume success for WSL
   elif [[ "$OSTYPE" == "linux-gnu" ]] || [[ "$OSTYPE" == "linux" ]]; then
     # Linux system
     open_url_with_linux_browser "$url" || echo "$error_message"
