@@ -33,7 +33,7 @@ open_url_when_available() {
   if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS system
     open ${2:+-a "$2"} "$url" || echo "$error_message"
-  elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+  elif [[ "$OSTYPE" == "linux-gnu" ]] || [[ "$OSTYPE" == "linux" ]]; then
     # Linux system
     open_url_with_linux_browser "$url" || echo "$error_message"
   elif [[ "$(uname -r)" == *microsoft* ]]; then
