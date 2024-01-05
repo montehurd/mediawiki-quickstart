@@ -35,7 +35,13 @@ open_url_when_available() {
     open ${2:+-a "$2"} "$url" || echo "$error_message"
   elif [[ "$(uname -r)" == *microsoft* ]]; then
     # Windows Subsystem for Linux
-    explorer.exe "$url" || true # Assume success for WSL
+    if which explorer.exe > /dev/null; then
+      explorer.exe "$url" || true
+    elif [ -f /mnt/c/WINDOWS/explorer.exe ]; then
+      /mnt/c/WINDOWS/explorer.exe "$url" || true
+    else
+      echo "explorer.exe not found."
+    fi
   elif [[ "$OSTYPE" == "linux-gnu" ]] || [[ "$OSTYPE" == "linux" ]]; then
     # Linux system
     open_url_with_linux_browser "$url" || echo "$error_message"
