@@ -29,6 +29,11 @@ Test running including Selenium tests you can watch as they execute
     ./fresh_install
     ```
 
+- You can also do a fresh install bypassing all confirmations for removing and re-installing Mediawiki files and containers, but use with caution as this proceeds with these destructive actions without confimation
+    ```bash
+    FORCE=1 ./fresh_install
+    ```
+
 # Optional
 
 ## Skin Management

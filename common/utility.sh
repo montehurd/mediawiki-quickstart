@@ -74,12 +74,18 @@ wait_until_url_available() {
 confirm_action() {
   local prompt_message
   prompt_message="$1"
-  read -p "${prompt_message} (y/n)? " -n 1 -r
-  echo
-  if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
-    return 1
+  local force_mode
+  force_mode=${FORCE:-""}
+  if [[ "$force_mode" == "1" ]] || [[ "$force_mode" == "true" ]]; then
+    return 0
+  else
+    read -p "${prompt_message} (y/n)? " -n 1 -r
+    echo
+    if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
+      return 1
+    fi
+    return 0
   fi
-  return 0
 }
 
 # Usage: print_duration_since_start start_time [format]
