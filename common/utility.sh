@@ -18,7 +18,7 @@ open_url_with_linux_browser() {
     return 0
   fi
   if command -v xdg-open &> /dev/null; then
-    xdg-open "$url" &> /dev/null
+    xdg-open "$url" > /dev/null
     return 0
   fi
   return 1
