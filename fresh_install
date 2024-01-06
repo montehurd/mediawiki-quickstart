@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 source "./config"
 source "./common/utility.sh"
 source "./docker/docker.sh"
