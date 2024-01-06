@@ -38,7 +38,6 @@ start() {
   fi
   wait_until_url_available $SPECIAL_VERSION_URL
   open_special_version_page
-  sleep 5
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
