@@ -17,7 +17,7 @@ open_url_with_linux_browser() {
     chromium "$url" &> /dev/null &
     return 0
   fi
-  if command -v xdg-open > /dev/null; then
+  if command -v xdg-open &> /dev/null; then
     xdg-open "$url" &> /dev/null
     return 0
   fi
