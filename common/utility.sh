@@ -91,9 +91,14 @@ confirm_action() {
 print_force_mode_notification_if_necessary() {
   local force_mode
   force_mode=${FORCE:-""}
+  local skip_countdown
+  skip_countdown=${SKIP_COUNTDOWN:-""}
   local interrupted
   interrupted=0
   if [[ "$force_mode" != "1" ]] && [[ "$force_mode" != "true" ]]; then
+    return 0
+  fi
+  if [[ "$skip_countdown" == "1" ]] || [[ "$skip_countdown" == "true" ]]; then
     return 0
   fi
   handle_interrupt() {
