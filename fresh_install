@@ -11,6 +11,7 @@ source "./start"
 fresh_install() {
   verify_compose_version 2 || return 1
   verify_docker_group || return 1
+  print_force_mode_notification_if_necessary
   if ! confirm_action "Are you sure you want to do a fresh install"; then
     return
   fi

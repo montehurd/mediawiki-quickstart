@@ -88,6 +88,41 @@ confirm_action() {
   fi
 }
 
+print_force_mode_notification_if_necessary() {
+  local force_mode
+  force_mode=${FORCE:-""}
+  local interrupted
+  interrupted=0
+  if [[ "$force_mode" != "1" ]] && [[ "$force_mode" != "true" ]]; then
+    return 0
+  fi
+  handle_interrupt() {
+    interrupted=1
+    # Clear the line to remove any partial countdown message
+    echo -ne "\r\033[K"
+    # Show cursor and add a new line for clean exit
+    echo -ne "\033[?25h\n"
+    echo 'Fresh install canceled'
+    exit
+  }
+  # Trap the interrupt signal (Control-C) and call handle_interrupt
+  trap handle_interrupt SIGINT
+  echo -ne "\033[?25l"
+  for i in {10..1}; do
+    echo -ne "\r\033[K\033[33mStarting fresh install in $i seconds. Press Control-c to cancel\033[0m"
+    sleep 1
+    if [[ $interrupted -eq 1 ]]; then
+      return
+    fi
+  done
+  # Clear the line before displaying the final message
+  echo -ne "\r\033[K"
+  echo -ne "\033[?25h"
+  echo 'Starting fresh install...'
+  # Reset the trap to default behavior
+  trap - SIGINT
+}
+
 # Usage: print_duration_since_start start_time [format]
 print_duration_since_start() {
   local start
