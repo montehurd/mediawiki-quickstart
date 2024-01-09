@@ -34,13 +34,10 @@ open_url_when_available() {
     # macOS system
     open ${2:+-a "$2"} "$url" || echo "$error_message"
   elif [[ "$(uname -r)" == *microsoft* ]]; then
-    # Windows Subsystem for Linux
-    if which explorer.exe > /dev/null; then
-      explorer.exe "$url" || true
-    elif [ -f /mnt/c/WINDOWS/explorer.exe ]; then
-      /mnt/c/WINDOWS/explorer.exe "$url" || true
+    if [ -f /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe ]; then
+      /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -Command "Start-Process '$url'"
     else
-      echo "explorer.exe not found."
+      echo "powershell.exe not found."
     fi
   elif [[ "$OSTYPE" == "linux-gnu" ]] || [[ "$OSTYPE" == "linux" ]]; then
     # Linux system
