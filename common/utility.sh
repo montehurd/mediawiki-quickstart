@@ -11,14 +11,14 @@ open_url_with_linux_browser() {
   local url
   url="$1"
   if command -v google-chrome &> /dev/null; then
-    nohup google-chrome "$url" &> /dev/null &
+    google-chrome "$url" &> /dev/null &
     return 0
   elif command -v chromium &> /dev/null; then
-    nohup chromium "$url" &> /dev/null &
+    chromium "$url" &> /dev/null &
     return 0
   fi
   if command -v xdg-open &> /dev/null; then
-    nohup xdg-open "$url" &> /dev/null
+    xdg-open "$url" &> /dev/null
     return 0
   fi
   return 1
