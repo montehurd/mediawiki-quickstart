@@ -1,0 +1,75 @@
+#!/bin/bash
+
+set -x
+
+# This script is used for local development 
+
+# Runs "./fresh_install" simultaneously locally (on my macOS laptop), and via ssh on my ubuntu-x1 and windows-x1 laptops:
+#    ./tmux_ssh
+# Spins up and runs Selenium bits on all three machines:
+#    TEST=1 ./tmux_ssh
+# Both commands above use tmux to create three separate terminal panes so terminal output on all three machines may be easily monitored 
+
+# Presumes mediawiki-quickstart has been cloned into ~/mediawiki-quickstart on all three machines
+
+# Session name
+SESSION_NAME="testing_session"
+
+# tmux session setup
+tmux has-session -t "$SESSION_NAME" 2>/dev/null
+if [ $? -eq 0 ]; then
+  tmux kill-session -t "$SESSION_NAME"
+fi
+tmux new-session -d -s "$SESSION_NAME"
+
+# Enable mouse support after creating the session and before attaching to it
+tmux set -t "$SESSION_NAME" mouse on
+
+# Pane setup
+tmux split-window -h -t "$SESSION_NAME"
+tmux split-window -h -t "$SESSION_NAME"
+
+# Run the commands directly in each pane, with forced interactive mode and color support
+send_tmux_command() {
+    local pane=$1
+    local message=$2
+    local command=$3
+    tmux send-keys -t "${SESSION_NAME}:${pane}" \
+        "export TERM=xterm-256color && " \
+        "echo -e '\033[32m\n${message}\n\033[0m' && " \
+        "(${command})" C-m
+}
+
+commands=""
+
+if [ "$TEST" == "1" ]; then
+    commands="./run_selenium_tests"
+else
+    commands="./fresh_install"
+fi
+
+# Presumes mediawiki-quickstart has been cloned on the Windows/WSL machine
+send_tmux_command "0.0" "Windows" \
+    "ssh -t windows-x1 '\
+        cd ~/mediawiki-quickstart && \
+        git pull && \
+        FORCE=1 SKIP_COUNTDOWN=1 $commands\
+    '"
+
+# Presumes mediawiki-quickstart has been cloned on the local machine
+send_tmux_command "0.1" "Local" \
+    "cd ~/mediawiki-quickstart && \
+    FORCE=1 SKIP_COUNTDOWN=1 $commands"
+
+# Presumes mediawiki-quickstart has been cloned on the Ubuntu machine
+send_tmux_command "0.2" "Ubuntu" \
+    "ssh -t ubuntu-x1 '\
+        cd ~/mediawiki-quickstart && \
+        git pull && \
+        DISPLAY=:0 MOZ_ENABLE_WAYLAND=0 FORCE=1 SKIP_COUNTDOWN=1 $commands && \
+        read -p \"Press [Enter] key to close browser...\"\
+    '"
+
+# Layout adjustment
+tmux select-layout -t "$SESSION_NAME" even-horizontal
+tmux attach-session -t "$SESSION_NAME"
