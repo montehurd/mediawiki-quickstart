@@ -9,7 +9,7 @@ source "./use_skin"
 prepare_node() {
   docker cp "$SCRIPT_PATH/node/node-preparation.sh" mediawiki-mediawiki-1:/var/www/html/w/
   docker exec -i -u root mediawiki-mediawiki-1 sh -c "
-    ./node-preparation.sh ensure_node_major_version_installed 16 &&
+    ./node-preparation.sh ensure_node_major_version_installed 18 &&
     npm install puppeteer-chromium-version-finder &&
     npm ci
   "
