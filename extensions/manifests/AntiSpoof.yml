@@ -1,0 +1,4 @@
+name: AntiSpoof
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/AntiSpoof
+configuration: |
+  wfLoadExtension( 'AntiSpoof' );
