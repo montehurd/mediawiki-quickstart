@@ -5,14 +5,14 @@ dependencies:
   - CheckUser
 configuration: |
   wfLoadExtension( 'CentralAuth' );
-  $wgAutoCreateTempUser['serialProvider']['type'] = 'centralauth';
-  # $wgAutoCreateTempUser['serialProvider']['type'] = 'local';
   $wgAutoCreateTempUser['enabled'] = true;
   $wgAutoCreateTempUser['genPattern'] = '~$1';
   $wgAutoCreateTempUser['serialProvider'] = [
     'numShards' => 8, // Just to test breaking up by year and by shard together
     'useYear' => true,
   ];
+  $wgAutoCreateTempUser['serialProvider']['type'] = 'centralauth';
+  # $wgAutoCreateTempUser['serialProvider']['type'] = 'local';
 bash: |
   apt update
   apt install -y sqlite3 || echo "sqlite3 is already installed or failed to install"
