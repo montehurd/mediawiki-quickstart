@@ -2,6 +2,7 @@ name: CentralAuth
 repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/CentralAuth
 dependencies:
   - AntiSpoof
+  - CheckUser
 configuration: |
   wfLoadExtension( 'CentralAuth' );
   $wgAutoCreateTempUser['serialProvider']['type'] = 'centralauth';
