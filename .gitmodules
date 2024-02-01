@@ -1,3 +1,6 @@
 [submodule "docker-chromium-novnc"]
 	path = docker-chromium-novnc
 	url = https://gitlab.wikimedia.org/mhurd/docker-chromium-novnc.git
+[submodule "shell-utilities"]
+	path = shell-utilities
+	url = https://gitlab.wikimedia.org/mhurd/shell-utilities.git
