@@ -6,7 +6,7 @@ ensure_utilities_present() {
   local UTILITY_PATH
   UTILITY_PATH="./shell-utilities/utilities.sh"
   if [ ! -f "$UTILITY_PATH" ]; then
-    git submodule update --init --recursive shell-utilities
+    git submodule update --init --recursive --remote shell-utilities
   fi
   if [ -f "$UTILITY_PATH" ]; then
     source "$UTILITY_PATH"

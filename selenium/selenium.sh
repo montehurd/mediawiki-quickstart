@@ -25,7 +25,7 @@ prepare_docker_chromium_novnc() {
     echo "Could not change directory to $SCRIPT_PATH"
     return 1
   }
-  if ! git submodule update --init --recursive; then
+  if ! git submodule update --init --recursive --remote docker-chromium-novnc; then
     echo "Failed to update git submodule"
     return 1
   fi
