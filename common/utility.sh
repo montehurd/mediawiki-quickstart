@@ -8,6 +8,7 @@ ensure_utilities_present() {
   if [ ! -f "$UTILITY_PATH" ]; then
     git submodule update --init --recursive --remote shell-utilities
   fi
+  git submodule update --recursive shell-utilities
   if [ -f "$UTILITY_PATH" ]; then
     source "$UTILITY_PATH"
   else
