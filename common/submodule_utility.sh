@@ -7,17 +7,17 @@ ensure_submodule_initialized_and_updated() {
   submodule="$1"
   if [ ! -e "./$submodule/.git" ]; then
     git submodule update --init --recursive --remote "$submodule"
-    echo "Submodule '$submodule' was updated (initial fetch)"
+    echo "Submodule '$submodule' updated (initial fetch)"
     return 0
   else
     before_update_sha=$(git -C "./$submodule" rev-parse HEAD)
     git submodule update --recursive "$submodule"
     after_update_sha=$(git -C "./$submodule" rev-parse HEAD)
     if [ "$before_update_sha" != "$after_update_sha" ]; then
-      echo "Submodule '$submodule' was updated"
+      echo "Submodule '$submodule' updated"
       return 0
     fi
-    echo "Submodule '$submodule' is already up to date"
+    echo "Submodule '$submodule' already up to date"
     return 1
   fi
 }
