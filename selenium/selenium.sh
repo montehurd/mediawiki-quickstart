@@ -21,15 +21,6 @@ prepare_mediawiki_for_selenium() {
 }
 
 prepare_docker_chromium_novnc() {
-  # cd "$SCRIPT_PATH" || {
-  #   echo "Could not change directory to $SCRIPT_PATH"
-  #   return 1
-  # }
-  # if ! git submodule update --init --recursive --remote docker-chromium-novnc; then
-  #   echo "Failed to update git submodule"
-  #   return 1
-  # fi
-  # sleep 1
   CHROMIUM_VERSION=$(docker exec -u root mediawiki-mediawiki-1 /usr/bin/node "./puppeteer-chromium-version-finder.js")
   echo "$CHROMIUM_VERSION"
   cd "$DOCKER_CHROMIUM_NOVNC_PATH" || {
