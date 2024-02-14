@@ -29,7 +29,7 @@ source_up_to_date_submodule_file() {
   submodule="$1"
   file="$2"
   submodule_path="./$submodule/$file"
-  ensure_submodule_initialized_and_updated "$submodule"
+  ensure_submodule_initialized_and_updated "$submodule" || true
   if [ ! -f "$submodule_path" ]; then
     echo "Error: '$submodule_path' not found. Submodule update might have failed." >&2
     exit 1
