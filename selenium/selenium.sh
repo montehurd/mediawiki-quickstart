@@ -27,6 +27,12 @@ prepare_docker_chromium_novnc() {
     echo "Could not change directory to $DOCKER_CHROMIUM_NOVNC_PATH"
     return 1
   }
+  if ! is_docker_chromium_novnc_up_to_date; then
+    if ! CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh rebuild; then
+      echo "Failed to perform rebuild"
+      return 1
+    fi
+  fi
   if ! CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install; then
     echo "Failed to perform fresh install"
     return 1
@@ -71,6 +77,22 @@ is_docker_chromium_novnc_automation_ready() {
   return 0
 }
 
+is_docker_chromium_novnc_up_to_date() {
+  # compare submodule commit hash to the hash when the containers were built
+  local submodule_commit_hash
+  local docker_commit_hash
+  submodule_commit_hash=$(cd "$DOCKER_CHROMIUM_NOVNC_PATH" && git rev-parse HEAD)
+  docker_commit_hash=$(docker exec -u root docker-chromium-novnc-chromium-1 sh -c 'echo "$GIT_COMMIT_HASH"')
+  # echo -e "Submodule hash:\n\t$submodule_commit_hash"
+  # echo -e "Hash used when building containers:\n\t$docker_commit_hash"
+  if [ "$submodule_commit_hash" = "$docker_commit_hash" ]; then
+    echo "docker-chromium-novnc containers were built using the latest submodule commit"
+    return 0
+  fi
+  echo "docker-chromium-novnc containers were not built using the latest submodule commit"
+  return 1
+}
+
 ensure_selenium_ready() {
   local start
   start=$(date +%s)
@@ -92,8 +114,7 @@ ensure_selenium_ready() {
   fi
 
   sleep 2
-
-  if ensure_submodule_initialized_and_updated "docker-chromium-novnc" || ! is_docker_chromium_novnc_automation_ready; then
+  if ensure_submodule_initialized_and_updated "docker-chromium-novnc" || ! is_docker_chromium_novnc_automation_ready || ! is_docker_chromium_novnc_up_to_date; then
     if ! confirm_action "Chromium / noVNC containers need to be prepared for Selenium. Do you wish to continue"; then
       exit 1
     fi
