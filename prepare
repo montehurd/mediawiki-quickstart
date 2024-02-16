@@ -4,7 +4,9 @@ source "./config"
 
 prepare() {
   local extra_compose_file_path
+  local original_dir
   extra_compose_file_path=${1:-""}
+  original_dir="$(pwd)"
   mkdir -p "$MEDIAWIKI_PATH"
   cd "$MEDIAWIKI_PATH" || exit
   if ! git clone https://gerrit.wikimedia.org/r/mediawiki/core.git . --depth=1; then
@@ -16,6 +18,7 @@ prepare() {
   if [ -n "$extra_compose_file_path" ] && [ -f "$extra_compose_file_path" ]; then
     cp "$extra_compose_file_path" .
   fi
+  cd "$original_dir"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
