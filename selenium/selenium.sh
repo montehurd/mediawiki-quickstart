@@ -28,12 +28,12 @@ prepare_docker_chromium_novnc() {
     return 1
   }
   if ! is_docker_chromium_novnc_up_to_date; then
-    if ! CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh rebuild; then
+    if ! CHROMIUM_VERSION="$CHROMIUM_VERSION" ./rebuild; then
       echo "Failed to perform rebuild"
       return 1
     fi
   fi
-  if ! CHROMIUM_VERSION="$CHROMIUM_VERSION" ./script.sh fresh_install; then
+  if ! CHROMIUM_VERSION="$CHROMIUM_VERSION" ./fresh_install; then
     echo "Failed to perform fresh install"
     return 1
   fi
@@ -139,5 +139,5 @@ ensure_selenium_ready() {
     echo "Could not change directory"
     return 1
   }
-  ./script.sh view_novnc
+  ./view_novnc
 }
