@@ -23,4 +23,3 @@ bash: |
   # php maintenance/run.php sql --wikidb centralauth extensions/AntiSpoof/sql/sqlite/tables-generated.sql
   php maintenance/run.php CentralAuth:migratePass0.php
   php maintenance/run.php CentralAuth:migratePass1.php
-  php maintenance/rebuildLocalisationCache.php --force

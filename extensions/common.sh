@@ -120,3 +120,7 @@ _install_php_and_node_dependencies() {
     exit 1
   fi
 }
+
+_rebuild_localization_cache() {
+  docker exec -u root mediawiki-mediawiki-1 bash -c "php maintenance/rebuildLocalisationCache.php --force --no-progress"
+}
