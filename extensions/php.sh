@@ -64,7 +64,7 @@ install_php_dependencies_for_extensions() {
         return 0
     fi
 
-    echo "Installing php dependencies for extensions: ${extensions_with_composer[@]}"
+    echo -e "\nInstalling php dependencies for extensions: ${extensions_with_composer[@]}"
 
     _backup_composer_local_json
 
