@@ -215,6 +215,8 @@ Then use the `install` command above to install it
 
   The extension installer script takes care of this automatically if it sees your extension contains `composer.json` / `package.json`
 
+  It also rebuilds localization caches when extension(s) are installed, so no need to run `php maintenance/rebuildLocalisationCache.php`
+
 ## Testing
 
 Run a variety of tests using the commands below
