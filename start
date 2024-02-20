@@ -37,6 +37,7 @@ start() {
     sleep 1
   fi
   wait_until_url_available $SPECIAL_VERSION_URL
+  sleep 1
   open_special_version_page
 }
 
