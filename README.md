@@ -247,47 +247,45 @@ Run a variety of tests using the commands below
 
 ### Selenium
 
-These functions provide examples you can examine and customize if needed
-
-- Run MediaWiki core Selenium tests
-    ```bash
-    ./run_selenium_tests
-    ```
-
-- Run a specific MediaWiki core Selenium test
-    ```bash
-    ./run_selenium_test
-    ```
-
-- Run all tests in a specific MediaWiki core Selenium test file
-    ```bash
-    ./run_selenium_test_file
-    ```
-
-- Run MediaWiki core Selenium tests with wildcard
-    ```bash
-    ./run_selenium_test_wildcard
-    ```
-
-- Run Selenium tests for installed extensions
-    ```bash
-    ./run_selenium_extensions_tests
-    ```
-
-- Run Selenium tests for a specific extension
-    ```bash
-    ./run_selenium_extension_tests
-    ```
-
-- Run Selenium test for a specific extension
-    ```bash
-    ./run_selenium_extension_test
-    ```
-
-- List Selenium core and extension tests
+- List all available core and extension tests, can be used to customize the parameters in the `run_selenium_tests` examples below
     ```bash
     ./list_selenium_tests
     ```
+
+- Run a MediaWiki core test
+    ```bash
+    ./run_selenium_tests "tests/selenium/specs/page.js" "should be creatable"
+    ```
+
+- Run tests in a specific MediaWiki core test file
+    ```bash
+    ./run_selenium_tests "tests/selenium/specs/page.js" ".*"
+    ```
+
+- Run all MediaWiki core tests
+    ```bash
+    ./run_selenium_tests "tests/selenium/specs/**/*.js" ".*"
+    ```
+
+- Run a test in a specific extension
+    ```bash
+    ./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" "alerts and notices are visible"
+    ```
+ 
+- Run all tests in specific extension file
+    ```bash
+    ./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" ".*"
+    ```
+
+- Run all tests in a specific extension
+    ```bash
+    ./run_selenium_tests "extensions/Echo/tests/selenium/specs/**/*.js" ".*"
+    ```
+
+- Run all tests in all extensions
+    ```bash
+    ./run_selenium_tests "extensions/*/tests/selenium/specs/**/*.js" ".*"
+   ```
 
 ## Container Management
 

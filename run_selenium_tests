@@ -1,13 +1,16 @@
 #!/bin/bash
 
-source "./docker/docker-compose-wrapper.sh"
 source "./selenium/selenium.sh"
 
 run_selenium_tests() {
   ensure_selenium_ready
-  docker_compose exec -u root mediawiki npx wdio /var/www/html/w/tests/selenium/wdio.conf.override.js
+  local file_path
+  file_path=$1
+  local test_name
+  test_name=$2
+  docker exec -it -u root mediawiki-mediawiki-1 npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/$file_path" --logLevel debug --mochaOpts.grep "$test_name"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-  run_selenium_tests "$@"
+  run_selenium_tests "$1" "$2"
 fi
