@@ -284,6 +284,11 @@ These functions provide examples you can examine and customize if needed
     ./run_selenium_extension_test
     ```
 
+- List Selenium core and extension tests
+    ```bash
+    ./run_selenium_extension_test
+    ```
+
 ## Container Management
 
 You can manage the MediaWiki containers using these commands

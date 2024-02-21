@@ -1,0 +1,41 @@
+#!/bin/bash
+
+list_selenium_tests() {
+  docker exec -i -u root mediawiki-mediawiki-1 sh -c "
+    node -e \"
+      const Mocha = require('mocha');
+      const fs = require('fs');
+      const path = require('path');
+
+      const listTests = (dir) => {
+        fs.readdirSync(dir)
+          .filter(file => file.endsWith('.js'))
+          .forEach(file => {
+            const fullPath = path.join(dir, file);
+            console.log(fullPath);
+            const mocha = new Mocha();
+            mocha.addFile(fullPath);
+            mocha.loadFiles();
+            mocha.suite.eachTest(test => console.log('\\t' + test.title));
+            mocha.suite.suites = [];
+          });
+      };
+
+      const traverseAndListTests = dir => {
+        if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) {
+          if (path.basename(dir) === 'specs' && path.basename(path.dirname(dir)) === 'selenium') {
+            listTests(dir);
+          } else {
+            fs.readdirSync(dir).forEach(subdir => traverseAndListTests(path.join(dir, subdir)));
+          }
+        }
+      };
+
+      ['tests/', 'extensions/'].forEach(dir => traverseAndListTests(dir));
+    \"
+  "
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  list_selenium_tests "$@"
+fi
