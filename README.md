@@ -286,7 +286,7 @@ These functions provide examples you can examine and customize if needed
 
 - List Selenium core and extension tests
     ```bash
-    ./run_selenium_extension_test
+    ./list_selenium_tests
     ```
 
 ## Container Management
