@@ -247,7 +247,7 @@ Run a variety of tests using the commands below
 
 ### Selenium
 
-- List all available core and extension tests, can be used to customize the parameters in the `run_selenium_tests` examples below
+- List all core and extension test files and tests, can be used to customize the file and test parameters in the `run_selenium_tests` examples below
     ```bash
     ./list_selenium_tests
     ```
