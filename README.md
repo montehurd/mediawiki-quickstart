@@ -269,21 +269,25 @@ Run a variety of tests using the commands below
 
 - Run a test in a specific extension
     ```bash
+    ./extensions/install Echo
     ./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" "alerts and notices are visible"
     ```
  
 - Run all tests in specific extension file
     ```bash
+    ./extensions/install Echo
     ./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" ".*"
     ```
 
 - Run all tests in a specific extension
     ```bash
+    ./extensions/install Echo
     ./run_selenium_tests "extensions/Echo/tests/selenium/specs/**/*.js" ".*"
     ```
 
 - Run all tests in all extensions
     ```bash
+    ./extensions/install_all
     ./run_selenium_tests "extensions/*/tests/selenium/specs/**/*.js" ".*"
    ```
 
