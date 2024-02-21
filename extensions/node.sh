@@ -26,7 +26,7 @@ install_node_dependencies_for_extensions() {
     echo -e "\nInstalling node dependencies for extensions: ${extensions[@]}"
     docker exec -it -u root mediawiki-mediawiki-1 bash -c '
         SECONDS=0
-        printf "./extensions/%s\\n" "$@" | xargs -I {} -P 2 sh -c "cd {} && npm install > ./npm_install.log 2>&1"
+        printf "./extensions/%s\\n" "$@" | xargs -I {} -P 2 sh -c "cd {} && echo \"Installing Node dependencies for \$(pwd)\" && npm install > ./npm_install.log 2>&1"
         ELAPSED=$SECONDS
         echo "Duration: "$((ELAPSED/60))" minutes "$((ELAPSED%60))" seconds"
     ' _ "${extensions[@]}"
