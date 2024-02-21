@@ -122,6 +122,9 @@ _install_php_and_node_dependencies() {
 }
 
 _rebuild_localization_cache() {
+  if [[ ${#INSTALLED_EXTENSIONS[@]} -eq 0 ]]; then
+    return
+  fi
   echo -e "\nRebuilding localization cache"
   docker exec -u root mediawiki-mediawiki-1 bash -c "php maintenance/rebuildLocalisationCache.php --force --no-progress"
 }
