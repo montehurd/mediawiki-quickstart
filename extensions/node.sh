@@ -23,7 +23,7 @@ install_node_dependencies_for_extensions() {
         echo "No extensions with package.json found. Exiting."
         return 0
     fi
-    echo -e "\nInstalling node dependencies for extensions: ${extensions[@]}"
+    echo -e "\nInstalling Node dependencies for extensions: ${extensions[@]}"
     docker exec -it -u root mediawiki-mediawiki-1 bash -c '
         SECONDS=0
         printf "./extensions/%s\\n" "$@" | xargs -I {} -P 2 sh -c "cd {} && echo \"Installing Node dependencies for \$(pwd)\" && npm install > ./npm_install.log 2>&1"

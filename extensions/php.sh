@@ -60,11 +60,11 @@ install_php_dependencies_for_extensions() {
     local extensions_with_composer=($(_extensions_with_composer_json "${extensions[@]}"))
 
     if [[ ${#extensions_with_composer[@]} -eq 0 ]]; then
-        echo "No extensions with php dependencies found. Exiting."
+        echo "No extensions with PHP dependencies found. Exiting."
         return 0
     fi
 
-    echo -e "\nInstalling php dependencies for extensions: ${extensions_with_composer[@]}"
+    echo -e "\nInstalling PHP dependencies for extensions: ${extensions_with_composer[@]}"
 
     _backup_composer_local_json
 
