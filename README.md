@@ -257,7 +257,7 @@ Run a variety of tests using the commands below
     ./run_selenium_tests "tests/selenium/specs/page.js" "should be creatable"
     ```
 
-- Run tests in a specific MediaWiki core test file
+- Run all tests in a specific MediaWiki core test file
     ```bash
     ./run_selenium_tests "tests/selenium/specs/page.js" ".*"
     ```
