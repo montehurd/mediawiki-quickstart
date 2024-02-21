@@ -11,6 +11,7 @@ prepare_node() {
   docker exec -i -u root mediawiki-mediawiki-1 sh -c "
     ./node-preparation.sh ensure_node_major_version_installed 18 &&
     npm install puppeteer-chromium-version-finder &&
+    npm install --global yarn &&
     npm ci
   "
 }
