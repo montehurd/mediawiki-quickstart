@@ -264,6 +264,10 @@ Run a variety of tests using the commands below
 
 - Run all MediaWiki core tests
     ```bash
+    ./run_selenium_tests
+
+    or
+    
     ./run_selenium_tests "tests/selenium/specs/**/*.js" ".*"
     ```
 
