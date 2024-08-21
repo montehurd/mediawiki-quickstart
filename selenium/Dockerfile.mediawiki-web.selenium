@@ -1,0 +1,16 @@
+FROM docker-registry.wikimedia.org/dev/buster-apache2:2.0.1
+
+COPY ./wdio.conf.override.js /var/local
+COPY ./install-browser-for-puppeteer-core.js /var/local
+
+COPY ./node-preparation.sh /var/local
+COPY ./install-chrome-dependencies.sh /var/local
+
+RUN set -ex && \
+    sed -i '/buster-backports/d' /etc/apt/sources.list && \
+    rm -f /etc/apt/sources.list.d/php.list /etc/apt/trusted.gpg.d/php.gpg && \
+    apt-get update && \
+    /var/local/node-preparation.sh ensure_node_major_version_installed 18 && \
+    /var/local/install-chrome-dependencies.sh
+
+WORKDIR /var/www/html/w
