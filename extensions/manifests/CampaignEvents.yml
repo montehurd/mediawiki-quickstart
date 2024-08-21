@@ -1,4 +1,6 @@
 name: CampaignEvents
 repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/CampaignEvents
+dependencies:
+  - CheckUser
 configuration: |
   wfLoadExtension( 'CampaignEvents' );
