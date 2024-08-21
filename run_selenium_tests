@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source "./selenium/selenium.sh"
+source "./common/utility.sh"
 
 run_selenium_tests() {
   ensure_selenium_ready
@@ -8,9 +9,12 @@ run_selenium_tests() {
   file_path=$1
   local test_name
   test_name=$2
-  docker exec -it -u root mediawiki-mediawiki-1 npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/$file_path" --logLevel debug --mochaOpts.grep "$test_name"
+  docker exec -it -u root \
+    -e DISPLAY=mediawiki-novnc-1:0 \
+    mediawiki-mediawiki-web-1 npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" --spec "/var/www/html/w/$file_path" --logLevel debug --mochaOpts.grep "$test_name"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  open_url_when_available "http://localhost:8086/vnc_lite.html?autoconnect=true" &
   run_selenium_tests "$1" "$2"
 fi

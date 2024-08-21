@@ -1,7 +1,6 @@
 #!/bin/bash
 
 source "./config"
-source "./docker/docker-compose-wrapper.sh"
 
 run_php_unit_test_path() {
   local testpath=$1
@@ -10,8 +9,7 @@ run_php_unit_test_path() {
     echo "Please provide a test path"
     exit 1
   fi
-
-  docker_compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php "$testpath" --testdox
+  cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w mediawiki composer phpunit -- "$testpath" --testdox
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

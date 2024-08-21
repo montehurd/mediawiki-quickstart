@@ -242,7 +242,7 @@ Run a variety of tests using the commands below
 
 - Run PHP unit tests with a specific path
     ```bash
-    ./run_php_unit_test_path unit/includes/resourceloader/
+    ./run_php_unit_test_path tests/phpunit/unit/includes/resourceloader/
     ```
 
 ### Selenium
@@ -317,19 +317,26 @@ You can manage the MediaWiki containers using these commands
 
 ## Container Shell Access
 
-Get quick Bash shell access to running MediaWiki containers with these commands
+Get quick shell access to running MediaWiki containers with these commands
 
-- Bash access to the MediaWiki container
-    ```bash
+- Shell access to the MediaWiki container
+    ```sh
     ./shellto m
     ```
 
-- Bash access to the job runner container
-    ```bash
+- Shell access to the job runner container
+    ```sh
     ./shellto j
     ```
 
-- Bash access to the web container
-    ```bash
+- Shell access to the web container
+    ```sh
     ./shellto w
     ```
+
+- Shell access to the Selenium viewer container ("n" is for "NoVNC")
+    ```sh
+    ./shellto n
+    ```
+
+Note: after shelling into a container you can use the "bash" command so you can do things like use the up arrow to view previous commands you have run

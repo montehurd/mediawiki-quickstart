@@ -1,10 +1,9 @@
 #!/bin/bash
 
 source "./config"
-source "./docker/docker-compose-wrapper.sh"
 
 run_parser_tests() {
-  docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki php tests/parser/parserTests.php
+  cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki php tests/parser/parserTests.php
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

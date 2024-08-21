@@ -1,7 +1,9 @@
 #!/bin/bash
 
+source "./selenium/selenium.sh"
+
 list_selenium_tests() {
-  docker exec -i -u root mediawiki-mediawiki-1 sh -c "
+  docker exec -i -u root mediawiki-mediawiki-web-1 sh -c "
     node -e \"
       const Mocha = require('mocha');
       const fs = require('fs');
@@ -37,5 +39,6 @@ list_selenium_tests() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  ensure_selenium_ready
   list_selenium_tests "$@"
 fi

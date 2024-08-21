@@ -1,10 +1,9 @@
 #!/bin/bash
 
 source "./config"
-source "./docker/docker-compose-wrapper.sh"
 
 run_php_unit_tests() {
-  docker_compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w/tests/phpunit mediawiki php phpunit.php --testdox
+  cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w mediawiki composer phpunit -- --testdox
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

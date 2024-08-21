@@ -1,7 +1,6 @@
 #!/bin/bash
 
 source "./config"
-source "./docker/docker-compose-wrapper.sh"
 
 stop() {
   if [ ! -d "$MEDIAWIKI_PATH" ]; then
@@ -10,7 +9,7 @@ stop() {
   if [ ! -f "$MEDIAWIKI_PATH/docker-compose.yml" ]; then
     return
   fi
-  docker_compose stop
+  cd "$MEDIAWIKI_PATH" && docker compose stop
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

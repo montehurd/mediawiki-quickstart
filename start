@@ -3,37 +3,22 @@
 source "./config"
 source "./common/utility.sh"
 source "./docker/docker.sh"
-source "./docker/docker-compose-wrapper.sh"
 source "./use_skin"
-
-prepare_node() {
-  docker cp "$SCRIPT_PATH/node/node-preparation.sh" mediawiki-mediawiki-1:/var/www/html/w/
-  docker exec -i -u root mediawiki-mediawiki-1 sh -c "
-    ./node-preparation.sh ensure_node_major_version_installed 18 &&
-    npm install puppeteer-chromium-version-finder &&
-    npm ci
-  "
-}
 
 start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
-    # docker_compose build --no-cache
-    docker_compose up -d || exit 1
-    docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki composer update
-    docker_compose exec -u "$HOST_UID:$HOST_GID" mediawiki bash /docker/install.sh
-    if prepare_node; then
-      echo "Node prepared successfully"
-    else
-      echo "Node wasn't prepared successfully"
-      exit 1
-    fi
+    cd "$MEDIAWIKI_PATH"
+    # docker compose build --no-cache
+    docker compose up -d || exit 1
+    docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki composer update
+    docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki bash /docker/install.sh
     sleep 2
     use_skin Vector
     return 0
   fi
 
   if ! is_container_running "mediawiki-mediawiki-1"; then
-    docker_compose up -d
+    cd "$MEDIAWIKI_PATH" && docker compose up -d
     sleep 1
   fi
   wait_until_url_available $SPECIAL_VERSION_URL

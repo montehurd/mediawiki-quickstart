@@ -2,7 +2,7 @@
 
 source "./config"
 source "./common/utility.sh"
-source "./docker/docker-compose-wrapper.sh"
+source "./docker/docker.sh"
 
 remove() {
   if [ ! -d "$MEDIAWIKI_PATH" ]; then
@@ -15,8 +15,9 @@ remove() {
     docker exec -u root mediawiki-mediawiki-1 sh -c "[ -d node_modules ] && rm -rf node_modules"
   fi
   if [ -f "$MEDIAWIKI_PATH/docker-compose.yml" ]; then
-    docker_compose down
+    cd "$MEDIAWIKI_PATH" && docker compose down
   fi
+  docker image rm mediawiki-web.selenium:1.0 || true
   if [ -n "$MEDIAWIKI_PATH" ] && [ -d "$MEDIAWIKI_PATH" ]; then
     rm -rf "$MEDIAWIKI_PATH"
   fi
