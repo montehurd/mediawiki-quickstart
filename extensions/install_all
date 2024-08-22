@@ -9,11 +9,13 @@ install_all() {
     exit 1
   fi
   INSTALLED_EXTENSIONS=()
+  local manifest
   for manifest in "$(_get_script_path)/manifests/"*.yml; do
     _install_from_manifest "$manifest"
   done
   _install_php_and_node_dependencies
   _rebuild_localization_cache
+  _run_bash_for_installed_extensions
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

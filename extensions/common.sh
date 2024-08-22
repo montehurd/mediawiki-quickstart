@@ -98,13 +98,32 @@ _install_from_manifest() {
   local configuration
   configuration=$(_yq '.configuration' "$manifest_content")
   echo -e "$configuration" >>"$(_get_mediawiki_path)/LocalSettings.php"
+
+  INSTALLED_EXTENSIONS+=("$name")
+}
+
+# bash execution needs to happen AFTER php and node dependencies have been installed 
+# since sometimes the bash executed needs to do something with those libraries
+_run_bash_for_installed_extensions() {
+  if [[ ${#INSTALLED_EXTENSIONS[@]} -eq 0 ]]; then
+    return
+  fi
+  for extension in "${INSTALLED_EXTENSIONS[@]}"; do
+    _run_bash_from_manifest "$(_get_script_path)/manifests/$extension.yml"
+  done
+}
+
+_run_bash_from_manifest() {
+  local manifest
+  manifest=$1
+  local manifest_content
+  manifest_content=$(cat "$manifest")
   local bash
   bash=$(_yq '.bash' "$manifest_content")
   if [ -n "$bash" ] && [ "$bash" != "null" ]; then
+    echo "Running bash from $manifest"
     docker exec -u root mediawiki-mediawiki-1 bash -c "$bash"
   fi
-
-  INSTALLED_EXTENSIONS+=("$name")
 }
 
 _install_php_and_node_dependencies() {
