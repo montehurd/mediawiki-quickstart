@@ -16,7 +16,8 @@ run_selenium_tests() {
     -e DISPLAY=mediawiki-novnc-1:0 \
     mediawiki-mediawiki-web-1 npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" \
       --spec "/var/www/html/w/$file_path" \
-      --logLevel debug \
+      # logLevel can be one of these: ( trace | debug | info | warn | error | silent ) https://webdriver.io/docs/configurationfile/
+      --logLevel error \ 
       --mochaOpts.grep "$test_name"
 }
 
