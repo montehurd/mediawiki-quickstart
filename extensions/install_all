@@ -14,8 +14,8 @@ install_all() {
     _install_from_manifest "$manifest"
   done
   _install_php_and_node_dependencies
-  _rebuild_localization_cache
   _run_bash_for_installed_extensions
+  _rebuild_localization_cache
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
