@@ -1,4 +1,6 @@
 include:
-  - ../selenium/docker-compose.selenium.yml
+  - path:
+    - ../selenium/docker-compose.selenium.yml
+    - ../elasticsearch/docker-compose.elastic.yml
 
 # Your other overrides below

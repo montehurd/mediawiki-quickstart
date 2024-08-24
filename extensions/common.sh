@@ -141,6 +141,7 @@ _install_php_and_node_dependencies() {
 }
 
 _rebuild_localization_cache() {
+  sleep 1
   if [[ ${#INSTALLED_EXTENSIONS[@]} -eq 0 ]]; then
     return
   fi

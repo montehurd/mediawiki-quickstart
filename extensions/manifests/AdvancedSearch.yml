@@ -1,4 +1,6 @@
 name: AdvancedSearch
 repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/AdvancedSearch
+dependencies:
+  - CirrusSearch
 configuration: |
   wfLoadExtension( 'AdvancedSearch' );
