@@ -7,6 +7,8 @@ source "./stop"
 source "./remove"
 source "./prepare"
 source "./start"
+source "./import_extra_local_settings"
+source "./import_page_xml"
 
 fresh_install() {
   [ -d "$MEDIAWIKI_PATH" ] && cp "$SCRIPT_PATH/docker-compose.override.yml" "$MEDIAWIKI_PATH" || true
@@ -22,6 +24,8 @@ fresh_install() {
   remove
   prepare "$extra_compose_file_path"
   start
+  import_extra_local_settings
+  import_page_xml
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
