@@ -1,0 +1,25 @@
+#!/bin/bash
+
+source "./config"
+
+import_extra_local_settings() {
+    local extra_settings_file="$SCRIPT_PATH/import-on-fresh-install/LocalSettings.extra.php"
+    if [ -f "$extra_settings_file" ]; then
+        echo -e "\nCopying extra settings file..."
+        docker cp "$extra_settings_file" mediawiki-mediawiki-1:/var/www/html/w/LocalSettings.extra.php
+
+        echo "Adding include line to LocalSettings.php..."
+        docker exec mediawiki-mediawiki-1 bash -c '
+            if ! grep -q "require.*LocalSettings\.extra\.php" /var/www/html/w/LocalSettings.php; then
+                echo "require_once \"\$IP/LocalSettings.extra.php\";" >> /var/www/html/w/LocalSettings.php
+            fi
+        '
+        echo "Extra settings import completed"
+    else
+        echo "No extra settings file found - skipping import"
+    fi
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+    import_extra_local_settings
+fi
