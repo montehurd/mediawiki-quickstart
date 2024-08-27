@@ -295,13 +295,17 @@ Run a variety of tests using the commands below
     ./run_selenium_tests "extensions/*/tests/selenium/*specs/**/*.js" ".*"
    ```
 
-## Custom MediaWiki Settings
+## Custom MediaWiki 'LocalSettings'
 
-To apply custom MediaWiki settings during fresh installation, edit [`import-on-fresh-install/LocalSettings.extra.php`](import-on-fresh-install/LocalSettings.extra.php)
+To apply custom MediaWiki settings during `./fresh_install`, edit [`import-on-fresh-install/LocalSettings.extra.php`](import-on-fresh-install/LocalSettings.extra.php)
 
 This file will be included by MediaWiki's `LocalSettings.php`
 
 Keep in mind this is not the place to add settings for extensions - the extension yml [format](#extension-management) has a `configuration` key for such settings
+
+## Importing Mediawiki XML page dumps
+
+When you run `./fresh_install`, page dump XML files found in [`import-on-fresh-install/pages/`](import-on-fresh-install/pages/) will be imported into the fresh MediaWiki instance
 
 ## Container Management
 
