@@ -295,6 +295,14 @@ Run a variety of tests using the commands below
     ./run_selenium_tests "extensions/*/tests/selenium/*specs/**/*.js" ".*"
    ```
 
+## Custom MediaWiki Settings
+
+To apply custom MediaWiki settings during fresh installation, edit [`import-on-fresh-install/LocalSettings.extra.php`](import-on-fresh-install/LocalSettings.extra.php)
+
+This file will be included by MediaWiki's `LocalSettings.php`
+
+Keep in mind this is not the place to add settings for extensions - the extension yml [format](#extension-management) has a `configuration` key for such settings
+
 ## Container Management
 
 You can manage the MediaWiki containers using these commands
