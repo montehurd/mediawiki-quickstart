@@ -11,6 +11,8 @@ import_extra_local_settings() {
         echo "Adding include line to LocalSettings.php..."
         docker exec mediawiki-mediawiki-1 bash -c '
             if ! grep -q "require.*LocalSettings\.extra\.php" /var/www/html/w/LocalSettings.php; then
+                echo "" >> /var/www/html/w/LocalSettings.php
+                echo "# Include additional local settings from LocalSettings.extra.php" >> /var/www/html/w/LocalSettings.php
                 echo "require_once \"\$IP/LocalSettings.extra.php\";" >> /var/www/html/w/LocalSettings.php
             fi
         '
