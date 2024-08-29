@@ -7,8 +7,11 @@ configuration: |
   $wgCirrusSearchServers = [ 'elasticsearch' ];
   $wgSearchType = 'CirrusSearch';
 bash: |
-  php extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php --startOver
-  php extensions/CirrusSearch/maintenance/ForceSearchIndex.php
+  php extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php
+  php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipLinks --indexOnSkip
+  php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipParse
+  php maintenance/runJobs.php
+  php extensions/CirrusSearch/maintenance/UpdateSuggesterIndex.php
 # Reminder:
 # To confirm Cirrus results, use a Cirrus-specific query param, like "cirrusDumpResult=1", when searching for a term, in this case, the string "beef":
 #    curl "http://localhost:8080/w/api.php?action=query&list=search&srsearch=beef&srprop=size&format=json&cirrusDumpResult=1"
