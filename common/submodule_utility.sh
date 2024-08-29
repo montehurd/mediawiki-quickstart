@@ -17,7 +17,7 @@ ensure_submodule_initialized_and_updated() {
       echo "Submodule '$submodule' updated"
       return 0
     fi
-    echo "Submodule '$submodule' already up to date"
+    # echo "Submodule '$submodule' already up to date"
     return 1
   fi
 }
