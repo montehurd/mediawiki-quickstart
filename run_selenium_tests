@@ -10,15 +10,17 @@ run_selenium_tests() {
   file_path=${1:-"tests/selenium/specs/**/*.js"}
   local test_name
   test_name=${2:-".*"}
+  local log_level
+  log_level=${3:-"error"}
+  # logLevel can be one of these: ( trace | debug | info | warn | error | silent ) https://webdriver.io/docs/configurationfile/
 
   docker exec -it \
     -u root \
     -e DISPLAY=mediawiki-novnc-1:0 \
     mediawiki-mediawiki-web-1 npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" \
       --spec "/var/www/html/w/$file_path" \
-      --logLevel "error" \
+      --logLevel "$log_level" \
       --mochaOpts.grep "$test_name"
-      # logLevel can be one of these: ( trace | debug | info | warn | error | silent ) https://webdriver.io/docs/configurationfile/
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

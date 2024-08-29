@@ -295,6 +295,20 @@ Run a variety of tests using the commands below
     ./run_selenium_tests "extensions/*/tests/selenium/*specs/**/*.js" ".*"
    ```
 
+#### Overriding Selenium run log level
+
+`./run_selenium_tests` supports an optional third parameter for setting the `logLevel`
+
+Its default value is `error`, but can be changed to one of these: 
+
+( `trace` | `debug` | `info` | `warn` | `error` | `silent` ) see https://webdriver.io/docs/configurationfile/
+
+For example, to use `debug` log level:
+
+```bash
+./run_selenium_tests "tests/selenium/specs/**/*.js" ".*" "debug"
+```
+
 ## Custom MediaWiki 'LocalSettings'
 
 To apply custom MediaWiki settings during `./fresh_install`, edit [`import-on-fresh-install/LocalSettings.extra.php`](import-on-fresh-install/LocalSettings.extra.php)
