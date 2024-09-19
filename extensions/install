@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# set -x
+
 source "./extensions/common.sh"
 
 declare -a INSTALLED_EXTENSIONS=()
@@ -10,10 +12,9 @@ install() {
   fi
   INSTALLED_EXTENSIONS=()
   for extension in "$@"; do
-    local manifest
-    manifest="$(_get_script_path)/manifests/$extension.yml"
-    if [[ -f "$manifest" ]]; then
-      _install_from_manifest "$manifest"
+    local manifest_path="$(_get_manifest_path "$extension")"
+    if [[ -f "$manifest_path" ]]; then
+      _install_from_manifest "$extension"
     else
       echo "No corresponding manifest file found for extension '$extension', skipping..."
     fi

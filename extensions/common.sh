@@ -20,6 +20,11 @@ _get_mediawiki_path() {
   echo "$(_get_script_path)/../mediawiki"
 }
 
+_get_manifest_path() {
+  local extension_name="$1"
+  echo "$(_get_script_path)/manifests/$extension_name/$extension_name.yml"
+}
+
 _ensure_containers_running() {
   if ! [ "$(docker inspect -f '{{.State.Running}}' mediawiki-mediawiki-1)" = "true" ]; then
     echo "MediaWiki container is not running"
@@ -62,14 +67,15 @@ _is_extension_enabled() {
 #   declare -a INSTALLED_EXTENSIONS=()
 _install_from_manifest() {
   local manifest
-  manifest=$1
-  echo -e "\nInstalling $manifest"
-  if [ -z "$manifest" ] || [ ! -f "$manifest" ]; then
-    echo "Manifest is not specified or file '$manifest' does not exist, skipping..."
+  local extension_name="$1"
+  local manifest_path="$(_get_manifest_path "$extension_name")"
+  echo -e "\nInstalling $manifest_path"
+  if [ ! -f "$manifest_path" ]; then
+    echo "Manifest file '$manifest_path' does not exist, skipping..."
     return
   fi
   local manifest_content
-  manifest_content=$(cat "$manifest")
+  manifest_content=$(cat "$manifest_path")
   if ! _validate_keys "$manifest_content"; then
     echo "Invalid manifest '$manifest', skipping..."
     return
@@ -109,20 +115,24 @@ _run_bash_for_installed_extensions() {
     return
   fi
   for extension in "${INSTALLED_EXTENSIONS[@]}"; do
-    _run_bash_from_manifest "$(_get_script_path)/manifests/$extension.yml"
+    _run_bash_from_manifest "$extension"
   done
 }
 
 _run_bash_from_manifest() {
-  local manifest
-  manifest=$1
+  local extension_name="$1"
+  local manifest="$(_get_script_path)/manifests/$extension_name/$extension_name.yml"
   local manifest_content
-  manifest_content=$(cat "$manifest")
-  local bash
-  bash=$(_yq '.bash' "$manifest_content")
-  if [ -n "$bash" ] && [ "$bash" != "null" ]; then
-    echo "Running bash from $manifest"
-    docker exec -u root mediawiki-mediawiki-1 bash -c "$bash"
+  if [ -f "$manifest" ]; then
+    manifest_content=$(cat "$manifest")
+    local bash
+    bash=$(_yq '.bash' "$manifest_content")
+    if [ -n "$bash" ] && [ "$bash" != "null" ]; then
+      echo "Running bash from $manifest"
+      docker exec -u root mediawiki-mediawiki-1 bash -c "$bash"
+    fi
+  else
+    echo "Manifest file not found: $manifest"
   fi
 }
 
