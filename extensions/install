@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# set -x
-
 source "./extensions/common.sh"
 
 declare -a INSTALLED_EXTENSIONS=()
