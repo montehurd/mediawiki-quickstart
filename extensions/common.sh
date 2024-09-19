@@ -3,7 +3,7 @@
 set -eu
 
 _get_required_keys() {
-  echo 'configuration'
+  echo ""
 }
 
 _EXTENSIONS_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -37,20 +37,6 @@ _yq() {
   echo "$2" | docker run --rm -i -v "$(_get_script_path):/workdir" mikefarah/yq eval "$1" -
 }
 
-_validate_keys() {
-  local value
-  local manifest_content
-  manifest_content=$1
-  for key in $(_get_required_keys); do
-    value=$(_yq ".${key}" "$manifest_content")
-    if [ -z "$value" ] || [ "$value" = "null" ]; then
-      echo "Missing key '$key' in manifest, skipping..."
-      return 1
-    fi
-  done
-  return 0
-}
-
 _is_extension_enabled() {
   local extension_name
   extension_name=$1
@@ -73,26 +59,30 @@ _get_dependencies() {
   fi
 }
 
+_get_extension_local_settings_path() {
+  local extension_name="$1"
+  echo "$(_get_script_path)/manifests/$extension_name/LocalSettings.php"
+}
+
 # Note: caller must declare the following:
 #   declare -a INSTALLED_EXTENSIONS=()
 _install_from_manifest() {
   local extension_name="$1"
   local manifest_path="$(_get_manifest_path "$extension_name")"
-  echo -e "\nInstalling $manifest_path"
-  if [ ! -f "$manifest_path" ]; then
-    echo "Manifest file '$manifest_path' does not exist, skipping..."
+  local local_settings_path="$(_get_extension_local_settings_path "$extension_name")"
+ 
+  echo -e "\nInstalling $extension_name"
+ 
+  if [ ! -f "$local_settings_path" ]; then
+    echo "LocalSettings.php for '$extension_name' does not exist, skipping..."
     return
   fi
-  local manifest_content
-  manifest_content=$(cat "$manifest_path")
-  if ! _validate_keys "$manifest_content"; then
-    echo "Invalid manifest '$manifest_path', skipping..."
-    return
-  fi
+ 
   if _is_extension_enabled "$extension_name"; then
     echo "Extension '$extension_name' is already installed and active, skipping..."
     return
   fi
+ 
   local dependencies
   dependencies=$(_get_dependencies "$extension_name")
   if [ -n "$dependencies" ]; then
@@ -109,10 +99,10 @@ _install_from_manifest() {
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
+ 
+  # Include the extension's LocalSettings.php in MediaWiki's LocalSettings.php
   echo -e "\n# Configuration for '$extension_name' extension" >>"$(_get_mediawiki_path)/LocalSettings.php"
-  local configuration
-  configuration=$(_yq '.configuration' "$manifest_content")
-  echo -e "$configuration" >>"$(_get_mediawiki_path)/LocalSettings.php"
+  echo "require_once \"\$IP/extensions/manifests/$extension_name/LocalSettings.php\";" >>"$(_get_mediawiki_path)/LocalSettings.php"
 
   INSTALLED_EXTENSIONS+=("$extension_name")
 }

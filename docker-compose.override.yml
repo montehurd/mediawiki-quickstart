@@ -3,4 +3,9 @@ include:
     - ../selenium/docker-compose.selenium.yml
     - ../elasticsearch/docker-compose.elastic.yml
 
+services:
+  mediawiki:
+    volumes:
+      - ../extensions/manifests:/var/www/html/w/extensions/manifests
+
 # Your other overrides below
