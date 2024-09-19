@@ -63,6 +63,16 @@ _is_extension_enabled() {
   fi
 }
 
+_get_dependencies() {
+  local extension_name="$1"
+  local dependencies_file="$(_get_script_path)/manifests/$extension_name/dependencies.yml"
+  if [ -f "$dependencies_file" ]; then
+    _yq '.[]' "$(cat "$dependencies_file")"
+  else
+    echo ""
+  fi
+}
+
 # Note: caller must declare the following:
 #   declare -a INSTALLED_EXTENSIONS=()
 _install_from_manifest() {
@@ -84,7 +94,7 @@ _install_from_manifest() {
     return
   fi
   local dependencies
-  dependencies=$(_yq '.dependencies[]' "$manifest_content")
+  dependencies=$(_get_dependencies "$extension_name")
   if [ -n "$dependencies" ]; then
     for dependency in $dependencies; do
       echo "Installing '$extension_name' dependency '$dependency'"
