@@ -3,7 +3,7 @@
 set -eu
 
 _get_required_keys() {
-  echo 'name' 'repository' 'configuration'
+  echo 'name' 'configuration'
 }
 
 _EXTENSIONS_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -66,7 +66,6 @@ _is_extension_enabled() {
 # Note: caller must declare the following:
 #   declare -a INSTALLED_EXTENSIONS=()
 _install_from_manifest() {
-  local manifest
   local extension_name="$1"
   local manifest_path="$(_get_manifest_path "$extension_name")"
   echo -e "\nInstalling $manifest_path"
@@ -77,7 +76,7 @@ _install_from_manifest() {
   local manifest_content
   manifest_content=$(cat "$manifest_path")
   if ! _validate_keys "$manifest_content"; then
-    echo "Invalid manifest '$manifest', skipping..."
+    echo "Invalid manifest '$manifest_path', skipping..."
     return
   fi
   local name
@@ -91,11 +90,13 @@ _install_from_manifest() {
   if [ -n "$dependencies" ]; then
     for dependency in $dependencies; do
       echo "Installing '$name' dependency '$dependency'"
-      _install_from_manifest "$(_get_script_path)/manifests/$dependency.yml"
+      _install_from_manifest "$dependency"
     done
   fi
-  local repository
-  repository=$(_yq '.repository' "$manifest_content")
+  
+  # Generate the repository URL from the extension name
+  local repository="https://gerrit.wikimedia.org/r/mediawiki/extensions/$name"
+  
   if ! git clone --recurse-submodules "$repository" "$(_get_mediawiki_path)/extensions/$name" --depth=1 >/dev/null 2>&1; then
     echo "Failed to clone repository '$repository'"
     exit 1
