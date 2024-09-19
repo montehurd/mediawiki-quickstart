@@ -3,7 +3,7 @@
 set -eu
 
 _get_required_keys() {
-  echo 'name' 'configuration'
+  echo 'configuration'
 }
 
 _EXTENSIONS_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -79,34 +79,32 @@ _install_from_manifest() {
     echo "Invalid manifest '$manifest_path', skipping..."
     return
   fi
-  local name
-  name=$(_yq '.name' "$manifest_content")
-  if _is_extension_enabled "$name"; then
-    echo "Extension '$name' is already installed and active, skipping..."
+  if _is_extension_enabled "$extension_name"; then
+    echo "Extension '$extension_name' is already installed and active, skipping..."
     return
   fi
   local dependencies
   dependencies=$(_yq '.dependencies[]' "$manifest_content")
   if [ -n "$dependencies" ]; then
     for dependency in $dependencies; do
-      echo "Installing '$name' dependency '$dependency'"
+      echo "Installing '$extension_name' dependency '$dependency'"
       _install_from_manifest "$dependency"
     done
   fi
   
   # Generate the repository URL from the extension name
-  local repository="https://gerrit.wikimedia.org/r/mediawiki/extensions/$name"
+  local repository="https://gerrit.wikimedia.org/r/mediawiki/extensions/$extension_name"
   
-  if ! git clone --recurse-submodules "$repository" "$(_get_mediawiki_path)/extensions/$name" --depth=1 >/dev/null 2>&1; then
+  if ! git clone --recurse-submodules "$repository" "$(_get_mediawiki_path)/extensions/$extension_name" --depth=1 >/dev/null 2>&1; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
-  echo -e "\n# Configuration for '$name' extension" >>"$(_get_mediawiki_path)/LocalSettings.php"
+  echo -e "\n# Configuration for '$extension_name' extension" >>"$(_get_mediawiki_path)/LocalSettings.php"
   local configuration
   configuration=$(_yq '.configuration' "$manifest_content")
   echo -e "$configuration" >>"$(_get_mediawiki_path)/LocalSettings.php"
 
-  INSTALLED_EXTENSIONS+=("$name")
+  INSTALLED_EXTENSIONS+=("$extension_name")
 }
 
 # bash execution needs to happen AFTER php and node dependencies have been installed 

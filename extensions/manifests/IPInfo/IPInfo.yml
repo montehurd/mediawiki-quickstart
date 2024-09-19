@@ -1,4 +1,3 @@
-name: IPInfo
 configuration: |
   wfLoadExtension( 'IPInfo' );
   $wgGroupPermissions['*']['ipinfo'] = true;

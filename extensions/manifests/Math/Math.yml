@@ -1,4 +1,3 @@
-name: Math
 configuration: |
   wfLoadExtension( 'Math' );
   # Basic configurations for Math extension
