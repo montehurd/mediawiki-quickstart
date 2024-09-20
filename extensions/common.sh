@@ -122,7 +122,7 @@ _run_bash_from_manifest() {
       chmod +x \"\$setup_script\"
       \"\$setup_script\"
     else
-      echo \"No setup.sh found for '${extension_name}'\"
+      echo \"No '${extension_name}/setup.sh' found, skipping...\"
     fi
   ")
   echo "$output"
