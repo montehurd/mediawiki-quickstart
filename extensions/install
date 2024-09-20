@@ -11,7 +11,7 @@ install() {
   INSTALLED_EXTENSIONS=()
   for extension in "$@"; do
     local manifest_path="$(_get_manifest_path "$extension")"
-    if [[ -f "$manifest_path" ]]; then
+    if [[ -d "$manifest_path" ]]; then
       _install_from_manifest "$extension"
     else
       echo "No corresponding manifest file found for extension '$extension', skipping..."

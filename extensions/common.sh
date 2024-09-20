@@ -2,10 +2,6 @@
 
 set -eu
 
-_get_required_keys() {
-  echo ""
-}
-
 _EXTENSIONS_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 _get_script_path() {
@@ -22,7 +18,7 @@ _get_mediawiki_path() {
 
 _get_manifest_path() {
   local extension_name="$1"
-  echo "$(_get_script_path)/manifests/$extension_name/$extension_name.yml"
+  echo "$(_get_script_path)/manifests/$extension_name"
 }
 
 _ensure_containers_running() {
@@ -51,7 +47,7 @@ _is_extension_enabled() {
 
 _get_dependencies() {
   local extension_name="$1"
-  local dependencies_file="$(_get_script_path)/manifests/$extension_name/dependencies.yml"
+  local dependencies_file="$(_get_manifest_path "$extension_name")/dependencies.yml"
   if [ -f "$dependencies_file" ]; then
     _yq '.[]' "$(cat "$dependencies_file")"
   else
@@ -61,20 +57,19 @@ _get_dependencies() {
 
 _get_extension_local_settings_path() {
   local extension_name="$1"
-  echo "$(_get_script_path)/manifests/$extension_name/LocalSettings.php"
+  echo "$(_get_manifest_path "$extension_name")/LocalSettings.php"
 }
 
 # Note: caller must declare the following:
 #   declare -a INSTALLED_EXTENSIONS=()
 _install_from_manifest() {
   local extension_name="$1"
-  local manifest_path="$(_get_manifest_path "$extension_name")"
   local local_settings_path="$(_get_extension_local_settings_path "$extension_name")"
  
   echo -e "\nInstalling $extension_name"
  
   if [ ! -f "$local_settings_path" ]; then
-    echo "LocalSettings.php for '$extension_name' does not exist, skipping..."
+    echo "Required '$local_settings_path' does not exist, skipping..."
     return
   fi
  
@@ -101,7 +96,7 @@ _install_from_manifest() {
   fi
  
   # Include the extension's LocalSettings.php in MediaWiki's LocalSettings.php
-  echo -e "\n# Configuration for '$extension_name' extension" >>"$(_get_mediawiki_path)/LocalSettings.php"
+  echo -e "\n# Local settings for '$extension_name' extension" >>"$(_get_mediawiki_path)/LocalSettings.php"
   echo "require_once \"\$IP/extensions/manifests/$extension_name/LocalSettings.php\";" >>"$(_get_mediawiki_path)/LocalSettings.php"
 
   INSTALLED_EXTENSIONS+=("$extension_name")
@@ -120,19 +115,17 @@ _run_bash_for_installed_extensions() {
 
 _run_bash_from_manifest() {
   local extension_name="$1"
-  local manifest="$(_get_script_path)/manifests/$extension_name/$extension_name.yml"
-  local manifest_content
-  if [ -f "$manifest" ]; then
-    manifest_content=$(cat "$manifest")
-    local bash
-    bash=$(_yq '.bash' "$manifest_content")
-    if [ -n "$bash" ] && [ "$bash" != "null" ]; then
-      echo "Running bash from $manifest"
-      docker exec -u root mediawiki-mediawiki-1 bash -c "$bash"
+  output=$(docker exec -u root mediawiki-mediawiki-1 bash -c "
+    setup_script=\"./extensions/manifests/${extension_name}/setup.sh\"
+    if [ -f \"\$setup_script\" ]; then
+      echo \"Running setup script for '${extension_name}'\"
+      chmod +x \"\$setup_script\"
+      \"\$setup_script\"
+    else
+      echo \"No setup.sh found for '${extension_name}'\"
     fi
-  else
-    echo "Manifest file not found: $manifest"
-  fi
+  ")
+  echo "$output"
 }
 
 _install_php_and_node_dependencies() {
