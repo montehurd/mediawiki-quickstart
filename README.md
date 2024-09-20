@@ -143,6 +143,8 @@ Look at the existing extension manifest folders in `~/mediawiki-quickstart/exten
 
 Copy one of them and rename it for your extension and edit it to use your extension's settings
 
+Ensure you name your folder the same way the extension is named on Gerrit, this is because the installer clones your extension from Gerrit using the name from this folder
+
 Then use the `install` command above to install it
 
 ### Extension folder structure
