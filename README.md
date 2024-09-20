@@ -148,7 +148,8 @@ Then use the `install` command above to install it
 ### Extension folder structure
 
 - Example of a minimal extension manifest folder ( ~/mediawiki-quickstart/extensions/manifests/IPInfo/ ):
-    LocalSettings.php:
+
+    LocalSettings.php
     ```php
     <?php
     wfLoadExtension( 'IPInfo' );
@@ -163,7 +164,8 @@ Then use the `install` command above to install it
   - `setup.sh`
 
 - Example extension manifest folder using the optional `setup.sh` file ( ~/mediawiki-quickstart/extensions/manifests/GlobalBlocking/ ):
-    setup.sh:
+
+    setup.sh
     ```bash
     #!/bin/bash
     sed -i '/buster-backports/d' /etc/apt/sources.list
@@ -174,7 +176,8 @@ Then use the `install` command above to install it
     ```
 
 - Example extension manifest folder using the optional `dependencies.yml` file ( ~/mediawiki-quickstart/extensions/manifests/CodeMirror/ ):
-    dependencies.yml:
+
+    dependencies.yml
     ```yaml
     - VisualEditor
     ```
