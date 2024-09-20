@@ -139,7 +139,7 @@ Skin installers are also safe to call more than once for a given skin
 
 ### Adding more extensions
 
-Look at the extension manifest folders in `~/mediawiki-quickstart/extensions/manifests`
+Look at the existing extension manifest folders in `~/mediawiki-quickstart/extensions/manifests`
 
 Copy one of them and rename it for your extension and edit it to use your extension's settings
 
@@ -147,49 +147,18 @@ Then use the `install` command above to install it
 
 ### Extension folder structure
 
-- Example of a minimal extension manifest folder ( ~/mediawiki-quickstart/extensions/manifests/IPInfo/ ):
+Each extension has its own folder in `~/mediawiki-quickstart/extensions/manifests/`
 
-    LocalSettings.php
-    ```php
-    <?php
-    wfLoadExtension( 'IPInfo' );
-    $wgGroupPermissions['*']['ipinfo'] = true;
-    $wgGroupPermissions['*']['ipinfo-view-basic'] = true;
-    $wgGroupPermissions['*']['ipinfo-view-full'] = true;
-    $wgGroupPermissions['*']['ipinfo-view-log'] = true;
-    ```
+Within an extension's folder, a `LocalSettings.php` file is required. In this file, you must at least load your extension
 
-  Note: The `LocalSettings.php` file is required. The following files are optional:
-  - `dependencies.yml`
-  - `setup.sh`
+The extension's `LocalSettings.php` will be included by MediaWiki's core `LocalSettings.php` file
 
-- Example extension manifest folder using the optional `setup.sh` file ( ~/mediawiki-quickstart/extensions/manifests/GlobalBlocking/ ):
+Your extension's `LocalSettings.php` file should *only* contain your extension's settings, no others
 
-    setup.sh
-    ```bash
-    #!/bin/bash
-    sed -i '/buster-backports/d' /etc/apt/sources.list
-    rm -f /etc/apt/sources.list.d/php.list /etc/apt/trusted.gpg.d/php.gpg
-    apt update
-    apt install sqlite3
-    sqlite3 cache/sqlite/globalblocking.sqlite < extensions/GlobalBlocking/sql/sqlite/tables-generated-globalblocks.sql
-    ```
+Your extension's folder can also contain the following optional files:
 
-- Example extension manifest folder using the optional `dependencies.yml` file ( ~/mediawiki-quickstart/extensions/manifests/CodeMirror/ ):
-
-    dependencies.yml
-    ```yaml
-    - VisualEditor
-    ```
-
-### Extension manifest folder files
-
-- `LocalSettings.php` required
-    Extension configuration php which will be included by MediaWiki's LocalSettings.php
-- `setup.sh` optional
-    Extension scripting to execute on installation
-- `dependencies.yml` optional
-    List of other extension folders to process when installing this extension
+- `setup.sh` place for any scripting which your extension requires to be execute on installation
+- `dependencies.yml` contains list of names of other extensions, upon which your extension depends, these will be installed first
 
 ### Important extension note
 
