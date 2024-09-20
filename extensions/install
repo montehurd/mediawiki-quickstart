@@ -14,7 +14,7 @@ install() {
     if [[ -d "$manifest_path" ]]; then
       _install_from_manifest "$extension"
     else
-      echo "No corresponding manifest file found for extension '$extension', skipping..."
+      echo "No corresponding manifest folder found for extension '$extension', skipping..."
     fi
   done
   _install_php_and_node_dependencies
