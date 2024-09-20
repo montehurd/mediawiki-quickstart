@@ -9,9 +9,10 @@ install_all() {
     exit 1
   fi
   INSTALLED_EXTENSIONS=()
-  local manifest
-  for manifest in "$(_get_script_path)/manifests/"*.yml; do
-    _install_from_manifest "$manifest"
+  local extension_dir
+  for extension_dir in "$(_get_script_path)/manifests"/*; do
+    local extension_name=$(basename "$extension_dir")
+    _install_from_manifest "$extension_name"
   done
   _install_php_and_node_dependencies
   _run_bash_for_installed_extensions
