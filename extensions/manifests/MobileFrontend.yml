@@ -1,4 +1,0 @@
-name: MobileFrontend
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/MobileFrontend
-configuration: |
-  wfLoadExtension( 'MobileFrontend' );

@@ -1,4 +1,0 @@
-name: UrlShortener
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/UrlShortener
-configuration: |
-  wfLoadExtension( 'UrlShortener' );

@@ -1,4 +1,0 @@
-name: WikimediaMessages
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/WikimediaMessages
-configuration: |
-  wfLoadExtension( 'WikimediaMessages' );

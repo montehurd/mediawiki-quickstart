@@ -1,4 +1,0 @@
-name: RelatedArticles
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/RelatedArticles
-configuration: |
-  wfLoadExtension( 'RelatedArticles' );

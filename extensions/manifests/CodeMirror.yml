@@ -1,8 +1,0 @@
-name: CodeMirror
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/CodeMirror
-dependencies:
-  - VisualEditor
-configuration: |
-  wfLoadExtension( 'CodeMirror' );
-  # This configuration enables syntax highlighting by default for all users
-  $wgDefaultUserOptions['usecodemirror'] = 1;

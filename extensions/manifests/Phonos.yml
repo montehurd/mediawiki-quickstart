@@ -1,9 +1,0 @@
-name: Phonos
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/Phonos
-configuration: |
-  wfLoadExtension( 'Phonos' );
-  $wgPhonosEngine = "google"; 
-  $wgPhonosApiKeyGoogle = "AIzaSyB6sNgMkxsx7qoJtZ_u3bDuAHFqycbK_0k";
-  # $wgPhonosApiEndpointGoogle = "https://texttospeech.googleapis.com/v1/text:synthesize";
-  $wgPhonosAudioGenerationEnabled = false;
-  $wgPhonosStoreFilesAsMp3 = true;

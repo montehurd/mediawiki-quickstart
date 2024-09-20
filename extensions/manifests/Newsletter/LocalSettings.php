@@ -1,0 +1,7 @@
+<?php
+
+wfLoadExtension( 'Newsletter' );
+# Basic configurations for Newsletter extension
+$wgNewsletterPublisherGroupName = 'newsletter-publisher';  # Name of the user group that can manage newsletters
+$wgNewsletterPublisherRight = 'newsletter-manage';  # Right that is required to manage newsletters
+$wgNewsletterMinimumHtml2TextVersion = '2.04';  # Minimum version of html2text utility required by Newsletter
