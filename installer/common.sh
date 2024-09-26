@@ -104,30 +104,23 @@ _install_from_manifest() {
   INSTALLED_COMPONENTS+=("$component_path")
 }
 
-_import_page_dumps_for_component() {
-  local component_path="$1"
-  local pages_folder="$(_get_manifest_path "$component_path")/pages"
-  if [ -d "$pages_folder" ]; then
-    echo "Importing pages from '$pages_folder'"
-    docker exec -u root mediawiki-mediawiki-1 bash -c "/import_page_xml.sh /var/www/html/w/$pages_folder"
-  else
-    echo "No pages to import found in '$pages_folder', skipping..."
-  fi
-}
-
 _import_page_dumps_for_installed_components() {
-  if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
-    return
-  fi
-  for component_path in "${INSTALLED_COMPONENTS[@]}"; do
-    _import_page_dumps_for_component "$component_path"
-  done
-  docker exec -u "$HOST_UID:$HOST_GID" -i mediawiki-mediawiki-1 bash <<EOF
-    echo -e "\nUpdating recent changes:"
-    php maintenance/run.php rebuildrecentchanges
-    echo -e "\nUpdating site stats:"
-    php maintenance/run.php initSiteStats --update
-EOF
+    if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
+        return
+    fi
+    local folders=()
+    for component_path in "${INSTALLED_COMPONENTS[@]}"; do
+        local pages_folder="$(_get_manifest_path "$component_path")/pages"
+        if [ -d "$pages_folder" ]; then
+            folders+=("$pages_folder")
+        fi
+    done
+    if [ ${#folders[@]} -gt 0 ]; then
+        echo "Importing pages from installed components"
+        docker exec -u "$HOST_UID:$HOST_GID" -i mediawiki-mediawiki-1 bash /import_page_xml.sh "${folders[@]}"
+    else
+        echo "No pages to import found in any installed components, skipping..."
+    fi
 }
 
 _run_bash_for_installed_components() {
