@@ -7,7 +7,6 @@ source "./stop"
 source "./remove"
 source "./prepare"
 source "./start"
-source "./import_extra_local_settings"
 source "./import_page_xml"
 
 fresh_install() {
@@ -24,7 +23,6 @@ fresh_install() {
   remove
   prepare "$extra_compose_file_path"
   start
-  import_extra_local_settings
   import_page_xml "/tmp/page-xml"
 }
 

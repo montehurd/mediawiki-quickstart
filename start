@@ -5,6 +5,7 @@ source "./common/utility.sh"
 source "./docker/docker.sh"
 source "./use_skin"
 source "./open_special_version_page"
+source "./import_extra_local_settings"
 
 start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
@@ -13,6 +14,7 @@ start() {
     docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki composer install
     docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki bash /docker/install.sh
     sleep 2
+    import_extra_local_settings
     if [[ "${SKIP_SKIN:-0}" != "1" ]]; then
       use_skin "Vector"
     else
