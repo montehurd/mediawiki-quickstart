@@ -1,7 +1,9 @@
 #!/bin/bash
 
-SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-MEDIAWIKI_PATH="$SCRIPT_PATH/mediawiki"
+GIT_CLONE_BASE_URL="https://gerrit.wikimedia.org/r/mediawiki"
+
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[1]}")" >/dev/null 2>&1 && pwd)"
+MEDIAWIKI_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/mediawiki"
 MEDIAWIKI_PORT=8080
 SPECIAL_VERSION_URL="http://localhost:$MEDIAWIKI_PORT/wiki/Special:Version"
 HOST_UID=$(id -u)
