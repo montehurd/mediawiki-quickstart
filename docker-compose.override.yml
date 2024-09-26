@@ -6,6 +6,8 @@ include:
 services:
   mediawiki:
     volumes:
-      - ../extensions/manifests:/var/www/html/w/extensions/manifests
+      - ../manifests:/var/www/html/w/manifests
+      - ../import-on-fresh-install/pages:/tmp/page-xml
+      - ../import_page_xml.sh:/import_page_xml.sh
 
 # Your other overrides below
