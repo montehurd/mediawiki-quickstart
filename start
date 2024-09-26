@@ -4,16 +4,20 @@ source "./config"
 source "./common/utility.sh"
 source "./docker/docker.sh"
 source "./use_skin"
+source "./open_special_version_page"
 
 start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
     cd "$MEDIAWIKI_PATH"
-    # docker compose build --no-cache
     docker compose up -d || exit 1
     docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki composer update
     docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki bash /docker/install.sh
     sleep 2
-    use_skin Vector
+    if [[ "${SKIP_SKIN:-0}" != "1" ]]; then
+      use_skin "Vector"
+    else
+    	open_special_version_page
+    fi
     return 0
   fi
 
