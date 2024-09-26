@@ -25,7 +25,7 @@ fresh_install() {
   prepare "$extra_compose_file_path"
   start
   import_extra_local_settings
-  import_page_xml
+  import_page_xml "/tmp/page-xml"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

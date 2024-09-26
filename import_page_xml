@@ -1,38 +1,12 @@
 #!/bin/bash
 
-source "./config"
+# set -x
 
 import_page_xml() {
-    local import_folder="$SCRIPT_PATH/import-on-fresh-install/pages"
-
-    if [ ! -d "$import_folder" ]; then
-        echo -e "\nImport folder not found. Skipping import"
-        return
-    fi
-
-    local xml_files=("$import_folder"/*.xml)
-    if [ ${#xml_files[@]} -eq 0 ] || [ ! -e "${xml_files[0]}" ]; then
-        echo -e "\nNo XML files found in '$import_folder' - skipping import"
-        return
-    fi
-
-    echo -e "\nImporting pages:"
-    for xml_file in "${xml_files[@]}"; do
-        local filepath=$(basename "$xml_file")
-        echo -e "\t$filepath"
-        docker cp "$xml_file" mediawiki-mediawiki-1:/tmp/ || true
-        docker exec -u "$HOST_UID:$HOST_GID" -i mediawiki-mediawiki-1 php maintenance/run.php importDump "/tmp/$filepath"
-    done
-
-    echo -e "\nUpdating recent changes and site stats:"
-    docker exec -u "$HOST_UID:$HOST_GID" -i mediawiki-mediawiki-1 bash <<EOF
-        php maintenance/run.php rebuildrecentchanges && \
-        php maintenance/run.php initSiteStats --update
-EOF
-
-    echo "Import process completed"
+    local folder="$1"
+    docker exec -u "$HOST_UID:$HOST_GID" -i mediawiki-mediawiki-1 bash /import_page_xml.sh "$folder"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-    import_page_xml
+    import_page_xml "$@"
 fi
