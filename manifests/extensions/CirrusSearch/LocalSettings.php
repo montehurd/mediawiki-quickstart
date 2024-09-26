@@ -2,6 +2,7 @@
 
 wfLoadExtension( 'CirrusSearch' );
 $wgCirrusSearchServers = [ 'elasticsearch' ];
+$wgCirrusSearchUseCompletionSuggester = 'yes';
 $wgSearchType = 'CirrusSearch';
 
 # Reminder:

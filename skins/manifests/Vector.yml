@@ -1,5 +1,0 @@
-name: Vector
-repository: https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git
-branch: master
-wfLoadSkin: Vector
-wgDefaultSkin: vector
