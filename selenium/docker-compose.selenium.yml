@@ -7,6 +7,7 @@ services:
     # becomes the name:tag the resulting image is given. this image then
     # overrides the mediawiki-web image from mediawiki's docker-compose.yml
     image: mediawiki-web.selenium:1.0
+    pull_policy: build
     environment:
       - MW_SERVER=http://localhost:8080
       - MW_SCRIPT_PATH=/w
@@ -16,6 +17,7 @@ services:
       context: ./novnc
       dockerfile: Dockerfile
     image: mediawiki-novnc:1.0
+    pull_policy: build
     environment:
       - DISPLAY_WIDTH=1280
       - DISPLAY_HEIGHT=1024
