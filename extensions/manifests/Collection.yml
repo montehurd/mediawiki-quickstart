@@ -1,0 +1,4 @@
+name: Collection
+repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/Collection
+configuration: |
+  wfLoadExtension( 'Collection' );
