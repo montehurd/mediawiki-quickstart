@@ -1,13 +1,67 @@
-include:
-  - path:
-    - ../selenium/docker-compose.selenium.yml
-    - ../elasticsearch/docker-compose.elastic.yml
-
 services:
+
+
   mediawiki:
     volumes:
       - ../manifests:/var/www/html/w/manifests
       - ../import-on-fresh-install/pages:/tmp/page-xml
       - ../import_page_xml.sh:/import_page_xml.sh
+      - ../shell-utilities:/shell-utilities
 
-# Your other overrides below
+
+  mediawiki-web:
+    build:
+      context: ../selenium
+      dockerfile: Dockerfile.mediawiki-web.selenium
+    # when using build context and dockerfile (above), the image value below
+    # becomes the name:tag the resulting image is given. this image then
+    # overrides the mediawiki-web image from mediawiki's docker-compose.yml
+    image: mediawiki-web.selenium:1.0
+    pull_policy: build
+    environment:
+      - MW_SERVER=http://localhost:8080
+      - MW_SCRIPT_PATH=/w
+      - MW_ELASTIC_HOST=elasticsearch
+      - MW_ELASTIC_PORT=9200
+    depends_on:
+      - elasticsearch
+    # volumes:
+    #   - ../shell-utilities:/shell-utilities
+
+
+  elasticsearch:
+    # image: docker-registry.wikimedia.org/dev/cirrus-elasticsearch:7.10.2-s2
+    image: docker-registry.wikimedia.org/repos/search-platform/cirrussearch-elasticsearch-image:v7.10.2-5
+    volumes:
+      - elasticdata:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - bootstrap.system_call_filter=false
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      default:
+        aliases:
+          - elasticsearch
+
+
+  novnc:
+    build:
+      context: ../selenium/novnc
+      dockerfile: Dockerfile
+    image: mediawiki-novnc:1.0
+    pull_policy: build
+    environment:
+      - DISPLAY_WIDTH=1280
+      - DISPLAY_HEIGHT=1024
+      - NOVNC_PORT=8086
+    ports:
+      - 8086:8086
+    volumes:
+      - ../selenium/novnc:/app
+
+
+volumes:
+  elasticdata:
+    driver: local
