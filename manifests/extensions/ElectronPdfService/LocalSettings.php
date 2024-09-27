@@ -1,3 +1,3 @@
 <?php
 
-wfLoadExtension( 'AbuseFilter' );
+wfLoadExtension( 'ElectronPdfService' );
