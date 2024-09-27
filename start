@@ -10,9 +10,9 @@ source "./import_extra_local_settings"
 start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
     cd "$MEDIAWIKI_PATH"
-    docker compose up -d || exit 1
-    docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki composer install
-    docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki bash /docker/install.sh
+    docker compose up -d 2>&1 | verboseOrDotPerLine "Docker compose up" || exit 1
+    docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki composer install 2>&1 | verboseOrDotPerLine "Composer install"  
+    docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki /docker/install.sh 2>&1 | verboseOrDotPerLine "/docker/install.sh"
     sleep 2
     import_extra_local_settings
     if [[ "${SKIP_SKIN:-0}" != "1" ]]; then

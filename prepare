@@ -9,7 +9,7 @@ prepare() {
   original_dir="$(pwd)"
   mkdir -p "$MEDIAWIKI_PATH"
   cd "$MEDIAWIKI_PATH" || exit
-  if ! git clone "$GIT_CLONE_BASE_URL/core.git" . --depth=1; then
+  if ! git clone "$GIT_CLONE_BASE_URL/core.git" . --depth=1 2>&1 | verboseOrDotPerLine "Git clone '$GIT_CLONE_BASE_URL/core.git'"; then
     echo "Failed to clone MediaWiki. Exiting."
     exit 1
   fi

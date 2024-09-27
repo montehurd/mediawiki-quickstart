@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Reminder: the path on the next line is in the container
+source "/shell-utilities/utilities.sh"
+
 # set -x
 
 import_page_xml() {
@@ -19,17 +22,14 @@ import_page_xml() {
 
         echo -e "\nImporting pages from '$folder':"
         for xml_file in "${xml_files[@]}"; do
-            echo -e "\t$(basename "$xml_file")"
-            php maintenance/run.php importDump "$xml_file"
+            php maintenance/run.php importDump "$xml_file" 2>&1 | verboseOrDotPerLine "php importDump for $(basename "$xml_file")"
             imported=true
         done
     done
 
     if [ "$imported" = true ]; then
-        echo -e "\nUpdating recent changes:"
-        php maintenance/run.php rebuildrecentchanges
-        echo -e "\nUpdating site stats:"
-        php maintenance/run.php initSiteStats --update
+        php maintenance/run.php rebuildrecentchanges 2>&1 | verboseOrDotPerLine "php rebuildrecentchanges"
+        php maintenance/run.php initSiteStats --update 2>&1 | verboseOrDotPerLine "php initSiteStats --update"
     else
         echo "No pages were imported"
     fi

@@ -5,6 +5,7 @@ set -eu
 source "./config"
 source "./installer/php.sh"
 source "./installer/node.sh"
+source "./common/utility.sh"
 
 docker cp "$SCRIPT_PATH/isComponentEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isComponentEnabled.php >/dev/null
 
@@ -167,6 +168,5 @@ _rebuild_localization_cache() {
   if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
     return
   fi
-  echo -e "\nRebuilding localization cache"
-  docker exec -u root mediawiki-mediawiki-1 bash -c "php maintenance/rebuildLocalisationCache.php --force --no-progress"
+  docker exec -it -u root mediawiki-mediawiki-1 bash -c "php maintenance/rebuildLocalisationCache.php --force" 2>&1 | verboseOrDotPerLine "Rebuild mediawiki localization cache"
 }

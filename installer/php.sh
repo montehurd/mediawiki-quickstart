@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "./common/utility.sh"
+
 set -eu
 
 _components_with_composer_json() {
@@ -68,25 +70,23 @@ install_php_dependencies_for_components() {
 
     sleep 1
 
-    echo "Composer install"
-    if ! docker exec -it -u root mediawiki-mediawiki-1 sh -c "composer install"; then
+    if ! docker exec -it -u root mediawiki-mediawiki-1 sh -c "composer install" 2>&1 | verboseOrDotPerLine "Composer install"; then
         echo "Composer install failed. Exiting."
         _restore_composer_local_json
         return 1
     fi
 
-    echo "Composer update"
-    if ! docker exec -it -u root mediawiki-mediawiki-1 sh -c "composer update"; then
+    if ! docker exec -it -u root mediawiki-mediawiki-1 sh -c "composer update" 2>&1 | verboseOrDotPerLine "Composer update"; then
         echo "Composer update failed. Exiting."
         _restore_composer_local_json
         return 1
     fi
 
-    echo "PHP maintenance update"
-    if ! docker exec -it -u root mediawiki-mediawiki-1 sh -c "php maintenance/run.php update --quick"; then
+    if ! docker exec -it -u root mediawiki-mediawiki-1 sh -c "php maintenance/run.php update --quick" 2>&1 | verboseOrDotPerLine "PHP maintenance update"; then
         echo "PHP maintenance update failed. Exiting."
         return 1
     fi
+    echo
 
     _restore_composer_local_json
     return 0
