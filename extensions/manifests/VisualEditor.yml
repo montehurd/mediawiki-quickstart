@@ -1,7 +1,0 @@
-name: VisualEditor
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/VisualEditor
-configuration: |
-  wfLoadExtension( 'VisualEditor' );
-  $wgDefaultUserOptions['visualeditor-enable'] = 1;
-  # Optional: Set it as the default for anonymous users
-  $wgDefaultUserOptions['visualeditor-editor'] = "visualeditor";

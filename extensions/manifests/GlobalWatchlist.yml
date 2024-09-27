@@ -1,4 +1,0 @@
-name: GlobalWatchlist
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalWatchlist
-configuration: |
-  wfLoadExtension( 'GlobalWatchlist' );

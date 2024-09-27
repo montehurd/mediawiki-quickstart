@@ -4,18 +4,18 @@ source "./config"
 
 import_extra_local_settings() {
     local extra_settings_file="$SCRIPT_PATH/import-on-fresh-install/LocalSettings.extra.php"
+    local host_localsettings_file="$MEDIAWIKI_PATH/LocalSettings.php"
+
     if [ -f "$extra_settings_file" ]; then
         echo -e "\nCopying extra settings file..."
-        docker cp "$extra_settings_file" mediawiki-mediawiki-1:/var/www/html/w/LocalSettings.extra.php
+        cp "$extra_settings_file" "$MEDIAWIKI_PATH/LocalSettings.extra.php"
 
         echo "Adding include line to LocalSettings.php..."
-        docker exec mediawiki-mediawiki-1 bash -c '
-            if ! grep -q "require.*LocalSettings\.extra\.php" /var/www/html/w/LocalSettings.php; then
-                echo "" >> /var/www/html/w/LocalSettings.php
-                echo "# Include additional local settings from LocalSettings.extra.php" >> /var/www/html/w/LocalSettings.php
-                echo "require_once \"\$IP/LocalSettings.extra.php\";" >> /var/www/html/w/LocalSettings.php
-            fi
-        '
+        if ! grep -q "require.*LocalSettings\.extra\.php" "$host_localsettings_file"; then
+            echo "" >> "$host_localsettings_file"
+            echo "# Include additional local settings from LocalSettings.extra.php" >> "$host_localsettings_file"
+            echo "require_once \"\$IP/LocalSettings.extra.php\";" >> "$host_localsettings_file"
+        fi
         echo "Extra settings import completed"
     else
         echo "No extra settings file found - skipping import"

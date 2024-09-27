@@ -34,188 +34,140 @@ Test running including Selenium tests you can watch as they execute
     FORCE=1 ./fresh_install
     ```
 
+- You can control the depth of git clones for MediaWiki and its components by setting the CLONE_DEPTH environment variable. If left off, a clone depth of 1 is performed for maximum speed
+    ```bash
+    CLONE_DEPTH=100 ./fresh_install  # Clone with depth of 100 commits
+    CLONE_DEPTH=0 ./fresh_install    # Full clone - really slow!
+    ```
+
 # Optional
 
-## Skin Management
+## Component management (installing skins/extensions)
 
-### Switching skins
+Quickstart considers skins and extensions to be "components"
 
-`use_skin` fetches and switches to a skin and refreshes the browser to show the skin in use
+### Component manifests
 
-It's safe to call more than once for a given skin, so you can use it to quickly toggle between skins
+A folder-based manifest format is used to definine how extensions and skins are installed
 
-- Vector skin
-    ```bash
-    ./use_skin vector
-    ```
+You can see examples in the `~/mediawiki-quickstart/manifests/` directory
 
-- Minerva Neue skin
-    ```bash
-    ./use_skin minervaneue
-    ```
+`manifests` contains `extensions` and `skins` sub-directories
 
-- Timeless skin
-    ```bash
-    ./use_skin timeless
-    ```
+In these you will see one directory per extension/skin:
 
-- MonoBook skin
-    ```bash
-    ./use_skin monobook
-    ```
+```
+manifests/
+  |--extensions/
+  |----IPInfo/
+  |----Math/
+  |----VisualEditor/
+  ...
+  |--skins/
+  |----MonoBook/
+  |----Vector/
+  |----Timeless/
+  ...
+```
 
-### Adding more skins
+### Component manifest folder required file
 
-Look at the skin manifest yml files in `~/mediawiki-quickstart/skins/manifests`
+Inside each component's folder a single file is required:
 
-Copy one of them and rename it for your skin and edit it to use your skin's settings
+`LocalSettings.php`
 
-- Then you can fetch and switch to your skin
-    ```bash
-    ./use_skin #your_skin_filename_without_extension#
-    ```
+In this file you put whatever settings your component needs to load/run it
 
-- You can also call the skin installers directly
-    ```bash
-    ./skins/install Vector
-    ```
+QuickStart's component installer links your component's `LocalSettings.php` to Mediawiki's `LocalSettings.php` by adding an include to the latter
 
-    ```bash
-    ./skins/install Vector Timeless
-    ```
+The installer automatically clones your components repo so you don't have to
 
-    ```bash
-    ./skins/install_all
-    ```
+### Component manifest folder optional files/folders
 
-Skin installers are also safe to call more than once for a given skin
+Components also support the following optional files/folders:
 
-### Skin yml example
+#### setup.sh
 
-- Example skin manifest yml ( [~/mediawiki-quickstart/skins/manifests/Vector.yml](./skins/manifests/Vector.yml) )
-    ```yaml
-    name: Vector
-    repository: https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git
-    branch: master
-    wfLoadSkin: Vector
-    wgDefaultSkin: vector
-    ```
+`setup.sh` is executed by the installer after your component's repo is cloned
 
-    Note: all keys in the above example are required. For skins there are no optional keys
+This is where you can put any shell scripting that needs to execute to set up your component
 
-### Skin yml keys
+It is executed relative to mediawiki's directory in the mediawiki container - i.e. `pwd` placed in your `setup.sh` will output `/var/www/html/w` 
 
-- `name` required
+#### dependencies.yml
 
-    Skin name
-- `repository` required
+This is where you can define other components that must be installed for your component to function
 
-    Skin git repo url
-- `branch` required
+The installer installs these dependencies first
 
-    Skin branch to use
-- `wfLoadSkin` required
+Example contents of `dependencies.yml`:
 
-    Skin key value pair which will be added to LocalSettings.php
-- `wgDefaultSkin` required
+```
+- skins/MonoBook
+- extensions/EventLogging
+```
 
-    Skin key value pair which will be added to LocalSettings.php
+As you can see above, your component, whether extension or skin, can have depenencies on other extensions/skins, and these will be installed when you install your component
 
-## Extension Management
+#### pages/
 
-- Install one or more extensions for which manifest files exist in `~/mediawiki-quickstart/extensions/manifests`
-    ```bash
-    ./extensions/install Echo
-    ```
+If your component's manifest folder contains a `pages` folder, any page dump xml files in that folder will be imported when your component is installed
 
-    ```bash
-    ./extensions/install Echo IPInfo
-    ```
+### Installing components
 
-- Install all extensions for which manifest files exist in `~/mediawiki-quickstart/extensions/manifests`
-    ```bash
-    ./extensions/install_all
-    ```
+### Install an extension
 
-### Adding more extensions
+For installing an extension, you'd first add a folder for your extension to `manifests/extensions`
 
-Look at the extension manifest yml files in `~/mediawiki-quickstart/extensions/manifests`
+You'd place the required and optional files inside your folder
 
-Copy one of them and rename it for your extension and edit it to use your extension's settings
+Then you run:
 
-Then use the `install` command above to install it
+`./install extensions/YOUR_EXTENSION`
 
-### Extension yml examples
+### Install a skin
 
-- Example of a minimal extension manifest yml ( [~/mediawiki-quickstart/extensions/manifests/IPInfo.yml](./extensions/manifests/IPInfo.yml) )
-    ```yaml
-    name: IPInfo
-    repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/IPInfo
-    configuration: |
-      wfLoadExtension( 'IPInfo' );
-      $wgGroupPermissions['*']['ipinfo'] = true;
-      $wgGroupPermissions['*']['ipinfo-view-basic'] = true;
-      $wgGroupPermissions['*']['ipinfo-view-full'] = true;
-      $wgGroupPermissions['*']['ipinfo-view-log'] = true;
-    ```
+For installing a skin, you'd first add a folder for your skin to `manifests/skins`
 
-    Note: all keys in the above example are required. For extensions the following keys are optional
-    - `dependencies`
-    - `bash`
+You'd place the required and optional files inside your folder
 
-- Example extension manifest yml using the optional `bash` key ( [~/mediawiki-quickstart/extensions/manifests/GlobalBlocking.yml](./extensions/manifests/GlobalBlocking.yml) )
-    ```yaml
-    name: GlobalBlocking
-    repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/GlobalBlocking
-    configuration: |
-      wfLoadExtension( 'GlobalBlocking' );
-      $wgGlobalBlockingDatabase = 'globalblocking';
-      $wgApplyGlobalBlocks = true;
-      $wgGlobalBlockingBlockXFF = true;
-    bash: |
-      apt update
-      apt install sqlite3
-      sqlite3 cache/sqlite/globalblocking.sqlite < extensions/GlobalBlocking/sql/sqlite/tables-generated-globalblocks.sql
-   
-    ```
+Then you run:
 
-- Example extension manifest yml using the optional `dependencies` key ( [~/mediawiki-quickstart/extensions/manifests/CodeMirror.yml](./extensions/manifests/CodeMirror.yml) )
-    ```yaml
-    name: CodeMirror
-    repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/CodeMirror
-    dependencies:
-      - VisualEditor
-    configuration: |
-      wfLoadExtension( 'CodeMirror' );
-      # This configuration enables syntax highlighting by default for all users
-      $wgDefaultUserOptions['usecodemirror'] = 1;   
-    ```
+`./install skins/YOUR_SKIN`
 
-### Extension yml keys
+### Activating a skin
 
-- `name` required
+After installing a skin you can this to activate it:
 
-    Extension name
-- `repository` required
+`./make_skin_default YOUR_SKIN`
 
-    Extension git repo url
-- `configuration` required
+Or you can use the `use_skin` convenience script to both install and activate your skin:
 
-    Extension configuration php which will be added to LocalSettings.php
-- `bash` optional
+`./use_skin YOUR_SKIN`
 
-    Extension scripting to execute on installation
-- `dependencies` optional
+### Installing multiple components at once
 
-    Other extension yml file(s) to install when installing this extension
+The `install` script can also be passed multiple components to install:
 
-### Important Extension manifest yml note
+`./install skins/MonoBook extensions/IPInfo`
 
-- Do not use `composer install` or `npm install` in your extension `bash` key's value
+Or you can use the convenience script `install_all` to install every skin, every extension, or every component
 
-  The extension installer script takes care of this automatically if it sees your extension contains `composer.json` / `package.json`
+`./install_all skins`
 
-  It also rebuilds localization caches when extension(s) are installed, so no need to run `php maintenance/rebuildLocalisationCache.php`
+`./install_all extensions`
+
+`./install_all skins extensions`
+
+### Important component notes
+
+- Do not use `composer install`, `npm install` or `npm ci` in your components' `setup.sh` files
+
+  The installer takes care of this automatically if it sees your component contains `composer.json` / `package.json` / `package-lock.json`
+
+  It also rebuilds localization caches after installations complete so no need to run `php maintenance/rebuildLocalisationCache.php`
+
+- Ensure you name your component's folder the same way the extension or skin is named on Gerrit, this is because the installer clones your component from Gerrit using the name from this folder
 
 ## Testing
 
@@ -370,3 +322,10 @@ Get quick shell access to running MediaWiki containers with these commands
     ```
 
 Note: after shelling into a container you can use the "bash" command so you can do things like use the up arrow to view previous commands you have run
+
+## Miscellaneous
+
+- If you don't want the `Vector` skin installed by default you can use this env var when you do a fresh install
+    ```bash
+    SKIP_SKIN=1 ./fresh_install
+    ```

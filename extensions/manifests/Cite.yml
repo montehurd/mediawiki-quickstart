@@ -1,4 +1,0 @@
-name: Cite
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/Cite
-configuration: |
-  wfLoadExtension( 'Cite' );

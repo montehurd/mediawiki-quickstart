@@ -1,4 +1,0 @@
-name: Elastica
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica
-configuration: |
-  wfLoadExtension( 'Elastica' );

@@ -15,9 +15,9 @@ remove() {
     docker exec -u root mediawiki-mediawiki-1 sh -c "[ -d node_modules ] && rm -rf node_modules"
   fi
   if [ -f "$MEDIAWIKI_PATH/docker-compose.yml" ]; then
-    cd "$MEDIAWIKI_PATH" && docker compose down
+    cd "$MEDIAWIKI_PATH" && docker compose down 2>&1 | verboseOrDotPerLine "Docker compose down"
   fi
-  docker image rm mediawiki-web.selenium:1.0 || true
+  docker image rm mediawiki-web.selenium:1.0 2>&1 | verboseOrDotPerLine "Docker image rm" || true
   if [ -n "$MEDIAWIKI_PATH" ] && [ -d "$MEDIAWIKI_PATH" ]; then
     rm -rf "$MEDIAWIKI_PATH"
   fi

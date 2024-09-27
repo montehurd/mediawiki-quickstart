@@ -1,0 +1,7 @@
+<?php
+
+wfLoadExtension( 'Math' );
+# Basic configurations for Math extension
+$wgUseTeX = true;
+$wgMathValidModes[] = 'latexml'; # or other modes such as 'mathjax', 'mathml'
+$wgDefaultUserOptions['math'] = 'latexml'; # or 'mathjax', 'mathml'

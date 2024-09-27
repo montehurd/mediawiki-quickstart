@@ -1,4 +1,0 @@
-name: FileImporter
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/FileImporter
-configuration: |
-  wfLoadExtension( 'FileImporter' );

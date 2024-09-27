@@ -1,5 +1,0 @@
-name: MonoBook
-repository: https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git
-branch: master
-wfLoadSkin: MonoBook
-wgDefaultSkin: monobook
