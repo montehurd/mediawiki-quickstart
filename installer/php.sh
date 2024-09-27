@@ -37,15 +37,9 @@ EOM
     return 0
 }
 
-_backup_composer_local_json() {
-    if [[ -f "$MEDIAWIKI_PATH/composer.local.json" ]]; then
-        cp "$MEDIAWIKI_PATH/composer.local.json" "$MEDIAWIKI_PATH/composer.local.json.copy"
-    fi
-}
-
 _restore_composer_local_json() {
-    if [[ -f "$MEDIAWIKI_PATH/composer.local.json.copy" ]]; then
-        mv "$MEDIAWIKI_PATH/composer.local.json.copy" "$MEDIAWIKI_PATH/composer.local.json"
+    if [[ -f "$MEDIAWIKI_PATH/composer.local.json-sample" ]]; then
+        cp "$MEDIAWIKI_PATH/composer.local.json-sample" "$MEDIAWIKI_PATH/composer.local.json"
     fi
 }
 
@@ -59,8 +53,6 @@ install_php_dependencies_for_components() {
     fi
 
     echo -e "\nInstalling PHP dependencies for components: ${components_with_composer[@]}"
-
-    _backup_composer_local_json
 
     if ! (_build_composer_local_json_for_components "${components_with_composer[@]}"); then
         echo "Failed to build composer.local.json. Exiting."
