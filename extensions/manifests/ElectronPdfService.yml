@@ -1,6 +1,0 @@
-name: ElectronPdfService
-repository: https://gerrit.wikimedia.org/r/mediawiki/extensions/ElectronPdfService
-dependencies:
-  - Collection
-configuration: |
-  wfLoadExtension( 'ElectronPdfService' );
