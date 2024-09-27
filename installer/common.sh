@@ -93,7 +93,7 @@ _install_from_manifest() {
   local repository
   repository="$GIT_CLONE_BASE_URL/$component_path"
   
-  if ! git clone --recurse-submodules "$repository" "$MEDIAWIKI_PATH/$component_path" --depth=1 >/dev/null 2>&1; then
+  if ! git clone --recurse-submodules "$repository" "$MEDIAWIKI_PATH/$component_path" --depth=1 2>&1 | verboseOrDotPerLine "Git clone '$repository' to '$component_path'"; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
