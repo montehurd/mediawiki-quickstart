@@ -29,7 +29,7 @@ install_node_dependencies_for_components() {
     SECONDS=0
 
     if [[ ${#components_with_package_lock_json[@]} -gt 0 ]]; then
-        echo -e "\nInstalling Node dependencies for components with package-lock.json: ${components_with_package_lock_json[@]}"
+        echo -e "Installing Node dependencies for components with package-lock.json: ${components_with_package_lock_json[@]}"
         for component in "${components_with_package_lock_json[@]}"; do
           docker exec -u root mediawiki-mediawiki-web-1 bash -c "cd '$component' && npm ci 2>&1" \
             | verboseOrDotPerLine "Installing Node dependencies for '$component' using npm ci"
