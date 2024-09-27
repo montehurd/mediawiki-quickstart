@@ -88,12 +88,14 @@ _install_from_manifest() {
       _install_from_manifest "$dependency"
     done
   fi
-  
+
+  local clone_depth="--depth=${CLONE_DEPTH:-1}"
+
   # Generate the repository URL based on component type and name
   local repository
   repository="$GIT_CLONE_BASE_URL/$component_path"
   
-  if ! git clone --recurse-submodules "$repository" "$MEDIAWIKI_PATH/$component_path" --depth=1 2>&1 | verboseOrDotPerLine "Git clone '$repository' to '$component_path'"; then
+  if ! git clone --recurse-submodules --progress "$repository" "$MEDIAWIKI_PATH/$component_path" $clone_depth 2>&1 | verboseOrDotPerLine "Git clone '$repository' $clone_depth to '$component_path'"; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi

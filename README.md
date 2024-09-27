@@ -34,6 +34,12 @@ Test running including Selenium tests you can watch as they execute
     FORCE=1 ./fresh_install
     ```
 
+- You can control the depth of git clones for MediaWiki and its components by setting the CLONE_DEPTH environment variable. If left off, a clone depth of 1 is performed for maximum speed
+    ```bash
+    CLONE_DEPTH=100 ./fresh_install  # Clone with depth of 100 commits
+    CLONE_DEPTH=0 ./fresh_install    # Full clone - really slow!
+    ```
+
 # Optional
 
 ## Component management (installing skins/extensions)
