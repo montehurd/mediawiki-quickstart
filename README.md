@@ -229,6 +229,8 @@ Run a variety of tests using the commands below
 
 ## Selenium
 
+### Core
+
 - List all core and extension test files and tests, can be used to customize the file and test parameters in the `run_selenium_tests` examples below
     ```bash
     ./list_selenium_tests
@@ -255,28 +257,56 @@ Run a variety of tests using the commands below
     ./run_selenium_tests "tests/selenium/specs/**/*.js" ".*"
     ```
 
+### Extensions
+
 - Run a test in a specific extension
     ```bash
-    ./extensions/install Echo
+    ./install extensions/Echo
     ./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" "alerts and notices are visible"
     ```
  
 - Run all tests in specific extension file
     ```bash
-    ./extensions/install Echo
+    ./install extensions/Echo
     ./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" ".*"
     ```
 
 - Run all tests in a specific extension
     ```bash
-    ./extensions/install Echo
+    ./install extensions/Echo
     ./run_selenium_tests "extensions/Echo/tests/selenium/*specs/**/*.js" ".*"
     ```
 
 - Run all tests in all extensions
     ```bash
-    ./extensions/install_all
+    ./install_all extensions
     ./run_selenium_tests "extensions/*/tests/selenium/*specs/**/*.js" ".*"
+   ```
+
+### Skins
+
+- Run a test in a specific skin
+    ```bash
+    ./install skins/MinervaNeue
+    ./run_selenium_tests "skins/MinervaNeue/tests/selenium/specs/references.js" "Opening a reference"
+    ```
+
+- Run all tests in specific skin file
+    ```bash
+    ./install skins/MinervaNeue
+    ./run_selenium_tests "skins/MinervaNeue/tests/selenium/specs/references.js" ".*"
+    ```
+
+- Run all tests in specific skin
+    ```bash
+    ./install skins/MinervaNeue
+    ./run_selenium_tests "skins/MinervaNeue/tests/selenium/*specs/**/*.js" ".*"
+    ```
+
+- Run all tests in all skins
+    ```bash
+    ./install_all skins
+    ./run_selenium_tests "skins/*/tests/selenium/*specs/**/*.js" ".*"
    ```
 
 ### Overriding Selenium run log level
