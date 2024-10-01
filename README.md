@@ -315,6 +315,7 @@ This [Glob Primer](https://github.com/isaacs/node-glob?tab=readme-ov-file#glob-p
 
 For example, you could use `+` and `|` to run all skin and extension tests with one command:
 ```bash
+./install_all skins extensions
 ./run_selenium_tests "+(skins|extensions)/*/tests/selenium/*specs/**/*.js" ".*"
 ```
 
