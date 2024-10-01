@@ -309,6 +309,15 @@ Run a variety of tests using the commands below
     ./run_selenium_tests "skins/*/tests/selenium/*specs/**/*.js" ".*"
    ```
 
+### Advanced GLOB patterns
+
+This [Glob Primer](https://github.com/isaacs/node-glob?tab=readme-ov-file#glob-primer) has details on more advanced pattern matching
+
+For example, you could use `+` and `|` to run all skin and extension tests with one command:
+```bash
+./run_selenium_tests "+(skins|extensions)/*/tests/selenium/*specs/**/*.js" ".*"
+```
+
 ### Overriding Selenium run log level
 
 `./run_selenium_tests` supports an optional third parameter for setting the `logLevel`
