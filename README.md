@@ -319,6 +319,11 @@ For example, you could use `+` and `|` to run all skin and extension tests with 
 ./run_selenium_tests "+(skins|extensions)/*/tests/selenium/*specs/**/*.js" ".*"
 ```
 
+You can also run all core, skin and extension tests with one command:
+```bash
+./run_selenium_tests "{+(skins|extensions)/*/,}tests/selenium/*specs/**/*.js" ".*"
+```
+
 ### Overriding Selenium run log level
 
 `./run_selenium_tests` supports an optional third parameter for setting the `logLevel`
