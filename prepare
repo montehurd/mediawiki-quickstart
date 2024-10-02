@@ -3,9 +3,7 @@
 source "./config"
 
 prepare() {
-  local extra_compose_file_path
   local original_dir
-  extra_compose_file_path=${1:-""}
   original_dir="$(pwd)"
   mkdir -p "$MEDIAWIKI_PATH"
   cd "$MEDIAWIKI_PATH" || exit
@@ -16,9 +14,6 @@ prepare() {
   fi
   echo "$MW_ENV" >.env
   cp "$SCRIPT_PATH/docker-compose.override.yml" . || true
-  if [ -n "$extra_compose_file_path" ] && [ -f "$extra_compose_file_path" ]; then
-    cp "$extra_compose_file_path" .
-  fi
   cd "$original_dir"
 }
 
