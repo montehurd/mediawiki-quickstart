@@ -138,7 +138,7 @@ _run_bash_for_installed_components() {
 _run_bash_from_manifest() {
   local component_path="$1"
   local setup_script="./$(_get_manifest_path "$component_path")/setup.sh"
-  output=$(docker exec -u root mediawiki-mediawiki-1 bash -c "
+  docker exec -u root mediawiki-mediawiki-1 bash -c "
     echo \"Looking for '${setup_script}'\"
     if [ -f \"${setup_script}\" ]; then
       echo \"Running setup script '${setup_script}'\"
@@ -147,8 +147,7 @@ _run_bash_from_manifest() {
     else
       echo \"No '${setup_script}' found, skipping...\"
     fi
-  ")
-  echo "$output"
+  " 2>&1 | verboseOrDotPerLine "Running '$setup_script', if present..."
 }
 
 _install_php_and_node_dependencies() {
