@@ -8,6 +8,12 @@ prepare() {
   mkdir -p "$MEDIAWIKI_PATH"
   cd "$MEDIAWIKI_PATH" || exit
   local clone_depth="--depth=${CLONE_DEPTH:-1}"
+  # `git clone --depth=0` fails with `fatal: depth 0 is not a positive number`.
+  # For `CLONE_DEPTH=0`, skip `--depth` argument.
+  # See T376791.
+  if [ "${CLONE_DEPTH}" -eq 0 ]; then
+    local clone_depth=""
+  fi
   if ! git clone "$GIT_CLONE_BASE_URL/core.git" . $clone_depth 2>&1 | verboseOrDotPerLine "Git clone '$GIT_CLONE_BASE_URL/core.git' $clone_depth" "use CLONE_DEPTH=0 for full depth"; then
     echo "Failed to clone MediaWiki. Exiting."
     exit 1
