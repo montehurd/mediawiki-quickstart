@@ -427,13 +427,7 @@ Note: after shelling into a container you can use the "bash" command so you can 
     VERBOSE=1 ./fresh_install
     ```
 
-- Clone repositories via `ssh` instead of `https`. Change `GIT_CLONE_BASE_URL` in `config` file from
-
-    ```bash
-    GIT_CLONE_BASE_URL="https://gerrit.wikimedia.org/r/mediawiki"
-    ```
-
-to (replace `username` with your username)
+- Clone repositories via `ssh` instead of `https`. Change `GIT_CLONE_BASE_URL` in `config` file. (Replace `username` with your username.)
 
     ```bash
     GIT_CLONE_BASE_URL="ssh://username@gerrit.wikimedia.org:29418/mediawiki"
