@@ -1,0 +1,28 @@
+#!/bin/bash
+
+manifests=(
+  "skins/MinervaNeue"
+  "extensions/ContactPage"
+  "extensions/Math"
+)
+
+for manifest in "${manifests[@]}"; do
+  echo "----------------------------------------"
+  echo "${manifest}"
+  echo "----------------------------------------"
+
+  echo "----------------------------------------"
+  echo "./fresh_install"
+  echo "----------------------------------------"
+  time FORCE=1 SKIP_COUNTDOWN=1 SKIP_SKIN=1 ./fresh_install
+
+  echo "----------------------------------------"
+  echo "./install $manifest"
+  echo "----------------------------------------"
+  time ./install "$manifest"
+
+  echo "----------------------------------------"
+  echo "./run_selenium_tests $manifest"
+  echo "----------------------------------------"
+  time ./run_selenium_tests "$manifest/tests/selenium/*specs/**/*.js" ".*"
+done
