@@ -1,28 +1,31 @@
 #!/bin/bash
 
-manifests=(
-  "skins/MinervaNeue"
-  "extensions/ContactPage"
-  "extensions/Math"
-)
+root="manifests"
+
+manifests=("extensions" "skins")
 
 for manifest in "${manifests[@]}"; do
-  echo "----------------------------------------"
-  echo "${manifest}"
-  echo "----------------------------------------"
+  folders=$(find "$root/$manifest" -mindepth 1 -maxdepth 1 -type d | sort)
 
-  echo "----------------------------------------"
-  echo "./fresh_install"
-  echo "----------------------------------------"
-  time FORCE=1 SKIP_COUNTDOWN=1 SKIP_SKIN=1 ./fresh_install
+  for folder in $folders; do
+    folder_name=$(basename "$folder")
+      echo "--------------------------------------------------------------------------------"
+      echo "${folder_name}"
+      echo "--------------------------------------------------------------------------------"
 
-  echo "----------------------------------------"
-  echo "./install $manifest"
-  echo "----------------------------------------"
-  time ./install "$manifest"
+      echo "--------------------------------------------------------------------------------"
+      echo "./fresh_install"
+      echo "--------------------------------------------------------------------------------"
+      time FORCE=1 SKIP_COUNTDOWN=1 SKIP_SKIN=1 ./fresh_install
 
-  echo "----------------------------------------"
-  echo "./run_selenium_tests $manifest"
-  echo "----------------------------------------"
-  time ./run_selenium_tests "$manifest/tests/selenium/*specs/**/*.js" ".*"
+      echo "--------------------------------------------------------------------------------"
+      echo "./install $manifest/$folder_name"
+      echo "--------------------------------------------------------------------------------"
+      time ./install "$manifest/$folder_name"
+
+      echo "--------------------------------------------------------------------------------"
+      echo "./run_selenium_tests $manifest/$folder_name"
+      echo "--------------------------------------------------------------------------------"
+      time ./run_selenium_tests "$manifest/$folder_name/tests/selenium/*specs/**/*.js" ".*"
+  done
 done
