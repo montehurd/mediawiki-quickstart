@@ -409,25 +409,25 @@ Get quick shell access to running MediaWiki containers with these commands.
 
 - Shell access to the MediaWiki container.
 
-```sh
+```bash
 ./shellto m
 ```
 
 - Shell access to the job runner container.
 
-```sh
+```bash
 ./shellto j
 ```
 
 - Shell access to the web container.
 
-```sh
+```bash
 ./shellto w
 ```
 
 - Shell access to the Selenium viewer container ("n" is for "NoVNC").
 
-```sh
+```bash
 ./shellto n
 ```
 
