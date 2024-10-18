@@ -48,7 +48,7 @@ You can see examples in the `~/mediawiki-quickstart/manifests/` directory.
 
 In these you will see one directory per extension/skin.
 
-```
+```text
 manifests/
   |--extensions/
   |----IPInfo/
@@ -64,7 +64,7 @@ manifests/
 
 ### Component manifest folder contents
 
-```
+```text
 manifests/
   |--extensions/
   |----IPInfo/
@@ -122,7 +122,7 @@ The installer installs these dependencies first.
 
 Example contents of `dependencies.yml`.
 
-```
+```yml
 - skins/MonoBook
 - extensions/EventLogging
 ```
