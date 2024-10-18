@@ -11,23 +11,23 @@ Test running including Selenium tests you can watch as they execute
 # Installation
 
 1. Clone the repository
-    ```bash
-    git clone https://gitlab.wikimedia.org/mhurd/mediawiki-quickstart.git
-    ```
+```bash
+git clone https://gitlab.wikimedia.org/mhurd/mediawiki-quickstart.git
+```
 
 2. Navigate to the repository directory
-    ```bash
-    cd ~/mediawiki-quickstart
-    ```
+```bash
+cd ~/mediawiki-quickstart
+```
 
 # Usage
 
 ## Fetch, configure and start MediaWiki
 
 - Fetches the latest MediaWiki (into `~/mediawiki-quickstart/mediawiki/`) and spins up its Docker containers
-    ```bash
-    ./fresh_install
-    ```
+```bash
+./fresh_install
+```
 
 # Component management (installing skins/extensions)
 
@@ -206,108 +206,108 @@ Run a variety of tests using the commands below
 ## Parser
 
 - Run parser tests
-    ```bash
-    ./run_parser_tests
-    ```
+```bash
+./run_parser_tests
+```
 
 ## PHP
 
 - Run PHP unit tests
-    ```bash
-    ./run_php_unit_tests
-    ```
+```bash
+./run_php_unit_tests
+```
 
 - Run PHP unit tests with a specific group
-    ```bash
-    ./run_php_unit_test_group Cache
-    ```
+```bash
+./run_php_unit_test_group Cache
+```
 
 - Run PHP unit tests with a specific path
-    ```bash
-    ./run_php_unit_test_path tests/phpunit/unit/includes/resourceloader/
-    ```
+```bash
+./run_php_unit_test_path tests/phpunit/unit/includes/resourceloader/
+```
 
 ## Selenium
 
 ### Core
 
 - List all core and extension test files and tests, can be used to customize the file and test parameters in the `run_selenium_tests` examples below
-    ```bash
-    ./list_selenium_tests
-    ```
+```bash
+./list_selenium_tests
+```
 
 - Run a MediaWiki core test
-    ```bash
-    ./run_selenium_tests "tests/selenium/specs/page.js" "should be creatable"
-    ```
+```bash
+./run_selenium_tests "tests/selenium/specs/page.js" "should be creatable"
+```
 
 - Run all tests in a specific MediaWiki core test file
-    ```bash
-    ./run_selenium_tests "tests/selenium/specs/page.js" ".*"
-    ```
+```bash
+./run_selenium_tests "tests/selenium/specs/page.js" ".*"
+```
 
 - Run all MediaWiki core tests
-    ```bash
-    ./run_selenium_tests
-    ```
+```bash
+./run_selenium_tests
+```
 
     or
 
-    ```bash
-    ./run_selenium_tests "tests/selenium/specs/**/*.js" ".*"
-    ```
+```bash
+./run_selenium_tests "tests/selenium/specs/**/*.js" ".*"
+```
 
 ### Extensions
 
 - Run a test in a specific extension
-    ```bash
-    ./install extensions/Echo
-    ./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" "alerts and notices are visible"
-    ```
+```bash
+./install extensions/Echo
+./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" "alerts and notices are visible"
+```
 
 - Run all tests in specific extension file
-    ```bash
-    ./install extensions/Echo
-    ./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" ".*"
-    ```
+```bash
+./install extensions/Echo
+./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" ".*"
+```
 
 - Run all tests in a specific extension
-    ```bash
-    ./install extensions/Echo
-    ./run_selenium_tests "extensions/Echo/tests/selenium/*specs/**/*.js" ".*"
-    ```
+```bash
+./install extensions/Echo
+./run_selenium_tests "extensions/Echo/tests/selenium/*specs/**/*.js" ".*"
+```
 
 - Run all tests in all extensions
-    ```bash
-    ./install_all extensions
-    ./run_selenium_tests "extensions/*/tests/selenium/*specs/**/*.js" ".*"
-   ```
+```bash
+./install_all extensions
+./run_selenium_tests "extensions/*/tests/selenium/*specs/**/*.js" ".*"
+```
 
 ### Skins
 
 - Run a test in a specific skin
-    ```bash
-    ./install skins/MinervaNeue
-    ./run_selenium_tests "skins/MinervaNeue/tests/selenium/specs/references.js" "Opening a reference"
-    ```
+```bash
+./install skins/MinervaNeue
+./run_selenium_tests "skins/MinervaNeue/tests/selenium/specs/references.js" "Opening a reference"
+```
 
 - Run all tests in specific skin file
-    ```bash
-    ./install skins/MinervaNeue
-    ./run_selenium_tests "skins/MinervaNeue/tests/selenium/specs/references.js" ".*"
-    ```
+```bash
+./install skins/MinervaNeue
+./run_selenium_tests "skins/MinervaNeue/tests/selenium/specs/references.js" ".*"
+```
 
 - Run all tests in specific skin
-    ```bash
-    ./install skins/MinervaNeue
-    ./run_selenium_tests "skins/MinervaNeue/tests/selenium/*specs/**/*.js" ".*"
-    ```
+```bash
+./install skins/MinervaNeue
+./run_selenium_tests "skins/MinervaNeue/tests/selenium/*specs/**/*.js" ".*"
+```
 
 - Run all tests in all skins
-    ```bash
-    ./install_all skins
-    ./run_selenium_tests "skins/*/tests/selenium/*specs/**/*.js" ".*"
-   ```
+```bash
+./install_all skins
+./run_selenium_tests "skins/*/tests/selenium/*specs/**/*.js" ".*"
+```
 
 ### Advanced GLOB patterns
 
@@ -356,79 +356,79 @@ When you run `./fresh_install`, page dump XML files found in [`import-on-fresh-i
 You can manage the MediaWiki containers using these commands
 
 - Stops MediaWiki containers
-    ```bash
-    ./stop
-    ```
+```bash
+./stop
+```
 
 - Starts MediaWiki containers
-    ```bash
-    ./start
-    ```
+```bash
+./start
+```
 
 - Restarts MediaWiki containers
-    ```bash
-    ./restart
-    ```
+```bash
+./restart
+```
 
 - Stops and removes MediaWiki containers and files
-    ```bash
-    ./remove
-    ```
+```bash
+./remove
+```
 
 # Container Shell Access
 
 Get quick shell access to running MediaWiki containers with these commands
 
 - Shell access to the MediaWiki container
-    ```sh
-    ./shellto m
-    ```
+```sh
+./shellto m
+```
 
 - Shell access to the job runner container
-    ```sh
-    ./shellto j
-    ```
+```sh
+./shellto j
+```
 
 - Shell access to the web container
-    ```sh
-    ./shellto w
-    ```
+```sh
+./shellto w
+```
 
 - Shell access to the Selenium viewer container ("n" is for "NoVNC")
-    ```sh
-    ./shellto n
-    ```
+```sh
+./shellto n
+```
 
 Note: after shelling into a container you can use the "bash" command so you can do things like use the up arrow to view previous commands you have run
 
 # Miscellaneous
 
 - Skip installation of the `Vector` skin on a fresh install
-    ```bash
-    SKIP_SKIN=1 ./fresh_install
-    ```
+```bash
+SKIP_SKIN=1 ./fresh_install
+```
 
 - Bypass all confirmations for removing and re-installing Mediawiki files and containers, but use with caution as this proceeds with these destructive actions without confimation
-    ```bash
-    FORCE=1 ./fresh_install
-    ```
+```bash
+FORCE=1 ./fresh_install
+```
 
 - Control the depth of git clones for MediaWiki and its components by setting the CLONE_DEPTH environment variable. If left off, a clone depth of 1 is performed for maximum speed
-    ```bash
-    CLONE_DEPTH=100 ./fresh_install  # Clone with depth of 100 commits
-    ```
+```bash
+CLONE_DEPTH=100 ./fresh_install  # Clone with depth of 100 commits
+```
 
-    ```bash
-    CLONE_DEPTH=0 ./fresh_install    # Full clone - really slow!
-    ```
+```bash
+CLONE_DEPTH=0 ./fresh_install    # Full clone - really slow!
+```
 
 - See verbose console output when debuggging installation issues
-    ```bash
-    VERBOSE=1 ./fresh_install
-    ```
+```bash
+VERBOSE=1 ./fresh_install
+```
 
 - Clone repositories via `ssh` instead of `https`. Change `GIT_CLONE_BASE_URL` in `config` file. (Replace `username` with your username.)
 
-    ```bash
-    GIT_CLONE_BASE_URL="ssh://username@gerrit.wikimedia.org:29418/mediawiki"
-    ```
+```bash
+GIT_CLONE_BASE_URL="ssh://username@gerrit.wikimedia.org:29418/mediawiki"
+```
