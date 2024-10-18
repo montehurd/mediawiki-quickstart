@@ -38,7 +38,7 @@ Quickstart considers skins and extensions to be "components"
 
 ## Component manifests
 
-A folder-based manifest format is used to definine how extensions and skins are installed
+A folder-based manifest format is used to define how extensions and skins are installed
 
 You can see examples in the `~/mediawiki-quickstart/manifests/` directory
 
@@ -68,14 +68,14 @@ manifests/
   |----IPInfo/
   |------LocalSettings.php  (required)
   |------setup.sh           (optional)
-  |------depedencies.yml    (optional)
+  |------dependencies.yml    (optional)
   |------pages/             (optional)
   ...
   |--skins/
   |----MonoBook/
   |------LocalSettings.php  (required)
   |------setup.sh           (optional)
-  |------depedencies.yml    (optional)
+  |------dependencies.yml    (optional)
   |------pages/             (optional)
   ...
 ```
@@ -100,7 +100,7 @@ or
 wfLoadSkin( 'Vector' );
 ```
 
-QuickStart's component installer links your component's `LocalSettings.php` to Mediawiki's `LocalSettings.php` by adding an include to the latter. This allows you to more cleanly manange and reason about your component's settings
+QuickStart's component installer links your component's `LocalSettings.php` to Mediawiki's `LocalSettings.php` by adding an include to the latter. This allows you to more cleanly manage and reason about your component's settings
 
 The installer automatically clones your components repo so you don't have to
 
@@ -125,7 +125,7 @@ Example contents of `dependencies.yml`:
 - extensions/EventLogging
 ```
 
-As you can see above, your component, whether extension or skin, can have depenencies on other extensions/skins, and these will be installed when you install your component
+As you can see above, your component, whether extension or skin, can have dependencies on other extensions/skins, and these will be installed when you install your component
 
 ### pages/ (optional)
 
@@ -439,7 +439,7 @@ Note: after shelling into a container you can use the "bash" command so you can 
 SKIP_SKIN=1 ./fresh_install
 ```
 
-- Bypass all confirmations for removing and re-installing Mediawiki files and containers, but use with caution as this proceeds with these destructive actions without confimation
+- Bypass all confirmations for removing and re-installing Mediawiki files and containers, but use with caution as this proceeds with these destructive actions without confirmation
 
 ```bash
 FORCE=1 ./fresh_install
@@ -455,7 +455,7 @@ CLONE_DEPTH=100 ./fresh_install  # Clone with depth of 100 commits
 CLONE_DEPTH=0 ./fresh_install    # Full clone - really slow!
 ```
 
-- See verbose console output when debuggging installation issues
+- See verbose console output when debugging installation issues
 
 ```bash
 VERBOSE=1 ./fresh_install
