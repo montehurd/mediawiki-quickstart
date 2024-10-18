@@ -4,7 +4,7 @@ Easy skin and extension management via "component" manifest folders
 
 Test running including Selenium tests you can watch as they execute
 
-# Prerequisites 
+# Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop) installed
 
@@ -107,7 +107,7 @@ The installer automatically clones your components repo so you don't have to
 
 This is where you can put any shell scripting that needs to execute to set up your component
 
-It is executed relative to mediawiki's directory in the mediawiki container - i.e. `pwd` placed in your `setup.sh` will output `/var/www/html/w` 
+It is executed relative to mediawiki's directory in the mediawiki container - i.e. `pwd` placed in your `setup.sh` will output `/var/www/html/w`
 
 ### dependencies.yml (optional)
 
@@ -264,7 +264,7 @@ Run a variety of tests using the commands below
     ./install extensions/Echo
     ./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" "alerts and notices are visible"
     ```
- 
+
 - Run all tests in specific extension file
     ```bash
     ./install extensions/Echo
@@ -329,7 +329,7 @@ You can also run all core, skin and extension tests with one command:
 
 `./run_selenium_tests` supports an optional third parameter for setting the `logLevel`
 
-Its default value is `error`, but can be changed to one of these: 
+Its default value is `error`, but can be changed to one of these:
 
 ( `trace` | `debug` | `info` | `warn` | `error` | `silent` ) see https://webdriver.io/docs/configurationfile/
 
