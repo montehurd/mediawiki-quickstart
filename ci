@@ -36,14 +36,13 @@ for manifest in "${manifests[@]}"; do
       VERBOSE=1 ./run_selenium_tests "$manifest/$folder_name/tests/selenium/*specs/**/*.js" ".*"
       report+=($?)
       reports+=("${report[*]}")
-  done
 
-  echo "--------------------------------------------------------------------------------"
-  echo "Manifest fresh_install install run_selenium_tests"
-  echo "--------------------------------------------------------------------------------"
-  for report in "${reports[@]}"; do
-      echo "$report"
+      echo "--------------------------------------------------------------------------------"
+      echo "Manifest fresh_install install run_selenium_tests"
+      echo "--------------------------------------------------------------------------------"
+      for report in "${reports[@]}"; do
+          echo "$report"
+      done
+      echo "--------------------------------------------------------------------------------"
   done
-  echo "--------------------------------------------------------------------------------"
-
 done
