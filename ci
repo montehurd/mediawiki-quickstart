@@ -33,8 +33,12 @@ for manifest in "${manifests[@]}"; do
       echo "--------------------------------------------------------------------------------"
       echo "./run_selenium_tests $manifest/$folder_name"
       echo "--------------------------------------------------------------------------------"
-      VERBOSE=1 ./run_selenium_tests "$manifest/$folder_name/tests/selenium/*specs/**/*.js" ".*"
-      report+=($?)
+      if grep -q '"selenium-test"' "./mediawiki/$manifest/$folder_name/package.json"; then
+        VERBOSE=1 ./run_selenium_tests "$manifest/$folder_name/tests/selenium/*specs/**/*.js" ".*"
+        report+=($?)
+      else
+          report+=("n/a")
+      fi
       reports+=("${report[*]}")
 
       echo "--------------------------------------------------------------------------------"
