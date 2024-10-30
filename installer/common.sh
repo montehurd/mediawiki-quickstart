@@ -93,7 +93,7 @@ _install_from_manifest() {
   # `git clone --depth=0` fails with `fatal: depth 0 is not a positive number`.
   # For `CLONE_DEPTH=0`, skip `--depth` argument.
   # See T376791.
-  if [ "${CLONE_DEPTH:-}" -eq 0 ]; then
+  if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
     local clone_depth=""
   fi
 
