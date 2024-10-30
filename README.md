@@ -469,7 +469,7 @@ VERBOSE=1 ./fresh_install
 GIT_CLONE_BASE_URL="ssh://username@gerrit.wikimedia.org:29418/mediawiki"
 ```
 
-- Speed up installation by skipping any countdowns.
+- Speed up installation by skipping any countdowns
 
 ```bash
 SKIP_COUNTDOWN=1 ./fresh_install
