@@ -1,0 +1,52 @@
+#!/bin/bash
+
+root="manifests"
+
+manifests=("extensions" "skins")
+
+reports=()
+
+for manifest in "${manifests[@]}"; do
+  folders=$(find "$root/$manifest" -mindepth 1 -maxdepth 1 -type d | sort)
+
+  for folder in $folders; do
+    folder_name=$(basename "$folder")
+      report=()
+
+      echo "--------------------------------------------------------------------------------"
+      echo "${folder_name}"
+      echo "--------------------------------------------------------------------------------"
+      report+=("$folder_name")
+
+      echo "--------------------------------------------------------------------------------"
+      echo "./fresh_install"
+      echo "--------------------------------------------------------------------------------"
+      FORCE=1 SKIP_COUNTDOWN=1 SKIP_SKIN=1 VERBOSE=1 ./fresh_install
+      report+=($?)
+
+      echo "--------------------------------------------------------------------------------"
+      echo "./install $manifest/$folder_name"
+      echo "--------------------------------------------------------------------------------"
+      VERBOSE=1 ./install "$manifest/$folder_name"
+      report+=($?)
+
+      echo "--------------------------------------------------------------------------------"
+      echo "./run_selenium_tests $manifest/$folder_name"
+      echo "--------------------------------------------------------------------------------"
+      if grep -q '"selenium-test"' "./mediawiki/$manifest/$folder_name/package.json"; then
+        VERBOSE=1 ./run_selenium_tests "$manifest/$folder_name/tests/selenium/*specs/**/*.js" ".*"
+        report+=($?)
+      else
+          report+=("n/a")
+      fi
+      reports+=("${report[*]}")
+
+      echo "--------------------------------------------------------------------------------"
+      printf "%-19s%-14s%-8s%-20s\n" "Manifest" "fresh_install" "install" "run_selenium_tests"
+      echo "--------------------------------------------------------------------------------"
+      for report in "${reports[@]}"; do
+          printf "%-19s%-14s%-8s%-20s\n" $report
+      done
+      echo "--------------------------------------------------------------------------------"
+  done
+done
