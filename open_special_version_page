@@ -4,7 +4,7 @@ source "./config"
 source "./common/utility.sh"
 
 open_special_version_page() {
-  if [ "${skipopenspecialversionpage:-false}" = "true" ]; then
+  if [ "${SILENT:-0}" = "1" ]; then
     return
   fi
   open_url_when_available "$SPECIAL_VERSION_URL"

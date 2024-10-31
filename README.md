@@ -474,3 +474,9 @@ GIT_CLONE_BASE_URL="ssh://username@gerrit.wikimedia.org:29418/mediawiki"
 ```bash
 SKIP_COUNTDOWN=1 ./fresh_install
 ```
+
+- Skip opening `Special:Version` page after installation
+
+```bash
+SILENT=1 ./fresh_install
+```
