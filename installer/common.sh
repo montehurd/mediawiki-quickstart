@@ -89,7 +89,7 @@ _install_from_manifest() {
     done
   fi
 
-  local clone_depth="--depth=${CLONE_DEPTH:-1}"
+  local clone_depth="--depth=${CLONE_DEPTH:-2}"
   # `git clone --depth=0` fails with `fatal: depth 0 is not a positive number`.
   # For `CLONE_DEPTH=0`, skip `--depth` argument.
   # See T376791.

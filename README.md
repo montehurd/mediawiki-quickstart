@@ -447,7 +447,7 @@ SKIP_SKIN=1 ./fresh_install
 FORCE=1 ./fresh_install
 ```
 
-- Control the depth of git clones for MediaWiki and its components by setting the CLONE_DEPTH environment variable. If left off, a clone depth of 1 is performed for maximum speed
+- Control the depth of git clones for MediaWiki and its components by setting the CLONE_DEPTH environment variable. If left off, a clone depth of 2 is performed by default, which is fast (and keeps Gerrit "git review" happy, which can complain if a repo's depth is 1)
 
 ```bash
 CLONE_DEPTH=100 ./fresh_install  # Clone with depth of 100 commits
