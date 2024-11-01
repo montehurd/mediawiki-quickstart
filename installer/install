@@ -13,11 +13,7 @@ install() {
   fi
   INSTALLED_COMPONENTS=()
   for component_path in "$@"; do
-    if [[ -d "./$(_get_manifest_path "$component_path")" ]]; then
-      _install_from_manifest "$component_path"
-    else
-      echo "No corresponding manifest folder found for '$component_path', skipping..."
-    fi
+    _install_from_manifest "$component_path"
   done
   _install_php_and_node_dependencies
   _run_bash_for_installed_components
