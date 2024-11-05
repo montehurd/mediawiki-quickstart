@@ -476,6 +476,7 @@ SKIP_COUNTDOWN=1 ./fresh_install
 ```
 
 - Skip opening `Special:Version` page after installation
+- Skip opening VNC viewer when running Selenium tests
 
 ```bash
 SILENT=1 ./fresh_install
