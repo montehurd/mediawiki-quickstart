@@ -265,7 +265,7 @@ Run a variety of tests using the commands below
 ./run_selenium_tests
 ```
 
-    or
+or
 
 ```bash
 ./run_selenium_tests "tests/selenium/specs/**/*.js" ".*"
@@ -362,6 +362,14 @@ For example, to use `debug` log level:
 ```bash
 ./run_selenium_tests "tests/selenium/specs/**/*.js" ".*" "debug"
 ```
+
+#### Overriding Selenium retries
+
+You can use the `SELENIUM_RETRIES` env var to have Selenium retry failed tests:
+
+```bash
+SELENIUM_RETRIES=2 ./run_selenium_tests
+``` 
 
 ## Custom MediaWiki 'LocalSettings'
 

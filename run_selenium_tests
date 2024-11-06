@@ -14,6 +14,9 @@ run_selenium_tests() {
   log_level=${3:-"error"}
   # logLevel can be one of these: ( trace | debug | info | warn | error | silent ) https://webdriver.io/docs/configurationfile/
 
+  local retries
+  retries=${SELENIUM_RETRIES:-0}
+
   docker cp "./selenium/wdio.conf.override.js" \
     mediawiki-mediawiki-web-1:/var/www/html/w/tests/selenium/wdio.conf.override.js
 
@@ -23,7 +26,8 @@ run_selenium_tests() {
     mediawiki-mediawiki-web-1 npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" \
       --spec "/var/www/html/w/$file_path" \
       --logLevel "$log_level" \
-      --mochaOpts.grep "$test_name"
+      --mochaOpts.grep "$test_name" \
+      --specFileRetries "$retries"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
