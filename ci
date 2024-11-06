@@ -4,6 +4,9 @@ root="manifests"
 
 manifests=("extensions" "skins")
 
+manifest_max_length=0
+manifest_width=0
+
 reports=()
 
 for manifest in "${manifests[@]}"; do
@@ -11,6 +14,10 @@ for manifest in "${manifests[@]}"; do
 
   for folder in $folders; do
     folder_name=$(basename "$folder")
+      if [ ${#folder_name} -gt $manifest_max_length ]; then
+        manifest_max_length=${#folder_name}
+        manifest_width=$(( manifest_max_length + 1 ))
+      fi
       report=()
 
       echo "--------------------------------------------------------------------------------"
@@ -42,10 +49,10 @@ for manifest in "${manifests[@]}"; do
       reports+=("${report[*]}")
 
       echo "--------------------------------------------------------------------------------"
-      printf "%-19s%-14s%-8s%-20s\n" "Manifest" "fresh_install" "install" "run_selenium_tests"
+      printf "%-${manifest_width}s%-14s%-8s%-20s\n" "Manifest" "fresh_install" "install" "run_selenium_tests"
       echo "--------------------------------------------------------------------------------"
       for report in "${reports[@]}"; do
-          printf "%-19s%-14s%-8s%-20s\n" $report
+          printf "%-${manifest_width}s%-14s%-8s%-20s\n" $report
       done
       echo "--------------------------------------------------------------------------------"
   done
