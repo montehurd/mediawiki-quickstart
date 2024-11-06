@@ -9,6 +9,8 @@ manifest_width=0
 
 reports=()
 
+separator="--------------------------------------------------------------------------------"
+
 for manifest in "${manifests[@]}"; do
   folders=$(find "$root/$manifest" -mindepth 1 -maxdepth 1 -type d | sort)
 
@@ -20,26 +22,19 @@ for manifest in "${manifests[@]}"; do
       fi
       report=()
 
-      echo "--------------------------------------------------------------------------------"
-      echo "${folder_name}"
-      echo "--------------------------------------------------------------------------------"
+      echo -e "${separator}\n${folder_name}\n${separator}\n"
       report+=("$folder_name")
 
-      echo "--------------------------------------------------------------------------------"
-      echo "./fresh_install"
-      echo "--------------------------------------------------------------------------------"
+      echo -e "${separator}\n./fresh_install\n${separator}\n"
+
       FORCE=1 SILENT=1 SKIP_COUNTDOWN=1 SKIP_SKIN=1 VERBOSE=1 ./fresh_install
       report+=($?)
 
-      echo "--------------------------------------------------------------------------------"
-      echo "./install $manifest/$folder_name"
-      echo "--------------------------------------------------------------------------------"
+      echo -e "${separator}\n./install $manifest/$folder_name\n${separator}\n"
       SILENT=1 VERBOSE=1 ./install "$manifest/$folder_name"
       report+=($?)
 
-      echo "--------------------------------------------------------------------------------"
-      echo "./run_selenium_tests $manifest/$folder_name"
-      echo "--------------------------------------------------------------------------------"
+      echo -e "${separator}\n./run_selenium_tests $manifest/$folder_name\n${separator}\n"
       if grep -q '"selenium-test"' "./mediawiki/$manifest/$folder_name/package.json"; then
         SILENT=1 VERBOSE=1 ./run_selenium_tests "$manifest/$folder_name/tests/selenium/*specs/**/*.js" ".*"
         report+=($?)
@@ -48,12 +43,12 @@ for manifest in "${manifests[@]}"; do
       fi
       reports+=("${report[*]}")
 
-      echo "--------------------------------------------------------------------------------"
+      echo -e "\n${separator}"
       printf "%-${manifest_width}s%-14s%-8s%-20s\n" "Manifest" "fresh_install" "install" "run_selenium_tests"
-      echo "--------------------------------------------------------------------------------"
+      echo -e "${separator}"
       for report in "${reports[@]}"; do
           printf "%-${manifest_width}s%-14s%-8s%-20s\n" $report
       done
-      echo "--------------------------------------------------------------------------------"
+      echo -e "${separator}\n"
   done
 done
