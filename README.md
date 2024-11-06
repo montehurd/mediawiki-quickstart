@@ -369,7 +369,19 @@ You can use the `SELENIUM_RETRIES` env var to have Selenium retry failed tests:
 
 ```bash
 SELENIUM_RETRIES=2 ./run_selenium_tests
-``` 
+```
+
+Retries defaults to 0 if the env var is not used
+
+#### Overriding Selenium max instances
+
+You can use the `SELENIUM_INSTANCES` env var to have Selenium run more than a single instance at once:
+
+```bash
+SELENIUM_INSTANCES=4 ./run_selenium_tests
+```
+
+Instances defaults to 1 if the env var is not used
 
 ## Custom MediaWiki 'LocalSettings'
 

@@ -16,6 +16,8 @@ run_selenium_tests() {
 
   local retries
   retries=${SELENIUM_RETRIES:-0}
+  local instances
+  instances=${SELENIUM_INSTANCES:-1}
 
   docker cp "./selenium/wdio.conf.override.js" \
     mediawiki-mediawiki-web-1:/var/www/html/w/tests/selenium/wdio.conf.override.js
@@ -27,7 +29,8 @@ run_selenium_tests() {
       --spec "/var/www/html/w/$file_path" \
       --logLevel "$log_level" \
       --mochaOpts.grep "$test_name" \
-      --specFileRetries "$retries"
+      --specFileRetries "$retries" \
+      --maxInstances "$instances"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
