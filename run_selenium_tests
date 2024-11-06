@@ -14,6 +14,9 @@ run_selenium_tests() {
   log_level=${3:-"error"}
   # logLevel can be one of these: ( trace | debug | info | warn | error | silent ) https://webdriver.io/docs/configurationfile/
 
+  docker cp "./selenium/wdio.conf.override.js" \
+    mediawiki-mediawiki-web-1:/var/www/html/w/tests/selenium/wdio.conf.override.js
+
   docker exec -it \
     -u root \
     -e DISPLAY=mediawiki-novnc-1:0 \

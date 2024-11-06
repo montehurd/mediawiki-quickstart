@@ -20,7 +20,6 @@ ensure_selenium_ready() {
     else
       npm install
     fi
-    cp -f /var/local/wdio.conf.override.js /var/www/html/w/tests/selenium/wdio.conf.override.js
     cp -f /var/local/install-browser-for-puppeteer-core.js /var/www/html/w/install-browser-for-puppeteer-core.js
     CHROME_PATH=$(node -e "
       require('dotenv').config();
