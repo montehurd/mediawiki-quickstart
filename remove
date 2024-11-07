@@ -11,9 +11,6 @@ remove() {
   if ! confirm_action "Are you sure you want to delete mediawiki containers and EVERYTHING in \"$MEDIAWIKI_PATH\""; then
     exit 1
   fi
-  if is_container_running "mediawiki-mediawiki-1"; then
-    docker exec -u root mediawiki-mediawiki-1 sh -c "[ -d node_modules ] && rm -rf node_modules"
-  fi
   if [ -f "$MEDIAWIKI_PATH/docker-compose.yml" ]; then
     cd "$MEDIAWIKI_PATH" && docker compose down 2>&1 | verboseOrDotPerLine "Docker compose down"
   fi
