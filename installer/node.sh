@@ -15,10 +15,6 @@ _components_with_file() {
     echo "${valid_components[@]}"
 }
 
-_recursively_chown_node_modules_files_to_host_user() {
-  docker exec -u root mediawiki-mediawiki-web-1 sh -c "find . -type d -name 'node_modules' -exec chown -R $(id -u):$(id -g) {} +"
-}
-
 install_node_dependencies_for_components() {
     local components=("$@")
 
@@ -53,8 +49,6 @@ install_node_dependencies_for_components() {
             | verboseOrDotPerLine "Installing Node dependencies for '$component' using npm install"
         done
     fi
-
-    _recursively_chown_node_modules_files_to_host_user
 
     ELAPSED=$SECONDS
     echo "Duration for node dependency installation: $((ELAPSED/60)) minutes $((ELAPSED%60)) seconds"
