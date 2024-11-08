@@ -68,7 +68,7 @@ _install_from_manifest() {
   local component_path="$1"
   local local_settings_path="$(_get_component_local_settings_path "$component_path")"
  
-  echo -e "\nInstalling '$(_get_component_name "$component_path")'"
+  printf "\n\033[34mInstalling '%s'\033[0m\n" "$(_get_component_name "$component_path")"
 
   if [ ! -f "$local_settings_path" ]; then
     printf "    \e[31mRequired '%s' does not exist\e[0m\n\
