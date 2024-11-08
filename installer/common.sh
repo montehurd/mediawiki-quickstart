@@ -39,7 +39,7 @@ _yq() {
 _is_component_enabled() {
   local component_path="$1"
   local output
-  output=$(docker exec -it mediawiki-mediawiki-1 php maintenance/run.php isComponentEnabled --component="$(_get_component_name "$component_path")" --type="$(_get_component_type "$component_path")")
+  output=$(docker exec mediawiki-mediawiki-1 php maintenance/run.php isComponentEnabled --component="$(_get_component_name "$component_path")" --type="$(_get_component_type "$component_path")")
   if [ "$output" == "1" ]; then
     return 0
   else
@@ -179,5 +179,5 @@ _rebuild_localization_cache() {
   if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
     return
   fi
-  docker exec -it -u root mediawiki-mediawiki-1 bash -c "php maintenance/rebuildLocalisationCache.php --force" 2>&1 | verboseOrDotPerLine "Rebuild mediawiki localization cache"
+  docker exec -u root mediawiki-mediawiki-1 bash -c "php maintenance/rebuildLocalisationCache.php --force" 2>&1 | verboseOrDotPerLine "Rebuild mediawiki localization cache"
 }
