@@ -28,17 +28,17 @@ class IsComponentEnabled extends Maintenance {
             // Check if the extension is loaded
             $isEnabled = \ExtensionRegistry::getInstance()->isLoaded($componentName);
         } elseif ($componentType === 'skins') {
-            // Retrieve the list of enabled skins using SkinFactory
+            // Retrieve list of installed skins
             $services = MediaWikiServices::getInstance();
             $skinFactory = $services->getSkinFactory();
-            $enabledSkins = $skinFactory->getSkinNames();
+            $installedSkins = $skinFactory->getInstalledSkins();
 
-            // Convert both the component name and enabled skins to lowercase
+            // Convert both the component name and installed skin names to lowercase
             $componentNameLower = strtolower($componentName);
-            $enabledSkinsLower = array_map('strtolower', $enabledSkins);
+            $installedSkinNames = array_map('strtolower', array_keys($installedSkins));
 
-            // Check if the specified skin is in the list of enabled skins
-            $isEnabled = in_array($componentNameLower, $enabledSkinsLower, true);
+            // Check if the specified skin is in the list of installed skins
+            $isEnabled = in_array($componentNameLower, $installedSkinNames, true);
         } else {
             $this->fatalError("Unknown component type: $componentType. Please specify 'extensions' or 'skins'.");
             return;
