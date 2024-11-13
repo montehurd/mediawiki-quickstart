@@ -268,7 +268,7 @@ Run a variety of tests using the commands below
 or
 
 ```bash
-./run_selenium_tests "tests/selenium/specs/**/*.js" ".*"
+./run_selenium_tests "tests/selenium/**/specs/**/*.js" ".*"
 ```
 
 #### Extensions

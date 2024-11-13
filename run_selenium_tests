@@ -7,7 +7,7 @@ run_selenium_tests() {
   ensure_selenium_ready
 
   local file_path
-  file_path=${1:-"tests/selenium/specs/**/*.js"}
+  file_path=${1:-"tests/selenium/**/specs/**/*.js"}
   local test_name
   test_name=${2:-".*"}
   local log_level
