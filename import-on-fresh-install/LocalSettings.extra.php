@@ -8,6 +8,9 @@
 // Increase size to 200 MB
 $wgMaxArticleSize = 20480;
 
+# Include default skin configuration
+require_once "$IP/Skin.default.php";
+
 # Include component configurations
 require_once "$IP/Components.php";
 

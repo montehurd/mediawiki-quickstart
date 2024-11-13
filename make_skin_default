@@ -8,9 +8,9 @@ make_skin_default() {
   skin_name="$1"
   (
     cd "$MEDIAWIKI_PATH" || exit 1
-    sed -i -E "s/\\\$wgDefaultSkin.*;[[:blank:]]*$/\\\$wgDefaultSkin = \"$skin_name\";/g" LocalSettings.php || exit 1
-	sleep 1
-	open_special_version_page
+    echo -e "<?php\n\$wgDefaultSkin = \"$skin_name\";\n" > Skin.default.php
+    sleep 1
+    open_special_version_page
   ) && return 0 || return 1
 }
 

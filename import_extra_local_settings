@@ -5,10 +5,14 @@ source "./config"
 import_extra_local_settings() {
     local extra_settings_file="$SCRIPT_PATH/import-on-fresh-install/LocalSettings.extra.php"
     local components_file="$SCRIPT_PATH/import-on-fresh-install/Components.php"
+    local skin_default_file="$SCRIPT_PATH/import-on-fresh-install/Skin.default.php"
     local host_localsettings_file="$MEDIAWIKI_PATH/LocalSettings.php"
 
     echo -e "\nCopying components file..."
     cp "$components_file" "$MEDIAWIKI_PATH/Components.php"
+
+    echo -e "\nCopying default skin file..."
+    cp "$skin_default_file" "$MEDIAWIKI_PATH/Skin.default.php"
 
     if [ -f "$extra_settings_file" ]; then
         echo -e "\nCopying extra settings file..."
