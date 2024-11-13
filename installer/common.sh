@@ -111,8 +111,8 @@ _install_from_manifest() {
   fi
  
   # Include the component's LocalSettings.php in MediaWiki's LocalSettings.php
-  echo -e "\n# Local settings for '$(_get_component_name "$component_path")' $(_get_component_type "$component_path")" >>"$MEDIAWIKI_PATH/LocalSettings.php"
-  echo "require_once \"\$IP/$(_get_manifest_path "$component_path")/LocalSettings.php\";" >>"$MEDIAWIKI_PATH/LocalSettings.php"
+  echo -e "\n# Local settings for '$(_get_component_name "$component_path")' $(_get_component_type "$component_path")" >> "$MEDIAWIKI_PATH/Components.php"
+  echo "require_once \"\$IP/$(_get_manifest_path "$component_path")/LocalSettings.php\";" >> "$MEDIAWIKI_PATH/Components.php"
 
   INSTALLED_COMPONENTS+=("$component_path")
 }

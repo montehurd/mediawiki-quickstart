@@ -8,4 +8,7 @@
 // Increase size to 200 MB
 $wgMaxArticleSize = 20480;
 
+# Include component configurations
+require_once "$IP/Components.php";
+
 // Your other overrides below:

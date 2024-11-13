@@ -4,7 +4,11 @@ source "./config"
 
 import_extra_local_settings() {
     local extra_settings_file="$SCRIPT_PATH/import-on-fresh-install/LocalSettings.extra.php"
+    local components_file="$SCRIPT_PATH/import-on-fresh-install/Components.php"
     local host_localsettings_file="$MEDIAWIKI_PATH/LocalSettings.php"
+
+    echo -e "\nCopying components file..."
+    cp "$components_file" "$MEDIAWIKI_PATH/Components.php"
 
     if [ -f "$extra_settings_file" ]; then
         echo -e "\nCopying extra settings file..."
