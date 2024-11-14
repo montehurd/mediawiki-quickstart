@@ -3,30 +3,21 @@
 source "./config"
 
 import_extra_local_settings() {
-    local extra_settings_file="$SCRIPT_PATH/import-on-fresh-install/LocalSettings.extra.php"
-    local components_file="$SCRIPT_PATH/import-on-fresh-install/Components.php"
-    local skin_default_file="$SCRIPT_PATH/import-on-fresh-install/Skin.default.php"
+    local import_dir="$SCRIPT_PATH/import-on-fresh-install"
     local host_localsettings_file="$MEDIAWIKI_PATH/LocalSettings.php"
 
-    echo -e "\nCopying components file..."
-    cp "$components_file" "$MEDIAWIKI_PATH/Components.php"
+    # Copy LocalSettings.extra.php and other PHP files from import directory into mediawiki dir
+    for file in "$import_dir"/*.php; do
+        echo "Copying '$file' to '$MEDIAWIKI_PATH/$(basename "$file")'"
+        cp "$file" "$MEDIAWIKI_PATH/$(basename "$file")"
+    done
 
-    echo -e "\nCopying default skin file..."
-    cp "$skin_default_file" "$MEDIAWIKI_PATH/Skin.default.php"
-
-    if [ -f "$extra_settings_file" ]; then
-        echo -e "\nCopying extra settings file..."
-        cp "$extra_settings_file" "$MEDIAWIKI_PATH/LocalSettings.extra.php"
-
-        echo "Adding include line to LocalSettings.php..."
-        if ! grep -q "require.*LocalSettings\.extra\.php" "$host_localsettings_file"; then
-            echo "" >> "$host_localsettings_file"
-            echo "# Include additional local settings from LocalSettings.extra.php" >> "$host_localsettings_file"
-            echo "require_once \"\$IP/LocalSettings.extra.php\";" >> "$host_localsettings_file"
-        fi
-        echo "Extra settings import completed"
-    else
-        echo "No extra settings file found - skipping import"
+    # Add LocalSettings.extra.php include to LocalSettings.php
+    if ! grep -q "require.*LocalSettings\.extra\.php" "$host_localsettings_file"; then
+        echo -e "\nAdding LocalSettings.extra.php include to LocalSettings.php..."
+        echo "" >> "$host_localsettings_file"
+        echo "# Include additional local settings from LocalSettings.extra.php" >> "$host_localsettings_file"
+        echo "require_once \"\$IP/LocalSettings.extra.php\";" >> "$host_localsettings_file"
     fi
 }
 
