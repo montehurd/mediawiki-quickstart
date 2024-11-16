@@ -453,7 +453,7 @@ Get quick shell access to running MediaWiki containers with these commands
 
 Note: after shelling into a container you can use the "bash" command so you can do things like use the up arrow to view previous commands you have run
 
-You can also execute commands directly without entering a shell:
+You can also specify commands to execute in containers:
 
 ```bash
 ./shellto w cat /etc/os-release    # Show OS info for web container
