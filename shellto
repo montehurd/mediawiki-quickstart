@@ -1,7 +1,19 @@
 #!/bin/bash
 
 # shellto: Script to run bash in specified docker service.
-# Usage: ./shellto [w|m|j|n]
+
+# Usage:
+#   ./shellto <container> [command]
+#
+# Containers:
+#   m - mediawiki
+#   w - mediawiki-web
+#   j - mediawiki-jobrunner
+#   n - novnc
+#
+# Examples:
+#   ./shellto m     # shell into mediawiki container
+#   ./shellto w pwd # run pwd in web container
 
 source "./config"
 
@@ -12,22 +24,13 @@ if [ -z "${1:-}" ]; then
 fi
 
 case "$1" in
-  w)
-    service="mediawiki-web"
-    ;;
-  m)
-    service="mediawiki"
-    ;;
-  j)
-    service="mediawiki-jobrunner"
-    ;;
-  n)
-    service="novnc"
-    ;;
-  *)
-    echo "Invalid argument - Use 'w', 'm', 'j' or 'n'"
-    exit 1
-    ;;
+    w) service="mediawiki-web";;
+    m) service="mediawiki";;
+    j) service="mediawiki-jobrunner";;
+    n) service="novnc";;
+    *) echo "Invalid argument - Use 'w', 'm', 'j' or 'n'"; exit 1;;
 esac
 
-cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" $service sh
+# Default to 'sh' if no additional args
+shift
+cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" $service "${@:-sh}"

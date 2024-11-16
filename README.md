@@ -453,6 +453,16 @@ Get quick shell access to running MediaWiki containers with these commands
 
 Note: after shelling into a container you can use the "bash" command so you can do things like use the up arrow to view previous commands you have run
 
+You can also execute commands directly without entering a shell:
+
+```bash
+./shellto w cat /etc/os-release    # Show OS info for web container
+./shellto j pwd                    # Show working directory in jobrunner container
+./shellto m ps aux                 # List processes in mediawiki container
+```
+
+Each command runs in the specified container and returns to your host shell.
+
 ## Miscellaneous
 
 - Skip installation of the `Vector` skin on a fresh install
