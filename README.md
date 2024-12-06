@@ -209,7 +209,7 @@ Or you can use the convenience script `install_all` to install every skin, every
 
 Run a variety of tests using the commands below
 
-### Parser
+### Mediawiki parser
 
 - Run parser tests
 
@@ -217,7 +217,7 @@ Run a variety of tests using the commands below
 ./run_parser_tests
 ```
 
-### PHP
+### Mediawiki PHP
 
 - Run PHP unit tests
 
@@ -239,7 +239,7 @@ Run a variety of tests using the commands below
 
 ### Selenium
 
-#### Core
+#### Mediawiki core
 
 - List all core and extension test files and tests, can be used to customize the file and test parameters in the `run_selenium_tests` examples below
 
@@ -271,7 +271,7 @@ or
 ./run_selenium_tests "tests/selenium/**/specs/**/*.js" ".*"
 ```
 
-#### Extensions
+#### Mediawiki extensions
 
 - Run a test in a specific extension
 
@@ -301,7 +301,7 @@ or
 ./run_selenium_tests "extensions/*/tests/selenium/*specs/**/*.js" ".*"
 ```
 
-#### Skins
+#### Mediawiki skins
 
 - Run a test in a specific skin
 
@@ -382,6 +382,26 @@ SELENIUM_INSTANCES=4 ./run_selenium_tests
 ```
 
 Instances defaults to 1 if the env var is not used
+
+## CI
+
+### Quickstart
+
+Runs a variety to tests putting Quickstart through its paces
+
+```bash
+./ci
+```
+
+### Mediawiki components (skins/extensions) Selenium  
+
+For each component manifest, does a `fresh_install` of Mediawiki, installs the component then runs its Selenium tests
+
+```bash
+./ci.components.selenium
+```
+
+This takes a while to run since it does a `fresh_install` of Mediawiki each time
 
 ## Custom MediaWiki 'LocalSettings'
 
