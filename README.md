@@ -387,7 +387,7 @@ Instances defaults to 1 if the env var is not used
 
 ### Quickstart
 
-Runs a variety to tests putting Quickstart through its paces
+Runs a variety to tests putting Quickstart through its paces:
 
 ```bash
 ./ci
@@ -395,7 +395,7 @@ Runs a variety to tests putting Quickstart through its paces
 
 ### Mediawiki components (skins/extensions) Selenium  
 
-For each component manifest, does a `fresh_install` of Mediawiki, installs the component then runs its Selenium tests
+For each component manifest, does a `fresh_install` of Mediawiki, installs the component then runs its Selenium tests:
 
 ```bash
 ./ci.components.selenium
