@@ -21,7 +21,7 @@ describe('Quickstart Selenium', () => {
 
     it('appearance settings should have selected vector radio button', async () => {
         await browser.url('http://localhost:8080/wiki/Special:Preferences#mw-prefsection-rendering');
-        const radioBtn = await $('input[type="radio"][value="vector"]');
+        const radioBtn = await $('input[type="radio"][value="vector-2022"]');
         await expect(radioBtn).toBeExisting();
         await expect(radioBtn).toBeSelected();
     });
