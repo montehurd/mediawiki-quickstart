@@ -1,54 +1,227 @@
 #!/bin/bash
 
-root="manifests"
+# Basic dependency-free Quickstart test coverage
+#
+# The script exits with a code corresponding to the number of test failures
+# For example:
+#   ./ci; echo -e "Exit code: $?"
+# To see verbose output use 'VERBOSE=1':
+#   VERBOSE=1 ./ci
 
-manifests=("extensions" "skins")
+source "./common/utility.sh"
 
-manifest_max_length=0
-manifest_width=0
+# 'set +e' needs to come after the "source" line above
+# Needed to allow subsequents tests to proceed if a test
+# fails
+set +e
 
-reports=()
+# set -x
 
-separator="--------------------------------------------------------------------------------"
+test_fresh_install() {
+  FORCE=1 SILENT=1 SKIP_COUNTDOWN=1 ./fresh_install 2>&1 | verboseOrDotPerLine ""
+  if [ ! -d "./mediawiki" ]; then
+    echo "mediawiki directory not created"
+    return 1
+  fi
+  echo "Mediawiki directory created as expected"
+  if ! docker ps | grep -q "mediawiki-mediawiki-1"; then
+    echo "mediawiki container not running"
+    return 1
+  fi
+  echo "Mediawiki container running as expected"
+  if ! curl -s -f -o /dev/null --retry 4 --retry-delay 2 --retry-max-time 15 -w "%{http_code}" "http://localhost:8080/wiki/Special:Version" | grep -q "200"; then
+    echo "Special:Version page not responding with 200"
+    return 1
+  fi
+  echo "Special:Version page accessible as expected"
+  return 0
+}
 
-for manifest in "${manifests[@]}"; do
-  folders=$(find "$root/$manifest" -mindepth 1 -maxdepth 1 -type d | sort)
+test_login() {
+  run_selenium_scenario "should log in"
+}
 
-  for folder in $folders; do
-    folder_name=$(basename "$folder")
-      if [ ${#folder_name} -gt $manifest_max_length ]; then
-        manifest_max_length=${#folder_name}
-        manifest_width=$(( manifest_max_length + 1 ))
-      fi
-      report=()
+test_install_skin() {
+  SILENT=1 ./install skins/MonoBook 2>&1 | verboseOrDotPerLine ""
+  if [ ! -d "./mediawiki/skins/MonoBook" ]; then
+    echo "MonoBook skin directory not created"
+    return 1
+  fi
+  echo "Monobook skin directory present as expected"
+  return 0
+}
 
-      echo -e "${separator}\n${folder_name}\n${separator}\n"
-      report+=("$folder_name")
+test_make_skin_default() {
+  SILENT=1 ./make_skin_default MonoBook 2>&1 | verboseOrDotPerLine ""
+  if ! curl -s -f -o /dev/null --retry 4 --retry-delay 2 --retry-max-time 15 -w "%{http_code}" "http://localhost:8080/wiki/Special:Version" | grep -q "200"; then
+    echo "Special:Version page not responding with 200"
+    return 1
+  fi
+  echo "Special:Version page still accessible as expected"
+  run_selenium_scenario "(should log in|appearance settings should have selected monobook radio button)"
+}
 
-      echo -e "${separator}\n./fresh_install\n${separator}\n"
+test_use_skin() {
+  SILENT=1 ./use_skin Timeless 2>&1 | verboseOrDotPerLine ""
+  if [ ! -d "./mediawiki/skins/Timeless" ]; then
+    echo "Timeless skin directory not created"
+    return 1
+  fi
+  echo "Timeless skin directory present as expected"
+  return 0
+}
 
-      FORCE=1 SILENT=1 SKIP_COUNTDOWN=1 SKIP_SKIN=1 VERBOSE=1 ./fresh_install
-      report+=($?)
+test_shellto_mediawiki() {
+  output=$(SILENT=1 ./shellto m pwd 2>&1)
+  if ! echo "$output" | grep -q "/var/www/html/w"; then
+    echo "Wrong path in mediawiki container"
+    return 1
+  fi
+  echo "Correct path found in mediawiki container"
+  return 0
+}
 
-      echo -e "${separator}\n./install $manifest/$folder_name\n${separator}\n"
-      SILENT=1 VERBOSE=1 ./install "$manifest/$folder_name"
-      report+=($?)
+test_shellto_mediawiki_interactive() {
+  output=$(echo -e "pwd\nexit" | SILENT=1 ./shellto m 2>&1)
+  if ! echo "$output" | grep -q "/var/www/html/w"; then
+    echo "Interactive shell did not show correct path"
+    return 1
+  fi
+  echo "Interactive shell worked as expected"
+  return 0
+}
 
-      echo -e "${separator}\n./run_selenium_tests $manifest/$folder_name\n${separator}\n"
-      if grep -q '"selenium-test"' "./mediawiki/$manifest/$folder_name/package.json"; then
-        SILENT=1 VERBOSE=1 ./run_selenium_tests "$manifest/$folder_name/tests/selenium/*specs/**/*.js" ".*"
-        report+=($?)
-      else
-          report+=("n/a")
-      fi
-      reports+=("${report[*]}")
+test_shellto_web() {
+  output=$(SILENT=1 ./shellto w pwd 2>&1)
+  if ! echo "$output" | grep -q "/var/www/html/w"; then
+    echo "Wrong path in web container"
+    return 1
+  fi
+  echo "Correct path found in web container"
+  return 0
+}
 
-      echo -e "\n${separator}"
-      printf "%-${manifest_width}s%-14s%-8s%-20s\n" "Manifest" "fresh_install" "install" "run_selenium_tests"
-      echo -e "${separator}"
-      for report in "${reports[@]}"; do
-          printf "%-${manifest_width}s%-14s%-8s%-20s\n" $report
-      done
-      echo -e "${separator}\n"
+test_shellto_web_interactive() {
+  output=$(echo -e "pwd\nexit" | SILENT=1 ./shellto w 2>&1)
+  if ! echo "$output" | grep -q "/var/www/html/w"; then
+    echo "Interactive shell did not show correct path"
+    return 1
+  fi
+  echo "Interactive shell worked as expected"
+  return 0
+}
+
+test_shellto_jobrunner() {
+  output=$(SILENT=1 ./shellto j pwd 2>&1)
+  if ! echo "$output" | grep -q "/var/www/html/w"; then
+    echo "Wrong path in jobrunner container"
+    return 1
+  fi
+  echo "Correct path found in jobrunner container"
+  return 0
+}
+
+test_shellto_jobrunner_interactive() {
+  output=$(echo -e "pwd\nexit" | SILENT=1 ./shellto j 2>&1)
+  if ! echo "$output" | grep -q "/var/www/html/w"; then
+    echo "Interactive shell did not show correct path"
+    return 1
+  fi
+  echo "Interactive shell worked as expected"
+  return 0
+}
+
+test_shellto_novnc() {
+  output=$(SILENT=1 ./shellto n pwd 2>&1)
+  if ! echo "$output" | grep -q "/"; then
+    echo "Wrong path in novnc container"
+    return 1
+  fi
+  echo "Correct path found in novnc container"
+  return 0
+}
+
+test_shellto_novnc_interactive() {
+  output=$(echo -e "pwd\nexit" | SILENT=1 ./shellto n 2>&1)
+  if ! echo "$output" | grep -q "/"; then
+    echo "Interactive shell did not show correct path"
+    return 1
+  fi
+  echo "Interactive shell worked as expected"
+  return 0
+}
+
+
+test_version_page_heading() {
+  run_selenium_scenario "should show Version heading"
+}
+
+test_vector_skin_was_cloned() {
+  was_skin_cloned "Vector"
+}
+
+was_skin_cloned() {
+  if [ ! -d "./mediawiki/skins/$1" ]; then
+    echo "$1 skin directory not created"
+    return 1
+  fi
+  echo "$1 skin directory present as expected"
+  return 0
+}
+
+test_vector_skin_appearance_setting() {
+  SILENT=1 ./make_skin_default Vector 2>&1 | verboseOrDotPerLine ""
+  run_selenium_scenario "(should log in|appearance settings should have selected vector radio button)"
+}
+
+run_selenium_scenario() {
+  docker cp "./ci.selenium.js" \
+    mediawiki-mediawiki-web-1:/var/www/html/w/tests/selenium/ci.selenium.js 2>&1 | verboseOrDotPerLine ""
+  local scenario="$1"
+  echo "$scenario"
+  ./run_selenium_tests "tests/selenium/ci.selenium.js" "$scenario" 2>&1 | verboseOrDotPerLine ""
+  local run_selenium_tests_status=${PIPESTATUS[0]}
+  return "$run_selenium_tests_status"
+}
+
+current_test=""
+test_status=0
+
+handle_test_exit() {
+  if [ -n "$current_test" ]; then
+    if [ $test_status -eq 0 ]; then
+      echo -e "\033[0;32mPASS\033[0m: $current_test"
+    else
+      echo -e "\033[0;31mFAIL\033[0m: $current_test"
+    fi
+  fi
+}
+
+run_all_tests() {
+  local failures=0
+  local test_functions=$(cat "$0" | grep '^test_.*(' | sed 's/(.*//')
+  for test_func in $test_functions; do
+    current_test="$test_func"
+    test_status=0
+    echo -e "\033[0;34m$test_func\033[0m"
+    $test_func
+    test_status=$?
+    handle_test_exit
+    ((failures+=test_status))
+    echo
   done
-done
+  current_test=""
+  echo "Tests completed"
+  echo "Total failures: $failures"
+  [ $failures -gt 255 ] && failures=255  # Cap at max exit code
+  return $failures
+}
+
+echo -e "\n\nTesting...\n(Use VERBOSE=1 to see full output)\n"
+run_all_tests
+RESULT=$?
+
+echo -e "Overall result: $([[ $RESULT -eq 0 ]] && echo "\033[0;32mPASS\033[0m" || echo "\033[0;31mFAIL\033[0m")"
+
+echo
+exit $RESULT
