@@ -1,0 +1,43 @@
+#
+# The "mediawiki-quickstart-ci" tag below is from the "Runners" section of:
+# https://gitlab.wikimedia.org/repos/qte/mediawiki-quickstart/-/settings/ci_cd
+#
+# The runner is a VPS instance associated with the "wikimedia-quickstart" project on:
+# https://horizon.wikimedia.org/project/
+#
+# The VPS instance's Docker and gitlab-runner provisioning is handled by this repo
+# during the creation of the instance:
+# https://gitlab.wikimedia.org/mhurd/vps-provisioning
+#
+
+stages:
+  - cleanup
+  - test
+
+workflow:
+  rules:
+    - when: always
+
+cleanup:
+  stage: cleanup
+  tags:
+    - mediawiki-quickstart-ci
+  variables:
+    GIT_STRATEGY: none  # Prevents Git operations for the cleanup job
+  script:
+    - sudo rm -rf /home/gitlab-runner/builds/*
+    - sudo systemctl restart docker
+    - sudo docker system prune --force
+
+test:
+  stage: test
+  tags:
+    - mediawiki-quickstart-ci
+  variables:
+    FORCE: 1
+    SILENT: 1
+    SKIP_COUNTDOWN: 1
+    VERBOSE: 1
+  script:
+    - set -x
+    - ./ci
