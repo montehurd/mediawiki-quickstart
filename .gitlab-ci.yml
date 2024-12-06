@@ -29,6 +29,7 @@ cleanup:
     - sudo systemctl restart docker
     - sudo docker system prune --force
 
+# Note: if you need to restart the "test" stage from the Gitlab UI, restart the "cleanup" stage first
 test:
   stage: test
   tags:
