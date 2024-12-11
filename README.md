@@ -393,6 +393,18 @@ Run a variety of tests putting Quickstart through its paces:
 ./ci
 ```
 
+Run a specific Quickstart CI test (handy for debugging):
+
+```bash
+./ci test_fresh_install
+```
+
+Run a few tests:
+
+```bash
+./ci test_fresh_install test_use_skin
+```
+
 ### Mediawiki components (skins/extensions) Selenium  
 
 For each component manifest, do a `fresh_install` of Mediawiki, install the component, then run its Selenium tests:

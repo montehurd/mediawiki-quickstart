@@ -199,7 +199,12 @@ handle_test_exit() {
 
 run_all_tests() {
   local failures=0
-  local test_functions=$(cat "$0" | grep '^test_.*(' | sed 's/(.*//')
+  local test_functions
+  if [ $# -eq 0 ]; then
+    test_functions=$(cat "$0" | grep '^test_.*(' | sed 's/(.*//')
+  else
+    test_functions="$@"
+  fi
   for test_func in $test_functions; do
     current_test="$test_func"
     test_status=0
@@ -218,7 +223,7 @@ run_all_tests() {
 }
 
 echo -e "\n\nTesting...\n(Use VERBOSE=1 to see full output)\n"
-run_all_tests
+run_all_tests "$@"
 RESULT=$?
 
 echo -e "Overall result: $([[ $RESULT -eq 0 ]] && echo "\033[0;32mPASS\033[0m" || echo "\033[0;31mFAIL\033[0m")"
