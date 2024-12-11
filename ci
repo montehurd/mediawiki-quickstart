@@ -9,6 +9,7 @@
 #   VERBOSE=1 ./ci
 
 source "./common/utility.sh"
+source "./config"
 
 # 'set +e' needs to come after the "source" line above
 # Needed to allow subsequents tests to proceed if a test
@@ -29,7 +30,7 @@ test_fresh_install() {
     return 1
   fi
   echo "Mediawiki container running as expected"
-  if ! curl -s -f -o /dev/null --retry 4 --retry-delay 2 --retry-max-time 15 -w "%{http_code}" "http://localhost:8080/wiki/Special:Version" | grep -q "200"; then
+  if ! curl -s -f -o /dev/null --retry 4 --retry-delay 2 --retry-max-time 15 -w "%{http_code}" "http://localhost:$MEDIAWIKI_PORT/wiki/Special:Version" | grep -q "200"; then
     echo "Special:Version page not responding with 200"
     return 1
   fi
@@ -53,7 +54,7 @@ test_install_skin() {
 
 test_make_skin_default() {
   SILENT=1 ./make_skin_default MonoBook 2>&1 | verboseOrDotPerLine ""
-  if ! curl -s -f -o /dev/null --retry 4 --retry-delay 2 --retry-max-time 15 -w "%{http_code}" "http://localhost:8080/wiki/Special:Version" | grep -q "200"; then
+  if ! curl -s -f -o /dev/null --retry 4 --retry-delay 2 --retry-max-time 15 -w "%{http_code}" "http://localhost:$MEDIAWIKI_PORT/wiki/Special:Version" | grep -q "200"; then
     echo "Special:Version page not responding with 200"
     return 1
   fi
