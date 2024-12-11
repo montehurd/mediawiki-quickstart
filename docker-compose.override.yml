@@ -19,7 +19,7 @@ services:
     image: mediawiki-web.selenium:1.0
     pull_policy: build
     environment:
-      - MW_SERVER=http://localhost:${MEDIAWIKI_PORT}
+      - MW_SERVER=http://localhost:8080
       - MW_SCRIPT_PATH=/w
       - MW_ELASTIC_HOST=elasticsearch
       - MW_ELASTIC_PORT=9200
