@@ -544,8 +544,4 @@ SILENT=1 ./fresh_install
 
 ## Bug Reporting
 
-This pops open a new Phabricator ticket you can use to report your issue or feature request
-
-```bash
-./report_bug
-```
+Open a Phabricator task [here](https://phabricator.wikimedia.org/maniphest/task/edit/form/default/?title=&description=Bug+Description&projects[]=mediawiki-quickstart) to report issues and make feature requests
