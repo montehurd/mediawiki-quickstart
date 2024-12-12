@@ -541,3 +541,11 @@ SKIP_COUNTDOWN=1 ./fresh_install
 ```bash
 SILENT=1 ./fresh_install
 ```
+
+## Bug Reporting
+
+This pops open a new Phabricator ticket you can use to report your issue or feature request
+
+```bash
+./report_bug
+```
