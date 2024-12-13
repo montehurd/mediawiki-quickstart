@@ -545,3 +545,11 @@ SILENT=1 ./fresh_install
 ## Bug Reporting
 
 Open a Phabricator task [here](https://phabricator.wikimedia.org/maniphest/task/edit/form/default/?title=&description=Bug+Description&projects[]=mediawiki-quickstart) to report issues and make feature requests
+
+## Contributions
+
+Merge requests are welcome
+
+Please ensure your changes don't add dependencies on the host or negatively impact `fresh_install` quickness
+
+It's a good idea to run the `./ci` script locally too to ensure all tests pass with your changes
