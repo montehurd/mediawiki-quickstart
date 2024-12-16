@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "./shell-utilities/utilities.sh"
+source "./common/utility.sh"
 
 set -eu
 
