@@ -5,7 +5,7 @@ set -eu
 source "./config"
 source "./installer/php.sh"
 source "./installer/node.sh"
-source "./shell-utilities/utilities.sh"
+source "./common/utility.sh"
 
 docker cp "$SCRIPT_PATH/isComponentEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isComponentEnabled.php >/dev/null
 

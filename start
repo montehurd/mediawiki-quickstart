@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source "./config"
-source "./shell-utilities/utilities.sh"
+source "./common/utility.sh"
 source "./docker/docker.sh"
 source "./use_skin"
 source "./open_special_version_page"
