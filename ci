@@ -8,7 +8,7 @@
 # To see verbose output use 'VERBOSE=1':
 #   VERBOSE=1 ./ci
 
-source "./common/utility.sh"
+source "./shell-utilities/utilities.sh"
 
 # 'set +e' needs to come after the "source" line above
 # Needed to allow subsequents tests to proceed if a test

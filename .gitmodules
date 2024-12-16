@@ -1,4 +1,0 @@
-[submodule "shell-utilities"]
-	path = shell-utilities
-	url = https://gitlab.wikimedia.org/mhurd/shell-utilities.git
-	branch = main
