@@ -112,7 +112,7 @@ function main() {
   const installCommand = `npx @puppeteer/browsers install ${browserInfo.name}@${browserInfo.version}`;
 
   try {
-    const output = execSync(installCommand, { stdio: 'pipe' }).toString();
+    const output = execSync(installCommand, { stdio: 'pipe', cwd :'./vendor/' }).toString();
     const installedPath = output.match(/\/.*$/m)?.[0];
     if (!installedPath) {
       throw new Error("Could not determine installed path");
