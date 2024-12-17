@@ -33,6 +33,7 @@ $include_string
         }
     }
 }
+
 EOM
     return 0
 }
@@ -40,6 +41,8 @@ EOM
 _restore_composer_local_json() {
     if [[ -f "$MEDIAWIKI_PATH/composer.local.json-sample" ]]; then
         cp "$MEDIAWIKI_PATH/composer.local.json-sample" "$MEDIAWIKI_PATH/composer.local.json"
+        # Add newline to please linter
+        echo >> "$MEDIAWIKI_PATH/composer.local.json"
     fi
 }
 
