@@ -3,7 +3,9 @@
 source "./selenium/selenium.sh"
 
 list_selenium_tests() {
-  docker exec -u root mediawiki-mediawiki-web-1 sh -c "
+  docker exec \
+  -u $(id -u):$(id -g) \
+  mediawiki-mediawiki-web-1 sh -c "
     node -e \"
       const Mocha = require('mocha');
       const fs = require('fs');

@@ -148,7 +148,9 @@ _run_bash_for_installed_components() {
 _run_bash_from_manifest() {
   local component_path="$1"
   local setup_script="./$(_get_manifest_path "$component_path")/setup.sh"
-  docker exec -u root mediawiki-mediawiki-1 bash -c "
+  docker exec \
+    -u $(id -u):$(id -g) \
+    mediawiki-mediawiki-1 bash -c "
     echo \"Looking for '${setup_script}'\"
     if [ -f \"${setup_script}\" ]; then
       echo \"Running setup script '${setup_script}'\"
@@ -179,5 +181,7 @@ _rebuild_localization_cache() {
   if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
     return
   fi
-  docker exec -u root mediawiki-mediawiki-1 bash -c "php maintenance/rebuildLocalisationCache.php --force" 2>&1 | verboseOrDotPerLine "Rebuild mediawiki localization cache"
+  docker exec \
+    -u $(id -u):$(id -g) \
+    mediawiki-mediawiki-1 bash -c "php maintenance/rebuildLocalisationCache.php --force" 2>&1 | verboseOrDotPerLine "Rebuild mediawiki localization cache"
 }

@@ -11,7 +11,8 @@ ensure_selenium_ready() {
     fresh_install
   fi
   # TODO: consider moving the bash code below to a "sh" file that the docker exec runs in the container
-  docker exec -i -u root \
+  docker exec -i \
+    -u $(id -u):$(id -g) \
     -e DISPLAY=mediawiki-novnc-1:0 \
     mediawiki-mediawiki-web-1 bash <<'EOF'
     set -e

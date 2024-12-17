@@ -31,7 +31,9 @@ install_node_dependencies_for_components() {
     if [[ ${#components_with_package_lock_json[@]} -gt 0 ]]; then
         echo -e "Installing Node dependencies for components with package-lock.json: ${components_with_package_lock_json[@]}"
         for component in "${components_with_package_lock_json[@]}"; do
-          docker exec -u root mediawiki-mediawiki-web-1 bash -c "cd '$component' && npm ci 2>&1" \
+          docker exec \
+              -u $(id -u):$(id -g) \
+              mediawiki-mediawiki-web-1 bash -c "cd '$component' && npm ci 2>&1" \
             | verboseOrDotPerLine "Installing Node dependencies for '$component' using npm ci"
         done
     fi
@@ -45,7 +47,9 @@ install_node_dependencies_for_components() {
     if [[ ${#components_with_package_json[@]} -gt 0 ]]; then
         echo -e "Installing Node dependencies for components with only package.json: ${components_with_package_json[@]}"
         for component in "${components_with_package_json[@]}"; do
-          docker exec -u root mediawiki-mediawiki-web-1 bash -c "cd '$component' && npm install 2>&1" \
+          docker exec \
+              -u $(id -u):$(id -g) \
+              mediawiki-mediawiki-web-1 bash -c "cd '$component' && npm install 2>&1" \
             | verboseOrDotPerLine "Installing Node dependencies for '$component' using npm install"
         done
     fi
