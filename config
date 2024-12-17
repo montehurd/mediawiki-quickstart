@@ -19,6 +19,7 @@ XDEBUG_ENABLE=true
 XHPROF_ENABLE=true
 XDEBUG_CONFIG='client_host=host.docker.internal client_port=9004'
 XDEBUG_MODE=debug
+HOME=/var/www/html/w
 "
 
 export MW_ENV
