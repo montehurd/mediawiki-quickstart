@@ -493,6 +493,18 @@ If a command is specified, it is run in the specified container, `shellto` then 
 ./shellto j pwd                    # Show working directory in jobrunner container
 ```
 
+## Debugging
+
+### VSCode
+
+- Ensure the "PHP Debug" extension is installed
+
+- Set breakpoints in your MediaWiki PHP files
+
+- Start the debugger in VS Code (F5 or the "Start Debugging" button)
+
+- Browse to the Mediawiki page executing your breakpoint code
+
 ## Miscellaneous
 
 - Skip installation of the `Vector` skin on a fresh install

@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "configurations": [
+    {
+      "name": "Listen for MediaWiki XDebug",
+      "type": "php",
+      "request": "launch",
+      "port": 9004,
+      "pathMappings": {
+        "/var/www/html/w": "${workspaceFolder}/mediawiki"
+      }
+    }
+  ]
+}
