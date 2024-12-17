@@ -137,12 +137,12 @@ confirm_action() {
   if [[ "$force_mode" == "1" ]] || [[ "$force_mode" == "true" ]]; then
     return 0
   else
-    read -p "${prompt_message} (y/n)? " -n 1 -r
+    read -p "${prompt_message} (Y/n)? " -n 1 -r
     echo
-    if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
-      return 1
+    if [[ -z "$REPLY" || "$REPLY" =~ ^[Yy]$ ]]; then
+      return 0
     fi
-    return 0
+    return 1
   fi
 }
 
