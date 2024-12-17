@@ -6,7 +6,7 @@ services:
       - ../manifests:/var/www/html/w/manifests
       - ../import-on-fresh-install/pages:/tmp/page-xml
       - ../import_page_xml.sh:/import_page_xml.sh
-      - ../shell-utilities:/shell-utilities
+      - ../common:/common
 
 
   mediawiki-web:
@@ -26,7 +26,7 @@ services:
     depends_on:
       - elasticsearch
     # volumes:
-    #   - ../shell-utilities:/shell-utilities
+    #   - ../common:/common
 
 
   elasticsearch:

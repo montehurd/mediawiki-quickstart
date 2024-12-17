@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Reminder: the path on the next line is in the container
-source "/shell-utilities/utilities.sh"
+source "/common/utility.sh"
 
 # set -x
 
