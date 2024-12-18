@@ -174,6 +174,18 @@ test_vector_skin_appearance_setting() {
   run_selenium_scenario "(should log in|appearance settings should have selected vector radio button)"
 }
 
+test_no_files_owned_by_root() {
+  output=$(SILENT=1 ./shellto w find . -user root 2>&1)
+  if [ -z "$output" ]; then
+    echo "No files owned by root found in the web container"
+    return 0
+  else
+    echo "Files owned by root found in the web container:"
+    echo "$output"
+    return 1
+  fi
+}
+
 run_selenium_scenario() {
   docker cp "./ci.selenium.js" \
     mediawiki-mediawiki-web-1:/var/www/html/w/tests/selenium/ci.selenium.js 2>&1 | verboseOrDotPerLine ""
