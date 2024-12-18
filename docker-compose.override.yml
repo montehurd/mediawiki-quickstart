@@ -3,7 +3,7 @@ services:
 
   mediawiki:
     volumes:
-      - ../manifests:/var/www/html/w/manifests
+      - ../manifests:/var/www/html/w/manifests:U
       - ../import-on-fresh-install/pages:/tmp/page-xml
       - ../import_page_xml.sh:/import_page_xml.sh
       - ../common:/common
