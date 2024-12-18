@@ -177,10 +177,10 @@ test_vector_skin_appearance_setting() {
 test_no_files_owned_by_root() {
   output=$(SILENT=1 ./shellto w find . -user root 2>&1)
   if [ -z "$output" ]; then
-    echo "No files owned by root found in the web container"
+    echo "No files owned by root found in the mediawiki folder in the web container"
     return 0
   else
-    echo "Files owned by root found in the web container:"
+    echo "Files owned by root found in the mediawiki folder in the web container:"
     echo "$output"
     return 1
   fi
