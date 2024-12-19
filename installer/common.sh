@@ -32,10 +32,6 @@ _ensure_containers_running() {
   return 0
 }
 
-_yq() {
-  echo "$2" | docker run --rm -i -v "$SCRIPT_PATH:/workdir" mikefarah/yq eval "$1" -
-}
-
 _is_component_enabled() {
   local component_path="$1"
   local output

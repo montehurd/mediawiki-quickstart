@@ -203,3 +203,7 @@ print_duration_since_start() {
   # shellcheck disable=SC2059
   printf "$format\n" "$minutes" "$seconds"
 }
+
+_yq() {
+  echo "$2" | docker run --rm -i mikefarah/yq eval "$1" -
+}
