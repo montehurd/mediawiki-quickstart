@@ -12,12 +12,18 @@ start_firefox() {
   if [ "${SILENT:-0}" -ne 1 ]; then
     open_url_when_available "http://localhost:8086/vnc_lite.html?autoconnect=true" &
   fi
-  ./shellto w sh -c "DISPLAY=mediawiki-novnc-1:0 /var/www/html/w/vendor/firefox/linux-nightly_*/firefox/firefox"
+  # remove the trailing "&" from the next line to see/debug any Firefox console output
+  ./shellto w sh -c "DISPLAY=mediawiki-novnc-1:0 /var/www/html/w/vendor/firefox/linux-nightly_*/firefox/firefox" &
+}
+
+run_qunit(){
+  ./shellto w sh -c "FIREFOX_BIN=\$(echo /var/www/html/w/vendor/firefox/linux-nightly_*/firefox/firefox) npm run qunit"
 }
 
 firefox_test() {
   install_firefox
   start_firefox
+  run_qunit
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
