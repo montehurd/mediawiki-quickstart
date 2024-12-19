@@ -1,0 +1,16 @@
+#!/bin/bash
+
+source "./selenium/selenium.sh"
+
+npm_run() {
+  if [ -z "${1:-}" ]; then
+    echo "Usage: $0 [name_from_package_json_scripts]"
+    exit 1
+  fi
+  ensure_selenium_ready # ensures node_modules are ready
+  ./shellto w npm run $1
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  npm_run "$@"
+fi

@@ -505,6 +505,15 @@ If a command is specified, it is run in the specified container, `shellto` then 
 
 - Browse to the Mediawiki page executing your breakpoint code
 
+## Run Mediawiki package.json scripts
+
+```bash
+./npm_run #SCRIPT_NAME#
+
+```
+
+`#SCRIPT_NAME#` could be any of the scripts found in Mediawiki's package.json, such as `lint`, `qunit`, `test`, `jest`, etc
+
 ## Miscellaneous
 
 - Skip installation of the `Vector` skin on a fresh install
