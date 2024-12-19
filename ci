@@ -200,12 +200,12 @@ test_mediawiki_web_image_consistency() {
 
   if [ "$mediawiki_base_image" != "$selenium_from_image" ]; then
     echo "Image mismatch detected"
-    echo "Dockerfile.mediawiki-web.selenium needs to use the same image as the core mediawiki docker-compose.yml (since it's just adding a couple layers to it):"
+    echo "Dockerfile.mediawiki-web.selenium needs to use the same image as the core Mediawiki docker-compose.yml (since it's just adding a couple layers to it):"
     echo "mediawiki/docker-compose.yml uses:"
     echo -e "\t$mediawiki_base_image"
     echo "Dockerfile.mediawiki-web.selenium uses:"
     echo -e "\t$selenium_from_image"
-    echo "Likly what happened is mediawiki's docker-compose.yml was updated to use a newer image, so Dockerfile.mediawiki-web.selenium will need to be updated to use the same newer image too"
+    echo "Likely what happened is Mediawiki's docker-compose.yml was updated to use a newer image, so Dockerfile.mediawiki-web.selenium will need to be updated to use the same newer image too"
     return 1
   fi
 
