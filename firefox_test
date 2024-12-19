@@ -8,12 +8,11 @@ install_firefox() {
   ./shellto w sh -c "npx @puppeteer/browsers install --path=/var/www/html/w/vendor firefox"
 }
 
-start_firefox() {
+watch_firefox() {
   if [ "${SILENT:-0}" -ne 1 ]; then
     open_url_when_available "http://localhost:8086/vnc_lite.html?autoconnect=true" &
   fi
-  # remove the trailing "&" from the next line to see/debug any Firefox console output
-  ./shellto w sh -c "DISPLAY=mediawiki-novnc-1:0 /var/www/html/w/vendor/firefox/linux-nightly_*/firefox/firefox" &
+  ./shellto w sh -c "DISPLAY=mediawiki-novnc-1:0 /var/www/html/w/vendor/firefox/linux-nightly_*/firefox/firefox"
 }
 
 run_qunit(){
@@ -22,7 +21,8 @@ run_qunit(){
 
 firefox_test() {
   install_firefox
-  start_firefox
+  # Uncomment the next line to see Firefox running in the mediawiki-web container
+  # watch_firefox
   run_qunit
 }
 
