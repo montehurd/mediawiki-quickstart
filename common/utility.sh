@@ -205,5 +205,5 @@ print_duration_since_start() {
 }
 
 _yq() {
-  echo "$2" | docker run --rm -i mikefarah/yq eval "$1" -
+  echo "$2" | docker run -q --rm -i mikefarah/yq eval "$1" -
 }
