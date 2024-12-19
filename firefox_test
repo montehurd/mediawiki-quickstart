@@ -1,0 +1,25 @@
+#!/bin/bash
+
+source "./common/utility.sh"
+
+install_firefox() {
+  ./shellto w npm install @puppeteer/browsers
+  # ./shellto w sh -c "npx @puppeteer/browsers install --help"
+  ./shellto w sh -c "npx @puppeteer/browsers install --path=/var/www/html/w/vendor firefox"
+}
+
+start_firefox() {
+  if [ "${SILENT:-0}" -ne 1 ]; then
+    open_url_when_available "http://localhost:8086/vnc_lite.html?autoconnect=true" &
+  fi
+  ./shellto w sh -c "DISPLAY=mediawiki-novnc-1:0 /var/www/html/w/vendor/firefox/linux-nightly_*/firefox/firefox"
+}
+
+firefox_test() {
+  install_firefox
+  start_firefox
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  firefox_test "$@"
+fi
