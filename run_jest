@@ -4,7 +4,8 @@ source "./config"
 source "./common/npm-dependencies.sh"
 
 run_jest() {
-  ensure_npm_ready
+  fresh_install_if_containers_not_running
+  install_node_dependencies
   ./shellto w sh -c "npm run jest"
 }
 

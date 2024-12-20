@@ -5,7 +5,8 @@ source "./fresh_install"
 source "./common/npm-dependencies.sh"
 
 ensure_selenium_ready() {
-  ensure_npm_ready
+  fresh_install_if_containers_not_running
+  install_node_dependencies
   # TODO: consider moving the bash code below to a "sh" file that the docker exec runs in the container
   docker exec -i \
     -u $(id -u):$(id -g) \
