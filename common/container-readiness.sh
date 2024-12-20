@@ -13,7 +13,5 @@ fresh_install_if_containers_not_running() {
 }
 
 install_node_dependencies() {
-  docker exec -i \
-    -u $(id -u):$(id -g) \
-    mediawiki-mediawiki-web-1 bash /var/local/node-preparation.sh install_node_dependencies
+  ./shellto w /var/local/node-preparation.sh install_node_dependencies
 }
