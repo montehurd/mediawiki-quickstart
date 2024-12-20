@@ -62,4 +62,16 @@ ensure_node_major_version_installed() {
   return 1
 }
 
+install_node_dependencies() {
+  if [ -f "package-lock.json" ]; then
+    echo "Found $(pwd)/package-lock.json, using npm ci..."
+    npm ci
+  elif [ -f "package.json" ]; then
+    echo "No package-lock.json found but found $(pwd)/package.json, using npm install..."
+    npm install
+  else
+    echo "No package-lock.json or package.json found in $(pwd). Skipping npm install/ci"
+  fi
+}
+
 "$@"
