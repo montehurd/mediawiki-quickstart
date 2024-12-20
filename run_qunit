@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source "./common/utility.sh"
+source "./common/npm-dependencies.sh"
+
+run_qunit(){
+  ensure_npm_ready
+  # At the moment QUnit test runs headless
+  ./shellto w sh -c "FIREFOX_BIN=\$(echo /usr/bin/firefox-esr) npm run qunit"
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  run_qunit "$@"
+fi
