@@ -1,8 +1,6 @@
 #!/bin/bash
 
-source "./docker/docker.sh"
-source "./fresh_install"
-source "./common/npm-dependencies.sh"
+source "./common/container-readiness.sh"
 
 ensure_selenium_ready() {
   fresh_install_if_containers_not_running

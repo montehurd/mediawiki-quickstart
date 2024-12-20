@@ -1,7 +1,6 @@
 #!/bin/bash
 
-source "./common/utility.sh"
-source "./common/npm-dependencies.sh"
+source "./common/container-readiness.sh"
 
 run_qunit(){
   fresh_install_if_containers_not_running
