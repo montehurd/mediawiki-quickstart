@@ -5,7 +5,7 @@ source "./common/npm-dependencies.sh"
 
 run_jest() {
   ensure_npm_ready
-  cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w mediawiki-web npm run jest
+  ./shellto w sh -c "npm run jest"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
