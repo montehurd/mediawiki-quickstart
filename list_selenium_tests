@@ -34,7 +34,7 @@ list_selenium_tests() {
         }
       };
 
-      ['tests/', 'extensions/'].forEach(dir => traverseAndListTests(dir));
+      ['tests/', 'extensions/', 'skins/'].forEach(dir => traverseAndListTests(dir));
     \"
   "
 }
