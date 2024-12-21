@@ -237,6 +237,22 @@ Run a variety of tests using the commands below
 ./run_php_unit_test_path tests/phpunit/unit/includes/resourceloader/
 ```
 
+### QUnit
+
+- Run QUnit tests
+
+```bash
+./run_qunit
+````
+
+### Jest
+
+- Run Jest tests
+
+```bash
+./run_jest
+````
+
 ### Selenium
 
 #### Mediawiki core
