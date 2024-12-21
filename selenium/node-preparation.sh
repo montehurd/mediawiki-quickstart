@@ -63,7 +63,6 @@ ensure_node_major_version_installed() {
 }
 
 install_node_dependencies() {
-  echo -e "Installing Node dependencies for '$(pwd)'"
   if [ -f "package-lock.json" ]; then
     echo "Found '$(pwd)/package-lock.json', using 'npm ci'..."
     npm ci
