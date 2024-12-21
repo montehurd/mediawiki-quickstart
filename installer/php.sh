@@ -81,7 +81,6 @@ install_php_dependencies_for_components() {
         echo "PHP maintenance update failed. Exiting."
         return 1
     fi
-    echo
 
     _restore_composer_local_json
     return 0
