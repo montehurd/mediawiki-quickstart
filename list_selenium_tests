@@ -1,11 +1,10 @@
 #!/bin/bash
 
+source "./common/utility.sh"
 source "./selenium/selenium.sh"
 
 list_selenium_tests() {
-  docker exec \
-  -u $(id -u):$(id -g) \
-  mediawiki-mediawiki-web-1 sh -c "
+  ./shellto w sh -c "
     node -e \"
       const Mocha = require('mocha');
       const fs = require('fs');
@@ -41,6 +40,10 @@ list_selenium_tests() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-  ensure_selenium_ready
+  ensure_selenium_ready 2>&1 | verboseOrDotPerLine "Ensuring Selenium ready..."
+  echo
+  echo "Selenium tests:"
+  echo
   list_selenium_tests "$@"
+  echo
 fi
