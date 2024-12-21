@@ -1,14 +1,30 @@
 #!/bin/bash
 
 source "./config"
+source "./common/utility.sh"
 source "./open_special_version_page"
 
 make_skin_default() {
-  local skin_name
-  skin_name="$1"
+  local skin_name="$1"
+  local skin_json="$MEDIAWIKI_PATH/skins/$skin_name/skin.json"
+  local skin_key
+
+  if [ ! -f "$skin_json" ]; then
+    echo "Could not find skin.json for $skin_name"
+    return 1
+  fi
+
+  # Get first key from ValidSkinNames
+  skin_key=$(_yq '.ValidSkinNames | keys | .[0]' "$(cat "$skin_json")")
+
+  if [ -z "$skin_key" ]; then
+    echo "Could not determine skin key from skin.json"
+    return 1
+  fi
+
   (
     cd "$MEDIAWIKI_PATH" || exit 1
-    echo -e "<?php\n\$wgDefaultSkin = \"$skin_name\";\n" > Skin.default.php
+    echo -e "<?php\n\$wgDefaultSkin = \"$skin_key\";\n" > Skin.default.php
     sleep 1
     open_special_version_page
   ) && return 0 || return 1
