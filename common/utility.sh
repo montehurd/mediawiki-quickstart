@@ -207,3 +207,7 @@ print_duration_since_start() {
 _yq() {
   echo "$2" | docker run -q --rm -i mikefarah/yq eval "$1" -
 }
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  "$@"
+fi
