@@ -31,7 +31,7 @@ services:
 
   elasticsearch:
     # image: docker-registry.wikimedia.org/dev/cirrus-elasticsearch:7.10.2-s2
-    image: docker-registry.wikimedia.org/repos/search-platform/cirrussearch-elasticsearch-image:v7.10.2-5
+    image: docker-registry.wikimedia.org/repos/search-platform/cirrussearch-elasticsearch-image:v7.10.2-12
     volumes:
       - elasticdata:/usr/share/elasticsearch/data
     environment:
