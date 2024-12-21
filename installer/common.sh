@@ -35,7 +35,7 @@ _ensure_containers_running() {
 _is_component_enabled() {
   local component_path="$1"
   local output
-  output=$(docker exec mediawiki-mediawiki-1 php maintenance/run.php isComponentEnabled --component="$(_get_component_name "$component_path")" --type="$(_get_component_type "$component_path")")
+  output=$(./shellto m php maintenance/run.php isComponentEnabled --component="$(_get_component_name "$component_path")" --type="$(_get_component_type "$component_path")")
   if [ "$output" == "1" ]; then
     return 0
   else
@@ -126,7 +126,7 @@ _import_page_dumps_for_installed_components() {
     done
     if [ ${#folders[@]} -gt 0 ]; then
         echo "Importing pages from installed components"
-        docker exec -u "$HOST_UID:$HOST_GID" -i mediawiki-mediawiki-1 bash /import_page_xml.sh "${folders[@]}"
+        ./shellto m bash /import_page_xml.sh "${folders[@]}"
     else
         echo "No pages to import found in any installed components, skipping..."
     fi
@@ -144,9 +144,7 @@ _run_bash_for_installed_components() {
 _run_bash_from_manifest() {
   local component_path="$1"
   local setup_script="./$(_get_manifest_path "$component_path")/setup.sh"
-  docker exec \
-    -u $(id -u):$(id -g) \
-    mediawiki-mediawiki-1 bash -c "
+  ./shellto m bash -c "
     echo \"Looking for '${setup_script}'\"
     if [ -f \"${setup_script}\" ]; then
       echo \"Running setup script '${setup_script}'\"
@@ -177,7 +175,5 @@ _rebuild_localization_cache() {
   if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
     return
   fi
-  docker exec \
-    -u $(id -u):$(id -g) \
-    mediawiki-mediawiki-1 bash -c "php maintenance/rebuildLocalisationCache.php --force" 2>&1 | verboseOrDotPerLine "Rebuild mediawiki localization cache"
+  ./shellto m bash -c "php maintenance/rebuildLocalisationCache.php --force" 2>&1 | verboseOrDotPerLine "Rebuild Mediawiki localization cache"
 }
