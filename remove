@@ -12,14 +12,16 @@ remove() {
     exit 1
   fi
 
-  docker run --rm -v "$MEDIAWIKI_PATH:/data" -u root alpine chown -Rf $(id -u):$(id -g) /data 2>&1 | verboseOrDotPerLine "Ensuring host user can remove files"
-
   if [ -f "$MEDIAWIKI_PATH/docker-compose.yml" ]; then
     cd "$MEDIAWIKI_PATH" && docker compose down 2>&1 | verboseOrDotPerLine "Docker compose down"
   fi
   docker image rm mediawiki-web.selenium:1.0 2>&1 | verboseOrDotPerLine "Docker image rm" || true
+
   if [ -n "$MEDIAWIKI_PATH" ] && [ -d "$MEDIAWIKI_PATH" ]; then
-    rm -rf "$MEDIAWIKI_PATH"
+    if ! rm -rf "$MEDIAWIKI_PATH"; then
+      docker run --rm -v "$MEDIAWIKI_PATH:/data" -u root alpine chown -Rf $(id -u):$(id -g) /data 2>&1 | verboseOrDotPerLine "Ensuring host user can remove files"
+      rm -rf "$MEDIAWIKI_PATH"
+    fi
   fi
 }
 
