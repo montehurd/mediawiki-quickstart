@@ -4,7 +4,7 @@ source "./selenium/selenium.sh"
 source "./common/utility.sh"
 
 run_selenium_tests() {
-  ensure_selenium_ready
+  ensure_selenium_ready 2>&1 | verboseOrDotPerLine "Ensuring Selenium ready..."
 
   local file_path
   file_path=${1:-"tests/selenium/**/specs/**/*.js"}
