@@ -160,7 +160,7 @@ _install_php_and_node_dependencies() {
   if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
     return
   fi
-  if ! install_php_dependencies_for_components "$MEDIAWIKI_PATH" "${INSTALLED_COMPONENTS[@]}"; then
+  if ! install_php_dependencies_for_components; then
     echo "Failed to install php dependencies"
     exit 1
   fi
