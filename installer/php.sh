@@ -5,7 +5,10 @@ source "./common/utility.sh"
 set -eu
 
 install_php_dependencies_for_components() {
-    ./shellto m cp composer.local.json-sample composer.local.json
+    if ! { ./shellto m cp composer.local.json-sample composer.local.json 2>&1 | verboseOrDotPerLine "Copying 'composer.local.json-sample' to 'composer.local.json'"; }; then
+        echo "Failed to copy composer.local.json-sample. Exiting."
+        return 1
+    fi
 
     if ! { ./shellto m composer update 2>&1 | verboseOrDotPerLine "Composer update"; }; then
         echo "Composer update failed. Exiting."
