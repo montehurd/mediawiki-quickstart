@@ -9,7 +9,7 @@ test_version_page_heading() {
 }
 
 run_selenium_scenario() {
-  docker cp "./ci.selenium.js" \
+  docker cp "./tests/suites/selenium_tests.js" \
     mediawiki-mediawiki-web-1:/var/www/html/w/tests/selenium/ci.selenium.js 2>&1 | verboseOrDotPerLine ""
   local scenario="$1"
   echo "$scenario"
