@@ -3,7 +3,7 @@
 source "./config"
 
 run_parser_tests() {
-  cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki php tests/parser/parserTests.php
+  ./shellto m php tests/parser/parserTests.php
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

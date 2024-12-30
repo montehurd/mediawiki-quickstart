@@ -3,7 +3,7 @@
 source "./config"
 
 run_php_unit_tests() {
-  cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w mediawiki composer phpunit -- --testdox
+  ./shellto m composer phpunit -- --testdox
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

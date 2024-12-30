@@ -9,7 +9,7 @@ run_php_unit_test_path() {
     echo "Please provide a test path"
     exit 1
   fi
-  cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w mediawiki composer phpunit -- "$testpath" --testdox
+  ./shellto m composer phpunit -- "$testpath" --testdox
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

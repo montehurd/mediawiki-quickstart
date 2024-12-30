@@ -9,7 +9,7 @@ run_php_unit_test_group() {
     echo "Please provide a test group"
     exit 1
   fi
-  cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" --workdir /var/www/html/w mediawiki composer phpunit -- --group "$testgroup" --testdox
+  ./shellto m composer phpunit -- --group "$testgroup" --testdox
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

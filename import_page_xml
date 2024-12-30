@@ -3,7 +3,7 @@
 # set -x
 
 import_page_xml() {
-    docker exec -u "$HOST_UID:$HOST_GID" -e VERBOSE -i mediawiki-mediawiki-1 bash /import_page_xml.sh "$@"
+    ./shellto -e VERBOSE m /import_page_xml.sh "$@"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
