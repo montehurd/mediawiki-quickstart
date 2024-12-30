@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# shellto: Script to run bash in specified docker service.
+# shellto: Script to run bash in specified docker service with optional environment variables and user.
 
 # Usage:
-#   ./shellto <container> [command]
+#   ./shellto [-e VAR1] [-e VAR2=VALUE] [-u USER] <container> [command]
 #
 # Containers:
 #   m - mediawiki
@@ -12,25 +12,57 @@
 #   n - novnc
 #
 # Examples:
-#   ./shellto m     # shell into mediawiki container
-#   ./shellto w pwd # run pwd in web container
+#   ./shellto m                                 # Shell into mediawiki container
+#   ./shellto w pwd                             # Run 'pwd' in web container
+#   ./shellto -e PATH -e HOME m                # Shell into mediawiki with PATH and HOME variables
+#   ./shellto -e API_KEY=12345 m               # Shell into mediawiki with API_KEY set to 12345
+#   ./shellto -u root m                        # Shell into mediawiki as root user
+#   ./shellto -e DEBUG=1 -u root m bash        # Shell into mediawiki as root with DEBUG=1
+#   ./shellto w sh -c "npm run jest"           # Other examples
+#   ./shellto w bash -c "FIREFOX_BIN=/usr/bin/firefox-esr npm run qunit"
 
 source "./config"
 
-# Check if argument is provided
+# Initialize args
+env_args=""
+DOCKER_USER="$HOST_UID:$HOST_GID"
+
+# Parse flags
+while getopts "e:u:" opt; do
+    case $opt in
+        e) env_args="$env_args -e $OPTARG" ;;
+        u) DOCKER_USER="$OPTARG" ;;
+        *) echo "Usage: $0 [-e VAR1] [-e VAR2=VALUE] [-u USER] [w|m|j|n] [command]"; exit 1 ;;
+    esac
+done
+shift $((OPTIND-1))
+
+# Check if container argument is provided
 if [ -z "${1:-}" ]; then
-    echo "Usage: $0 [w|m|j|n]"
+    echo "Usage: $0 [-e VAR1] [-e VAR2=VALUE] [-u USER] [w|m|j|n] [command]"
     exit 1
 fi
 
+# Map container shorthand to service name
 case "$1" in
     w) service="mediawiki-web";;
     m) service="mediawiki";;
     j) service="mediawiki-jobrunner";;
     n) service="novnc";;
-    *) echo "Invalid argument - Use 'w', 'm', 'j' or 'n'"; exit 1;;
+    *) echo "Invalid container argument - Use 'w', 'm', 'j' or 'n'"; exit 1;;
 esac
 
-# Default to 'sh' if no additional args
+# Shift past the container argument
 shift
-cd "$MEDIAWIKI_PATH" && docker compose exec -u "$HOST_UID:$HOST_GID" $service "${@:-sh}"
+
+# Build the command array
+cmd=()
+if [ $# -eq 0 ]; then
+    cmd=("sh")
+else
+    # Preserve all arguments exactly as they were passed
+    cmd=("$@")
+fi
+
+# Execute the Docker command with environment variables and user if specified
+cd "$MEDIAWIKI_PATH" && docker compose exec -u "$DOCKER_USER" $env_args $service "${cmd[@]}"
