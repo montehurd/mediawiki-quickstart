@@ -205,7 +205,14 @@ print_duration_since_start() {
 }
 
 _yq() {
-  echo "$2" | docker run -q --rm -i mikefarah/yq eval "$1" -
+  # Lets us use yq on the host even if it's not been installed
+  # but avoids trying to do docker-in-docker in our containers
+  # where we have installed yq
+  if command -v yq >/dev/null 2>&1; then
+    echo "$2" | yq eval "$1" -
+  else
+    echo "$2" | docker run -q --rm -i mikefarah/yq eval "$1" -
+  fi
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
