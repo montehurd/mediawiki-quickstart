@@ -11,16 +11,16 @@
 source "./common/utility.sh"
 source "./config"
 
-# 'set +e' needs to come after the "source" line above
-# Needed to allow subsequents tests to proceed if a test
-# fails
-set +e
-
 for suite in ./tests/suites/*.sh; do
   source "$suite"
 done
 
 source "./tests/runner.sh"
+
+# 'set +e' needs to come after the "source" line above
+# Needed to allow subsequents tests to proceed if a test
+# fails
+set +e
 
 echo -e "\n\nTesting...\n(Use VERBOSE=1 to see full output)\n"
 run_all_tests "$@"
