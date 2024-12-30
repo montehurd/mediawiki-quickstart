@@ -115,7 +115,7 @@ function main() {
 	const installCommand = `npx @puppeteer/browsers install ${ browserInfo.name }@${ browserInfo.version }`;
 
 	try {
-		const output = execSync( installCommand, { stdio: 'pipe', cwd: './vendor/' } ).toString();
+		const output = execSync( installCommand, { stdio: 'pipe', cwd: '/var/local/' } ).toString();
 		const match = output.match( /\/.*$/m );
 		const installedPath = match ? match[ 0 ] : undefined;
 		if ( !installedPath ) {
