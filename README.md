@@ -42,43 +42,39 @@ Quickstart considers skins and extensions to be "components"
 
 A folder-based manifest format is used to define how extensions and skins are installed
 
-You can see examples in the `~/mediawiki-quickstart/manifests/` directory
-
-`manifests` contains `extensions` and `skins` sub-directories
+You can see examples in the `~/mediawiki-quickstart/extensions/` and `~/mediawiki-quickstart/skins` directories
 
 In these you will see one directory per extension/skin:
 
 ```text
-manifests/
-  |--extensions/
-  |----IPInfo/
-  |----Math/
-  |----VisualEditor/
+extensions/
+  |--IPInfo/
+  |--Math/
+  |--VisualEditor/
   ...
-  |--skins/
-  |----MonoBook/
-  |----Vector/
-  |----Timeless/
+skins/
+  |--MonoBook/
+  |--Vector/
+  |--Timeless/
   ...
 ```
 
 ### Component manifest folder contents
 
 ```text
-manifests/
-  |--extensions/
-  |----IPInfo/
-  |------LocalSettings.php  (required)
-  |------setup.sh           (optional)
-  |------dependencies.yml    (optional)
-  |------pages/             (optional)
+extensions/
+  |--IPInfo/
+  |----LocalSettings.php  (required)
+  |----setup.sh           (optional)
+  |----dependencies.yml    (optional)
+  |----pages/             (optional)
   ...
-  |--skins/
-  |----MonoBook/
-  |------LocalSettings.php  (required)
-  |------setup.sh           (optional)
-  |------dependencies.yml    (optional)
-  |------pages/             (optional)
+skins/
+  |--MonoBook/
+  |----LocalSettings.php  (required)
+  |----setup.sh           (optional)
+  |----dependencies.yml    (optional)
+  |----pages/             (optional)
   ...
 ```
 
@@ -137,7 +133,7 @@ If your component's manifest folder contains a `pages` folder, any page dump xml
 
 ### Install an extension
 
-For installing an extension, you'd first add a folder for your extension to `manifests/extensions`
+For installing an extension, you'd first add a folder for your extension to `extensions/`
 
 You'd place the required and optional files inside your folder
 
@@ -149,7 +145,7 @@ Then you run:
 
 ### Install a skin
 
-For installing a skin, you'd first add a folder for your skin to `manifests/skins`
+For installing a skin, you'd first add a folder for your skin to `skins/`
 
 You'd place the required and optional files inside your folder
 

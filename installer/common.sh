@@ -2,12 +2,14 @@
 
 set -eu
 
-source "./config"
-source "./installer/php.sh"
-source "./installer/node.sh"
-source "./common/utility.sh"
+source "/var/local/installer/php.sh"
+source "/var/local/installer/node.sh"
+source "/var/local/common/utility.sh"
 
-docker cp "$SCRIPT_PATH/isComponentEnabled.php" mediawiki-mediawiki-1:/var/www/html/w/maintenance/isComponentEnabled.php >/dev/null
+if [ -z "${GIT_CLONE_BASE_URL:-}" ]; then
+  echo "Error: GIT_CLONE_BASE_URL environment variable must be set"
+  exit 1
+fi
 
 _get_component_type() {
   local component_path="$1"
@@ -21,7 +23,7 @@ _get_component_name() {
 
 _get_manifest_path() {
   local component_path="$1"
-  echo "manifests/$component_path"
+  echo "/var/local/$component_path"
 }
 
 _ensure_containers_running() {
@@ -35,7 +37,7 @@ _ensure_containers_running() {
 _is_component_enabled() {
   local component_path="$1"
   local output
-  output=$(./shellto m php maintenance/run.php isComponentEnabled --component="$(_get_component_name "$component_path")" --type="$(_get_component_type "$component_path")")
+  output=$(php /var/local/installer/isComponentEnabled.php --component="$(_get_component_name "$component_path")" --type="$(_get_component_type "$component_path")")
   if [ "$output" == "1" ]; then
     return 0
   else
@@ -45,7 +47,7 @@ _is_component_enabled() {
 
 _get_dependencies() {
   local component_path="$1"
-  local dependencies_file="./$(_get_manifest_path "$component_path")/dependencies.yml"
+  local dependencies_file="$(_get_manifest_path "$component_path")/dependencies.yml"
   if [ -f "$dependencies_file" ]; then
     _yq '.[]' "$(cat "$dependencies_file")"
   else
@@ -55,7 +57,7 @@ _get_dependencies() {
 
 _get_component_local_settings_path() {
   local component_path="$1"
-  echo "./$(_get_manifest_path "$component_path")/LocalSettings.php"
+  echo "$(_get_manifest_path "$component_path")/LocalSettings.php"
 }
 
 # Note: caller must declare the following:
@@ -90,9 +92,6 @@ _install_from_manifest() {
   fi
 
   local clone_depth="--depth=${CLONE_DEPTH:-2}"
-  # `git clone --depth=0` fails with `fatal: depth 0 is not a positive number`.
-  # For `CLONE_DEPTH=0`, skip `--depth` argument.
-  # See T376791.
   if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
     local clone_depth=""
   fi
@@ -101,14 +100,14 @@ _install_from_manifest() {
   local repository
   repository="$GIT_CLONE_BASE_URL/$component_path"
   
-  if ! git clone --recurse-submodules --progress "$repository" "$MEDIAWIKI_PATH/$component_path" $clone_depth 2>&1 | verboseOrDotPerLine "Git clone '$repository' $clone_depth to '$component_path'" "use CLONE_DEPTH=0 for full depth"; then
+  if ! git clone --recurse-submodules --progress "$repository" "$component_path" $clone_depth 2>&1 | verboseOrDotPerLine "Git clone '$repository' $clone_depth to '$component_path'" "use CLONE_DEPTH=0 for full depth"; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
  
   # Include the component's LocalSettings.php in MediaWiki's LocalSettings.php
-  echo -e "\n# Local settings for '$(_get_component_name "$component_path")' $(_get_component_type "$component_path")" >> "$MEDIAWIKI_PATH/Components.php"
-  echo "require_once \"\$IP/$(_get_manifest_path "$component_path")/LocalSettings.php\";" >> "$MEDIAWIKI_PATH/Components.php"
+  echo -e "\n# Local settings for '$(_get_component_name "$component_path")' $(_get_component_type "$component_path")" >> Components.php
+  echo "require_once \"$local_settings_path\";" >> Components.php
 
   INSTALLED_COMPONENTS+=("$component_path")
 }
@@ -126,7 +125,7 @@ _import_page_dumps_for_installed_components() {
     done
     if [ ${#folders[@]} -gt 0 ]; then
         echo "Importing pages from installed components"
-        ./shellto m bash /import_page_xml.sh "${folders[@]}"
+        bash /import_page_xml.sh "${folders[@]}"
     else
         echo "No pages to import found in any installed components, skipping..."
     fi
@@ -143,17 +142,18 @@ _run_bash_for_installed_components() {
 
 _run_bash_from_manifest() {
   local component_path="$1"
-  local setup_script="./$(_get_manifest_path "$component_path")/setup.sh"
-  ./shellto m bash -c "
-    echo \"Looking for '${setup_script}'\"
-    if [ -f \"${setup_script}\" ]; then
-      echo \"Running setup script '${setup_script}'\"
-      chmod +x \"${setup_script}\"
-      \"${setup_script}\"
-    else
-      echo \"No '${setup_script}' found, skipping...\"
-    fi
-  " 2>&1 | verboseOrDotPerLine "Running '$setup_script', if present..."
+  local setup_script="$(_get_manifest_path "$component_path")/setup.sh"
+  echo "Looking for '${setup_script}'"
+  if [ -f "${setup_script}" ]; then
+    echo "Running setup script '${setup_script}'"
+    chmod +x "${setup_script}"
+    cd ~
+    # TODO: make next line use verboseOrDotPerLine (test with CirrusSearch which uses a setup.sh file)
+    "${setup_script}"
+  else
+    echo "No '${setup_script}' found, skipping..."
+  fi
+  cd ~
 }
 
 _install_php_and_node_dependencies() {
@@ -175,5 +175,5 @@ _rebuild_localization_cache() {
   if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
     return
   fi
-  ./shellto m bash -c "php maintenance/rebuildLocalisationCache.php --force" 2>&1 | verboseOrDotPerLine "Rebuild Mediawiki localization cache"
+  php maintenance/rebuildLocalisationCache.php --force 2>&1 | verboseOrDotPerLine "Rebuild Mediawiki localization cache"
 }

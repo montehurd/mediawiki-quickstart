@@ -1,7 +1,7 @@
 'use strict';
 
 require( 'dotenv' ).config();
-const { config } = require( './wdio.conf.js' );
+const { config } = require( '/var/www/html/w/tests/selenium/wdio.conf.js' );
 
 // docs: https://webdriver.io/docs/configurationfile/
 exports.config = { ...config,

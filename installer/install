@@ -1,16 +1,10 @@
 #!/bin/bash
 
-# set -x
-
-source "./installer/common.sh"
-source "./open_special_version_page"
+source "/var/local/installer/common.sh"
 
 declare -a INSTALLED_COMPONENTS=()
 
 install() {
-  if ! _ensure_containers_running; then
-    exit 1
-  fi
   INSTALLED_COMPONENTS=()
   for component_path in "$@"; do
     _install_from_manifest "$component_path"
@@ -19,7 +13,6 @@ install() {
   _run_bash_for_installed_components
   _rebuild_localization_cache
   _import_page_dumps_for_installed_components
-	open_special_version_page
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

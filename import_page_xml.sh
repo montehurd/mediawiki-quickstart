@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# Reminder: the path on the next line is in the container
-source "/common/utility.sh"
-
-# set -x
+source "/var/local/common/utility.sh"
 
 import_page_xml() {
     local imported=false

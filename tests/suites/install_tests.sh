@@ -20,30 +20,43 @@ test_fresh_install() {
   return 0
 }
 
-test_mediawiki_web_image_consistency() {
-  local mediawiki_base_image
-  mediawiki_base_image=$(_yq '.services."mediawiki-web".image' "$(cat "$MEDIAWIKI_PATH/docker-compose.yml")")
-  if [ -z "$mediawiki_base_image" ]; then
-    echo "Error: Could not determine mediawiki-web base image"
+ensure_image_consistency() {
+  local service_name="$1"
+  local dockerfile_path="$2"
+
+  # Get base image from docker-compose.yml for the specified service
+  local base_image
+  base_image=$(_yq ".services.\"$service_name\".image" "$(cat "$MEDIAWIKI_PATH/docker-compose.yml")")
+  if [ -z "$base_image" ]; then
+    echo "Error: Could not determine $service_name base image"
     return 1
   fi
 
-  local selenium_from_image
-  selenium_from_image=$(grep '^FROM' "./selenium/Dockerfile.mediawiki-web.selenium" | sed 's/FROM //')
+  # Get FROM image from the specified Dockerfile
+  local from_image
+  from_image=$(grep '^FROM' "$dockerfile_path" | sed 's/FROM //')
 
-  if [ "$mediawiki_base_image" != "$selenium_from_image" ]; then
+  if [ "$base_image" != "$from_image" ]; then
     echo "Image mismatch detected"
-    echo "Dockerfile.mediawiki-web.selenium needs to use the same image as the core Mediawiki docker-compose.yml (since it's just adding a couple layers to it):"
-    echo "mediawiki/docker-compose.yml uses:"
-    echo -e "\t$mediawiki_base_image"
-    echo "Dockerfile.mediawiki-web.selenium uses:"
-    echo -e "\t$selenium_from_image"
-    echo "Likely what happened is Mediawiki's docker-compose.yml was updated to use a newer image, so Dockerfile.mediawiki-web.selenium will need to be updated to use the same newer image too"
+    echo "$dockerfile_path needs to use the same image as the $service_name service in docker-compose.yml (since it's just adding layers to it):"
+    echo "docker-compose.yml uses for $service_name:"
+    echo -e "\t$base_image"
+    echo "$dockerfile_path uses:"
+    echo -e "\t$from_image"
+    echo "Likely what happened is docker-compose.yml was updated to use a newer image, so $dockerfile_path will need to be updated to use the same newer image too"
     return 1
   fi
 
-  echo "Images match: $mediawiki_base_image"
+  echo "Images match for $service_name: $base_image"
   return 0
+}
+
+test_mediawiki_web_image_consistency() {
+  ensure_image_consistency "mediawiki-web" "./selenium/Dockerfile.mediawiki-web.selenium"
+}
+
+test_mediawiki_image_consistency() {
+  ensure_image_consistency "mediawiki" "./selenium/Dockerfile.mediawiki.extras"
 }
 
 test_no_files_owned_by_root() {

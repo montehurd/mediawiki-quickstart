@@ -1,7 +1,5 @@
 #!/bin/bash
 
-root="manifests"
-
 manifests=("extensions" "skins")
 
 manifest_max_length=0
@@ -12,7 +10,7 @@ reports=()
 separator="--------------------------------------------------------------------------------"
 
 for manifest in "${manifests[@]}"; do
-  folders=$(find "$root/$manifest" -mindepth 1 -maxdepth 1 -type d | sort)
+  folders=$(find "$manifest" -mindepth 1 -maxdepth 1 -type d | sort)
 
   for folder in $folders; do
     folder_name=$(basename "$folder")

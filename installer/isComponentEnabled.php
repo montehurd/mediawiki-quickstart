@@ -8,7 +8,7 @@
  *   php maintenance/run.php isComponentEnabled --component=SkinName --type=skins
  */
 
-require_once __DIR__ . '/Maintenance.php';
+require_once '/var/www/html/w/maintenance/Maintenance.php';
 
 use MediaWiki\MediaWikiServices;
 

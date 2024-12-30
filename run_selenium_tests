@@ -8,6 +8,10 @@ run_selenium_tests() {
 
   local file_path
   file_path=${1:-"tests/selenium/**/specs/**/*.js"}
+  if [[ ! "$file_path" = /* ]]; then
+    file_path="/var/www/html/w/$file_path"
+  fi
+
   local test_name
   test_name=${2:-".*"}
   local log_level
@@ -19,15 +23,13 @@ run_selenium_tests() {
   local instances
   instances=${SELENIUM_INSTANCES:-1}
 
-  docker cp "./selenium/wdio.conf.override.js" \
-    mediawiki-mediawiki-web-1:/var/www/html/w/tests/selenium/wdio.conf.override.js
-
   docker exec \
     $([[ "${SILENT:-0}" == "1" ]] || echo "-it") \
     -u $(id -u):$(id -g) \
     -e DISPLAY=mediawiki-novnc-1:0 \
-    mediawiki-mediawiki-web-1 npx wdio "/var/www/html/w/tests/selenium/wdio.conf.override.js" \
-      --spec "/var/www/html/w/$file_path" \
+    -e NODE_PATH=/var/www/html/w/node_modules \
+    mediawiki-mediawiki-web-1 npx wdio "/var/local/wdio.conf.override.js" \
+      --spec "$file_path" \
       --logLevel "$log_level" \
       --mochaOpts.grep "$test_name" \
       --specFileRetries "$retries" \

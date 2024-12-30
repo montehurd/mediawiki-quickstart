@@ -2,11 +2,19 @@ services:
 
 
   mediawiki:
+    build:
+      # TODO: should we have "selenium" folder or make it more generic?
+      context: ../selenium
+      dockerfile: Dockerfile.mediawiki.extras
+    image: mediawiki.extras:1.0
     volumes:
-      - ../manifests:/var/www/html/w/manifests
+      - ../skins:/var/local/skins
+      - ../extensions:/var/local/extensions
+      - ../installer:/var/local/installer
+      - ../common:/var/local/common
+      - ../selenium/node-preparation.sh:/var/local/node-preparation.sh
       - ../import-on-fresh-install/pages:/tmp/page-xml
       - ../import_page_xml.sh:/import_page_xml.sh
-      - ../common:/common
 
 
   mediawiki-web:
@@ -25,8 +33,11 @@ services:
       - MW_ELASTIC_PORT=9200
     depends_on:
       - elasticsearch
-    # volumes:
-    #   - ../common:/common
+    volumes:
+      - ../skins:/var/local/skins
+      - ../extensions:/var/local/extensions
+      - ../installer:/var/local/installer
+      - ../common:/var/local/common
 
 
   elasticsearch:

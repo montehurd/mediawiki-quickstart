@@ -11,9 +11,13 @@ start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
     cd "$MEDIAWIKI_PATH"
     docker compose up -d 2>&1 | verboseOrDotPerLine "Docker compose up" || exit 1
-    docker compose exec -u root mediawiki-web chown "$(id -u):$(id -g)" /var/www/html/w/manifests
-    docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki composer install 2>&1 | verboseOrDotPerLine "Composer install"  
-    docker compose exec -u "$HOST_UID:$HOST_GID" mediawiki /docker/install.sh 2>&1 | verboseOrDotPerLine "/docker/install.sh"
+    cd ..
+
+    ./shellto -u root w chown -R "$(id -u):$(id -g)" /var/local
+    ./shellto m composer install 2>&1 | verboseOrDotPerLine "Composer install"
+    ./shellto m /docker/install.sh 2>&1 | verboseOrDotPerLine "/docker/install.sh"
+    ./shellto m /var/local/node-preparation.sh install_node_dependencies 2>&1 | verboseOrDotPerLine "Installing Mediawiki core Node dependencies"
+
     sleep 2
     import_extra_local_settings 2>&1 | verboseOrDotPerLine "Importing extra local settings"
     if [[ "${SKIP_SKIN:-0}" != "1" ]]; then

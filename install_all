@@ -1,18 +1,18 @@
 #!/bin/bash
 
-source "./installer/install"
+source "./install"
 
 install_all() {
     local items=()
     for dir in "$@"; do
-        if [ -d "manifests/$dir" ]; then
-            for subdir in "manifests/$dir"/*; do
+        if [ -d "$dir" ]; then
+            for subdir in "$dir"/*; do
                 if [ -d "$subdir" ]; then
                     items+=("$dir/$(basename "$subdir")")
                 fi
             done
         else
-            echo "Warning: manifests/$dir is not a directory. Skipping."
+            echo "Warning: $dir is not a directory. Skipping."
         fi
     done
 

@@ -11,7 +11,3 @@ fresh_install_if_containers_not_running() {
   echo "Mediawiki containers are not running..."
   fresh_install
 }
-
-install_node_dependencies() {
-  ./shellto w /var/local/node-preparation.sh install_node_dependencies
-}

@@ -4,7 +4,6 @@ source "./common/container-readiness.sh"
 
 run_qunit(){
   fresh_install_if_containers_not_running
-  install_node_dependencies
   # At the moment QUnit test runs headless
   ./shellto w sh -c "FIREFOX_BIN=/usr/bin/firefox-esr npm run qunit"
 }
