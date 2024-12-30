@@ -27,7 +27,7 @@ cleanup:
   script:
     - sudo rm -rf /home/gitlab-runner/builds/*
     - sudo systemctl restart docker
-    - sudo docker system prune --force
+    - sudo docker system prune -af
 
 # Note: if you need to restart the "test" stage from the Gitlab UI, restart the "cleanup" stage first
 test:
