@@ -35,3 +35,5 @@ cd "$MEDIAWIKI_PATH" || { echo "Failed to cd to $MEDIAWIKI_PATH"; exit 1; }
 
 # echo "docker compose exec -u \"$HOST_UID:$HOST_GID\" ${args[@]}" >> debug.txt
 docker compose exec -u "$HOST_UID:$HOST_GID" "${args[@]}"
+
+cd "$SCRIPT_PATH"
