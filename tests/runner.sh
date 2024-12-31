@@ -2,6 +2,7 @@
 
 current_test=""
 test_status=0
+total_tests=0
 
 handle_test_exit() {
   if [ -n "$current_test" ]; then
@@ -10,6 +11,7 @@ handle_test_exit() {
     else
       echo -e "\033[0;31mFAIL\033[0m: $current_test"
     fi
+    ((total_tests++))
   fi
 }
 
@@ -32,7 +34,7 @@ run_all_tests() {
     echo
   done
   current_test=""
-  echo "Tests completed"
+  echo "Tests completed: $total_tests"
   echo "Total failures: $failures"
   [ $failures -gt 255 ] && failures=255  # Cap at max exit code
   return $failures
