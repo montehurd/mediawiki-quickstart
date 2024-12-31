@@ -1,68 +1,37 @@
 #!/bin/bash
 
-# shellto: Script to run bash in specified docker service with optional environment variables and user.
-
-# Usage:
-#   ./shellto [-e VAR1] [-e VAR2=VALUE] [-u USER] <container> [command]
+# Thin wrapper around 'docker compose exec' allowing more
+# concise invocation of shell commands in Mediawiki's
+# containers
 #
-# Containers:
-#   m - mediawiki
-#   w - mediawiki-web
-#   j - mediawiki-jobrunner
-#   n - novnc
+# Sets user, which callers can override by supplying their
+# own '-u', since the last '-u' will take precedent
 #
-# Examples:
-#   ./shellto m                                 # Shell into mediawiki container
-#   ./shellto w pwd                             # Run 'pwd' in web container
-#   ./shellto -e PATH -e HOME m                # Shell into mediawiki with PATH and HOME variables
-#   ./shellto -e API_KEY=12345 m               # Shell into mediawiki with API_KEY set to 12345
-#   ./shellto -u root m                        # Shell into mediawiki as root user
-#   ./shellto -e DEBUG=1 -u root m bash        # Shell into mediawiki as root with DEBUG=1
-#   ./shellto w sh -c "npm run jest"           # Other examples
-#   ./shellto w bash -c "FIREFOX_BIN=/usr/bin/firefox-esr npm run qunit"
+# Reminder: this script should NOT inspect or have knowledge
+# of flags passed to it. Remember - "thin wrapper"
 
 source "./config"
 
-# Initialize args
-env_args=""
-DOCKER_USER="$HOST_UID:$HOST_GID"
+args=()
 
-# Parse flags
-while getopts "e:u:" opt; do
-    case $opt in
-        e) env_args="$env_args -e $OPTARG" ;;
-        u) DOCKER_USER="$OPTARG" ;;
-        *) echo "Usage: $0 [-e VAR1] [-e VAR2=VALUE] [-u USER] [w|m|j|n] [command]"; exit 1 ;;
-    esac
+# Replace container shorthand character with full container name
+for arg in "$@"; do
+  case "$arg" in
+    w) args+=("mediawiki-web") ;;
+    m) args+=("mediawiki") ;;
+    j) args+=("mediawiki-jobrunner") ;;
+    n) args+=("novnc") ;;
+    e) args+=("elasticsearch") ;;
+    *) args+=("$arg") ;;  # Preserve all other arguments as-is
+  esac
 done
-shift $((OPTIND-1))
 
-# Check if container argument is provided
-if [ -z "${1:-}" ]; then
-    echo "Usage: $0 [-e VAR1] [-e VAR2=VALUE] [-u USER] [w|m|j|n] [command]"
-    exit 1
+# Append 'sh' if ONLY the container is specified
+if [ "${#args[@]}" -eq 1 ]; then
+  args+=("sh")
 fi
 
-# Map container shorthand to service name
-case "$1" in
-    w) service="mediawiki-web";;
-    m) service="mediawiki";;
-    j) service="mediawiki-jobrunner";;
-    n) service="novnc";;
-    *) echo "Invalid container argument - Use 'w', 'm', 'j' or 'n'"; exit 1;;
-esac
+cd "$MEDIAWIKI_PATH" || { echo "Failed to cd to $MEDIAWIKI_PATH"; exit 1; }
 
-# Shift past the container argument
-shift
-
-# Build the command array
-cmd=()
-if [ $# -eq 0 ]; then
-    cmd=("sh")
-else
-    # Preserve all arguments exactly as they were passed
-    cmd=("$@")
-fi
-
-# Execute the Docker command with environment variables and user if specified
-cd "$MEDIAWIKI_PATH" && docker compose exec -u "$DOCKER_USER" $env_args $service "${cmd[@]}"
+# echo "docker compose exec -u \"$HOST_UID:$HOST_GID\" ${args[@]}" >> debug.txt
+docker compose exec -u "$HOST_UID:$HOST_GID" "${args[@]}"
