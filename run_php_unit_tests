@@ -3,7 +3,11 @@
 source "./config"
 
 run_php_unit_tests() {
-  ./shellto m composer phpunit -- --testdox
+  local args=""
+  if [ $# -gt 0 ]; then
+    args="$*"
+  fi
+  ./shellto m composer phpunit -- --testdox $args
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
