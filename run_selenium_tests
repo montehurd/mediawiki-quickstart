@@ -23,12 +23,11 @@ run_selenium_tests() {
   local instances
   instances=${SELENIUM_INSTANCES:-1}
 
-  docker exec \
+  ./shellto \
     $([[ "${SILENT:-0}" == "1" ]] || echo "-it") \
-    -u $(id -u):$(id -g) \
     -e DISPLAY=mediawiki-novnc-1:0 \
     -e NODE_PATH=/var/www/html/w/node_modules \
-    mediawiki-mediawiki-web-1 npx wdio "/var/local/wdio.conf.override.js" \
+    w npx wdio "/var/local/wdio.conf.override.js" \
       --spec "$file_path" \
       --logLevel "$log_level" \
       --mochaOpts.grep "$test_name" \
