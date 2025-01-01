@@ -136,19 +136,18 @@ _run_bash_for_installed_components() {
     return
   fi
   for component_path in "${INSTALLED_COMPONENTS[@]}"; do
-    _run_bash_from_manifest "$component_path"
+    _run_bash_from_manifest "$component_path" 2>&1 | verboseOrDotPerLine "Running '$component_path/setup.sh'..."
   done
 }
 
 _run_bash_from_manifest() {
   local component_path="$1"
   local setup_script="$(_get_manifest_path "$component_path")/setup.sh"
-  echo "Looking for '${setup_script}'"
+  echo -e "\nLooking for '${setup_script}'"
   if [ -f "${setup_script}" ]; then
     echo "Running setup script '${setup_script}'"
     chmod +x "${setup_script}"
     cd ~
-    # TODO: make next line use verboseOrDotPerLine (test with CirrusSearch which uses a setup.sh file)
     "${setup_script}"
   else
     echo "No '${setup_script}' found, skipping..."
