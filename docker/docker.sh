@@ -39,29 +39,6 @@ are_containers_present() {
   return 0
 }
 
-is_network_connected_to_container() {
-  local network_name
-  network_name=$1
-  local container_name
-  container_name=$2
-  docker network inspect "$network_name" --format '{{range .Containers}}{{.Name}} {{end}}' | grep -wq "$container_name"
-}
-
-connect_network_to_container() {
-  local network_name=$1
-  local container_name=$2
-  if is_network_connected_to_container "$network_name" "$container_name"; then
-    echo "Container $container_name is already connected to $network_name"
-    return 0
-  fi
-  echo "Connecting $container_name to $network_name..."
-  if docker network connect "$network_name" "$container_name"; then
-    return 0
-  fi
-  echo "Failed to connect $container_name to $network_name"
-  return 1
-}
-
 get_compose_version() {
   docker compose version --short 2>/dev/null
 }
