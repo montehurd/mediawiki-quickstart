@@ -39,21 +39,6 @@ are_containers_present() {
   return 0
 }
 
-is_container_env_var_set() {
-  local container
-  container=$1
-  local var_name
-  var_name=$2
-  local expected_value
-  expected_value=$3
-
-  if docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep -q "$var_name=$expected_value"; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 is_network_connected_to_container() {
   local network_name
   network_name=$1
