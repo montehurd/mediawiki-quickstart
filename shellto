@@ -33,7 +33,10 @@ fi
 
 cd "$MEDIAWIKI_PATH" || { echo "Failed to cd to $MEDIAWIKI_PATH"; exit 1; }
 
-# echo "docker compose exec -u \"$HOST_UID:$HOST_GID\" ${args[@]}" >> debug.txt
-docker compose exec -u "$HOST_UID:$HOST_GID" "${args[@]}"
+if [ "${SHELLTO_TEST:-0}" -ne 1 ]; then
+    docker compose exec -u "$HOST_UID:$HOST_GID" "${args[@]}"
+else
+    echo "docker compose exec -u \"$HOST_UID:$HOST_GID\" ${args[@]}"
+fi
 
 cd "$SCRIPT_PATH"
