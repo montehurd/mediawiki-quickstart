@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "config"
+
 test_fresh_install() {
   FORCE=1 SILENT=1 SKIP_COUNTDOWN=1 ./fresh_install 2>&1 | verboseOrDotPerLine ""
   if [ ! -d "./mediawiki" ]; then

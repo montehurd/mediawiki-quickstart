@@ -1,0 +1,18 @@
+#!/bin/bash
+
+source "./tests/runner.sh"
+
+main() {
+  if [ $# -eq 0 ]; then
+    echo "Usage: $0 test_file [test_function1 test_function2 ...]"
+    exit 1
+  fi
+  local test_file="$1"
+  shift
+  source "$test_file"
+  run_all_tests "$@"
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+	main "$@"
+fi

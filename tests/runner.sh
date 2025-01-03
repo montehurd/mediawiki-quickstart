@@ -1,8 +1,13 @@
 #!/bin/bash
 
+source "./common/utility.sh"
+
 current_test=""
 test_status=0
 total_tests=0
+
+# 'set +e' needed to allow subsequents tests to proceed if a test fails
+set +e
 
 handle_test_exit() {
   if [ -n "$current_test" ]; then

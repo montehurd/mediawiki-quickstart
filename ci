@@ -1,29 +1,15 @@
 #!/bin/bash
 
-# Basic dependency-free Quickstart test coverage
-#
 # The script exits with a code corresponding to the number of test failures
 # For example:
 #   ./ci; echo -e "Exit code: $?"
 # To see verbose output use 'VERBOSE=1':
 #   VERBOSE=1 ./ci
 
-source "./common/utility.sh"
-source "./config"
-
-for suite in ./tests/suites/*.sh; do
-  source "$suite"
-done
-
-source "./tests/runner.sh"
-
-# 'set +e' needs to come after the "source" line above
-# Needed to allow subsequents tests to proceed if a test
-# fails
-set +e
-
 echo -e "\n\nTesting...\n(Use VERBOSE=1 to see full output)\n"
-run_all_tests "$@"
+
+./test_all
+
 RESULT=$?
 
 echo -e "Overall result: $([[ $RESULT -eq 0 ]] && echo "\033[0;32mPASS\033[0m" || echo "\033[0;31mFAIL\033[0m")"

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "./tests/utilities.sh"
+
 test_install_skin() {
   SILENT=1 ./install skins/MonoBook 2>&1 | verboseOrDotPerLine ""
   if [ ! -d "./mediawiki/skins/MonoBook" ]; then

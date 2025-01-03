@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source "./tests/runner.sh"
+
+main() {
+  for test_file in tests/suites/*_tests.sh; do
+    source "$test_file"
+  done
+  run_all_tests
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+	main "$@"
+fi

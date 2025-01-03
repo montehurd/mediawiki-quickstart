@@ -399,22 +399,24 @@ Instances defaults to 1 if the env var is not used
 
 ### Quickstart
 
-Run a variety of tests putting Quickstart through its paces:
+Run a variety of tests putting Quickstart through its paces
+
+This is run for each commit / merge request
 
 ```bash
 ./ci
 ```
 
-Run a specific Quickstart CI test (handy for debugging):
+Run all tests in a specific Quickstart test file (handy for debugging):
 
 ```bash
-./ci test_fresh_install
+./test tests/suites/shellto_tests.sh
 ```
 
-Run a few tests:
+Run only specific test(s) in a file:
 
 ```bash
-./ci test_fresh_install test_use_skin
+./test tests/suites/shell_tests.sh test_shellto_web test_shellto_web_interactive
 ```
 
 ### Mediawiki components (skins/extensions) Selenium  
