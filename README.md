@@ -1,3 +1,5 @@
+[[_TOC_]]
+
 # mediawiki-quickstart
 
 Quickly spin up a MediaWiki instance with Docker
