@@ -8,7 +8,9 @@ Test running including Selenium tests you can watch as they execute
 
 <details>
 <summary><h2>Table of Contents</h2></summary>
+
 [[_TOC_]]
+
 </details>
 
 ## Prerequisites
