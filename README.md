@@ -1,5 +1,3 @@
-[[_TOC_]]
-
 # mediawiki-quickstart
 
 Quickly spin up a MediaWiki instance with Docker
@@ -7,6 +5,8 @@ Quickly spin up a MediaWiki instance with Docker
 Easy skin and extension management via "component" manifest folders
 
 Test running including Selenium tests you can watch as they execute
+
+[[_TOC_]]
 
 ## Prerequisites
 
