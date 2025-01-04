@@ -1,5 +1,3 @@
-# mediawiki-quickstart
-
 Quickly spin up a MediaWiki instance with Docker
 
 Easy skin and extension management via "component" manifest folders
@@ -13,11 +11,11 @@ Test running including Selenium tests you can watch as they execute
 
 </details>
 
-## Prerequisites
+# Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop) installed
 
-## Installation
+# Installation
 
 1. Clone the repository
 
@@ -31,9 +29,9 @@ git clone https://gitlab.wikimedia.org/mhurd/mediawiki-quickstart.git
 cd ~/mediawiki-quickstart
 ```
 
-## Usage
+# Usage
 
-### Fetch, configure and start MediaWiki
+## Fetch, configure and start MediaWiki
 
 - Fetches the latest MediaWiki (into `~/mediawiki-quickstart/mediawiki/`) and spins up its Docker containers
 
@@ -41,11 +39,11 @@ cd ~/mediawiki-quickstart
 ./fresh_install
 ```
 
-## Component management (installing skins/extensions)
+# Component management (installing skins/extensions)
 
 Quickstart considers skins and extensions to be "components"
 
-### Component manifests
+## Component manifests
 
 A folder-based manifest format is used to define how extensions and skins are installed
 
@@ -66,7 +64,7 @@ skins/
   ...
 ```
 
-### Component manifest folder contents
+## Component manifest folder contents
 
 ```text
 extensions/
@@ -85,7 +83,7 @@ skins/
   ...
 ```
 
-#### LocalSettings.php (required)
+### LocalSettings.php (required)
 
 In this file you put whatever settings your component needs to load/configure it
 
@@ -109,7 +107,7 @@ QuickStart's component installer links your component's `LocalSettings.php` to M
 
 The installer automatically clones your components repo so you don't have to
 
-#### setup.sh (optional)
+### setup.sh (optional)
 
 `setup.sh` is executed by the installer after your component's repo is cloned
 
@@ -117,7 +115,7 @@ This is where you can put any shell scripting that needs to execute to set up yo
 
 It is executed relative to mediawiki's directory in the mediawiki container - i.e. `pwd` placed in your `setup.sh` will output `/var/www/html/w`
 
-#### dependencies.yml (optional)
+### dependencies.yml (optional)
 
 This is where you can define other components that must be installed for your component to function
 
@@ -132,13 +130,13 @@ Example contents of `dependencies.yml`:
 
 As you can see above, your component, whether extension or skin, can have dependencies on other extensions/skins, and these will be installed when you install your component
 
-#### pages/ (optional)
+### pages/ (optional)
 
 If your component's manifest folder contains a `pages` folder, any page dump xml files in that folder will be imported when your component is installed
 
-### Installing components
+## Installing components
 
-### Install an extension
+## Install an extension
 
 For installing an extension, you'd first add a folder for your extension to `extensions/`
 
@@ -150,7 +148,7 @@ Then you run:
 ./install extensions/YOUR_EXTENSION
 ```
 
-### Install a skin
+## Install a skin
 
 For installing a skin, you'd first add a folder for your skin to `skins/`
 
@@ -162,7 +160,7 @@ Then you run:
 ./install skins/YOUR_SKIN
 ```
 
-### Activating a skin
+## Activating a skin
 
 After installing a skin you can this to activate it:
 
@@ -176,7 +174,7 @@ Or you can use the `use_skin` convenience script to both install and activate yo
 ./use_skin YOUR_SKIN
 ```
 
-### Installing multiple components at once
+## Installing multiple components at once
 
 The `install` script can also be passed multiple components to install:
 
@@ -198,7 +196,7 @@ Or you can use the convenience script `install_all` to install every skin, every
 ./install_all skins extensions
 ```
 
-### Important component notes
+## Important component notes
 
 - Do not use `composer install`, `npm install` or `npm ci` in your components' `setup.sh` files
 
@@ -208,11 +206,11 @@ Or you can use the convenience script `install_all` to install every skin, every
 
 - Ensure you name your component's folder the same way the extension or skin is named on Gerrit, this is because the installer clones your component from Gerrit using the name from this folder
 
-## Testing
+# Testing
 
 Run a variety of tests using the commands below
 
-### Mediawiki parser
+## Mediawiki parser
 
 - Run parser tests
 
@@ -220,7 +218,7 @@ Run a variety of tests using the commands below
 ./run_parser_tests
 ```
 
-### Mediawiki PHP
+## Mediawiki PHP
 
 - Run PHP unit tests
 
@@ -240,7 +238,7 @@ Run a variety of tests using the commands below
 ./run_php_unit_tests tests/phpunit/unit/includes/resourceloader/
 ```
 
-### QUnit
+## QUnit
 
 - Run QUnit tests
 
@@ -248,7 +246,7 @@ Run a variety of tests using the commands below
 ./run_qunit
 ````
 
-### Jest
+## Jest
 
 - Run Jest tests
 
@@ -256,9 +254,9 @@ Run a variety of tests using the commands below
 ./run_jest
 ````
 
-### Selenium
+## Selenium
 
-#### Mediawiki core
+### Mediawiki core
 
 - List all core and extension test files and tests, can be used to customize the file and test parameters in the `run_selenium_tests` examples below
 
@@ -290,7 +288,7 @@ or
 ./run_selenium_tests "tests/selenium/**/specs/**/*.js" ".*"
 ```
 
-#### Mediawiki extensions
+### Mediawiki extensions
 
 - Run a test in a specific extension
 
@@ -320,7 +318,7 @@ or
 ./run_selenium_tests "extensions/*/tests/selenium/*specs/**/*.js" ".*"
 ```
 
-#### Mediawiki skins
+### Mediawiki skins
 
 - Run a test in a specific skin
 
@@ -350,7 +348,7 @@ or
 ./run_selenium_tests "skins/*/tests/selenium/*specs/**/*.js" ".*"
 ```
 
-#### Advanced GLOB patterns
+### Advanced GLOB patterns
 
 This [Glob Primer](https://github.com/isaacs/node-glob?tab=readme-ov-file#glob-primer) has details on more advanced pattern matching
 
@@ -368,7 +366,7 @@ You can also run all core, skin and extension tests with one command:
 ./run_selenium_tests "{+(skins|extensions)/*/,}tests/selenium/*specs/**/*.js" ".*"
 ```
 
-#### Overriding Selenium run log level
+### Overriding Selenium run log level
 
 `./run_selenium_tests` supports an optional third parameter for setting the `logLevel`
 
@@ -382,7 +380,7 @@ For example, to use `debug` log level:
 ./run_selenium_tests "tests/selenium/specs/**/*.js" ".*" "debug"
 ```
 
-#### Overriding Selenium retries
+### Overriding Selenium retries
 
 You can use the `SELENIUM_RETRIES` env var to have Selenium retry failed tests:
 
@@ -392,7 +390,7 @@ SELENIUM_RETRIES=2 ./run_selenium_tests
 
 Retries defaults to 0 if the env var is not used
 
-#### Overriding Selenium max instances
+### Overriding Selenium max instances
 
 You can use the `SELENIUM_INSTANCES` env var to have Selenium run more than a single instance at once:
 
@@ -402,7 +400,7 @@ SELENIUM_INSTANCES=4 ./run_selenium_tests
 
 Instances defaults to 1 if the env var is not used
 
-### Quickstart
+## Quickstart
 
 Quickstart's functionality is verified by a variety of tests found in `tests/suites/`
 
@@ -424,7 +422,7 @@ Run specific test(s) in a Quickstart test file:
 ./test tests/suites/shell_tests.sh test_shellto_web test_shellto_web_interactive
 ```
 
-## CI
+# CI
 
 The `ci` script is run for each commit / merge request:
 
@@ -434,7 +432,7 @@ The `ci` script is run for each commit / merge request:
 
 It runs all Quickstart tests (via `test_all`) and reports the results
 
-### Mediawiki components (skins/extensions) Selenium  
+## Mediawiki components (skins/extensions) Selenium  
 
 For each component manifest, do a `fresh_install` of Mediawiki, install the component, then run its Selenium tests:
 
@@ -444,7 +442,7 @@ For each component manifest, do a `fresh_install` of Mediawiki, install the comp
 
 This takes a while to run since it does a `fresh_install` of Mediawiki each time
 
-## Custom MediaWiki 'LocalSettings'
+# Custom MediaWiki 'LocalSettings'
 
 To apply custom MediaWiki settings during `./fresh_install`, edit [`import-on-fresh-install/LocalSettings.extra.php`](import-on-fresh-install/LocalSettings.extra.php)
 
@@ -452,11 +450,11 @@ This file will be included by MediaWiki's `LocalSettings.php`
 
 Keep in mind this is not the place to add settings for extensions or skins - your component's [LocalSettings.php](#localsettingsphp-required) is the place for this
 
-## Importing Mediawiki XML page dumps
+# Importing Mediawiki XML page dumps
 
 When you run `./fresh_install`, page dump XML files found in [`import-on-fresh-install/pages/`](import-on-fresh-install/pages/) will be imported into the fresh MediaWiki instance
 
-## Container Management
+# Container Management
 
 You can manage the MediaWiki containers using these commands
 
@@ -484,7 +482,7 @@ You can manage the MediaWiki containers using these commands
 ./remove
 ```
 
-## Container Shell Access
+# Container Shell Access
 
 Get quick shell access to running MediaWiki containers with these commands
 
@@ -522,9 +520,9 @@ If a command is specified, it is run in the specified container, `shellto` then 
 ./shellto j pwd                    # Show working directory in jobrunner container
 ```
 
-## Debugging
+# Debugging
 
-### VSCode
+## VSCode
 
 - Ensure the "PHP Debug" extension is installed
 
@@ -534,7 +532,7 @@ If a command is specified, it is run in the specified container, `shellto` then 
 
 - Browse to the Mediawiki page executing your breakpoint code
 
-## Miscellaneous
+# Miscellaneous
 
 - Skip installation of the `Vector` skin on a fresh install
 
@@ -583,11 +581,11 @@ SKIP_COUNTDOWN=1 ./fresh_install
 SILENT=1 ./fresh_install
 ```
 
-## Bug Reporting
+# Bug Reporting
 
 Open a Phabricator task [here](https://phabricator.wikimedia.org/maniphest/task/edit/form/default/?title=&description=Bug+Description&projects[]=mediawiki-quickstart) to report issues and make feature requests
 
-## Contributions
+# Contributions
 
 Merge requests are welcome
 
