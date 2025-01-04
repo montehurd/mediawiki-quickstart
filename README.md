@@ -395,16 +395,14 @@ SELENIUM_INSTANCES=4 ./run_selenium_tests
 
 Instances defaults to 1 if the env var is not used
 
-## CI
-
 ### Quickstart
 
-Run a variety of tests putting Quickstart through its paces
+Quickstart's functionality is verified by a variety of tests found in `tests/suites/`
 
-This is run for each commit / merge request
+Run all Quickstart tests:
 
 ```bash
-./ci
+./test_all
 ```
 
 Run all tests in a specific Quickstart test file (handy for debugging):
@@ -413,11 +411,21 @@ Run all tests in a specific Quickstart test file (handy for debugging):
 ./test tests/suites/shellto_tests.sh
 ```
 
-Run only specific test(s) in a file:
+Run specific test(s) in a Quickstart test file:
 
 ```bash
 ./test tests/suites/shell_tests.sh test_shellto_web test_shellto_web_interactive
 ```
+
+## CI
+
+The `ci` script is run for each commit / merge request:
+
+```bash
+./ci
+```
+
+It runs all Quickstart tests (via `test_all`) and reports the results
 
 ### Mediawiki components (skins/extensions) Selenium  
 
