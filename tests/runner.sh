@@ -20,7 +20,9 @@ handle_test_exit() {
   fi
 }
 
-run_all_tests() {
+# Run sourced functions with names starting with 'test_'
+# Can also be passed the names of funcs to run
+run_tests() {
   local failures=0
   local test_functions
   if [ $# -eq 0 ]; then

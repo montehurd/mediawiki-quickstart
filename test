@@ -10,7 +10,7 @@ main() {
   local test_file="$1"
   shift
   source "$test_file"
-  run_all_tests "$@"
+  run_tests "$@"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
