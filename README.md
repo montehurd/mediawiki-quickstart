@@ -7,7 +7,7 @@ Easy skin and extension management via "component" manifest folders
 Test running including Selenium tests you can watch as they execute
 
 <details>
-<summary>Table of Contents</summary>
+<summary><h2>Table of Contents</h2></summary>
 
 [[_TOC_]]
 
