@@ -402,7 +402,7 @@ Instances defaults to 1 if the env var is not used
 
 ## Quickstart
 
-Quickstart's functionality is verified by a variety of tests found in `tests/suites/`
+Quickstart's functionality is verified by a variety of tests found in `tests/`
 
 Run all Quickstart tests:
 
@@ -413,13 +413,13 @@ Run all Quickstart tests:
 Run all tests in a specific Quickstart test file (handy for debugging):
 
 ```bash
-./test tests/suites/shellto_tests.sh
+./test tests/shellto_tests.sh
 ```
 
 Run specific test(s) in a Quickstart test file:
 
 ```bash
-./test tests/suites/shell_tests.sh test_shellto_web test_shellto_web_interactive
+./test tests/shell_tests.sh test_shellto_web test_shellto_web_interactive
 ```
 
 # CI

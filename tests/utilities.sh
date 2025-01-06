@@ -1,7 +1,7 @@
 #!/bin/bash
 
 run_selenium_scenario() {
-  docker cp "./tests/suites/selenium_tests.js" \
+  docker cp "./tests/selenium_tests.js" \
     mediawiki-mediawiki-web-1:/var/local/ci.selenium.js 2>&1 | verboseOrDotPerLine ""
   local scenario="$1"
   echo "$scenario"

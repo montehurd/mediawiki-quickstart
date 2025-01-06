@@ -3,7 +3,7 @@
 source "./tests/runner.sh"
 
 main() {
-  for test_file in tests/suites/*_tests.sh; do
+  for test_file in tests/*_tests.sh; do
     source "$test_file"
   done
   run_tests
