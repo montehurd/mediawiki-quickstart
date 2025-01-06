@@ -1,2 +1,5 @@
+- skins/Vector
 - extensions/WikimediaMessages
 - extensions/UniversalLanguageSelector
+- extensions/EventLogging
+- extensions/EventBus
