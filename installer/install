@@ -136,8 +136,10 @@ _run_bash_for_installed_components() {
     return
   fi
   for component_path in "${INSTALLED_COMPONENTS[@]}"; do
+    cd ~
     _run_bash_from_manifest "$component_path" 2>&1 | verboseOrDotPerLine "Running '$component_path/setup.sh'..."
   done
+  cd ~
 }
 
 _run_bash_from_manifest() {
@@ -152,7 +154,6 @@ _run_bash_from_manifest() {
   else
     echo "No '${setup_script}' found, skipping..."
   fi
-  cd ~
 }
 
 _install_php_and_node_dependencies() {
