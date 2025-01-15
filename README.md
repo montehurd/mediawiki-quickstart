@@ -142,9 +142,9 @@ If your component needs additional containers, you can specify them in its own `
 
 See the Elastica [docker-compose.yml](extensions/Elastica/docker-compose.yml) for an example
 
-Notice that it also specifies a couple values for the `mediawiki-web` container
+Notice how the Elastica `docker-compose.yml` also specifies a couple values for the `mediawiki-web` container
 
-Keep such changes to core Mediawiki containers to a minimum - your component's `docker-compose.yml` should be mostly concerned with your component
+This is allowed, of course, but try to keep such changes to core Mediawiki containers to a minimum - your component's `docker-compose.yml` should be mostly concerned with your component
 
 ## Installing components
 
