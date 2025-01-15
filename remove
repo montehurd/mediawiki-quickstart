@@ -23,7 +23,6 @@ remove() {
       rm -rf "$MEDIAWIKI_PATH"
     fi
   fi
-  rm "$SCRIPT_PATH/$COMPOSE_TRACKER_FILE" || true
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

@@ -11,11 +11,8 @@ install() {
   fi
   export GIT_CLONE_BASE_URL
   if ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL m /var/local/installer/install "$@"; then
-    local installed_components=$(./shellto m cat Components.installed.txt)
-    if update_compose_tracker $installed_components; then
-      # Restart if components with thier own docker-compose.yml were installed
-      ./restart
-    fi
+    # Restart in case components with thier own docker-compose.yml were installed
+    ./restart
     open_special_version_page
   fi
 }

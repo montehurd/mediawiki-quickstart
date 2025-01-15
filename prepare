@@ -18,6 +18,7 @@ prepare() {
     echo "Failed to clone MediaWiki. Exiting."
     exit 1
   fi
+  echo -n " -f docker-compose.yml -f docker-compose.override.yml " > "$SCRIPT_PATH/compose_tracker.txt"
   echo "$MW_ENV" >.env
   cp "$SCRIPT_PATH/docker-compose.override.yml" . || true
   cd "$original_dir"

@@ -95,19 +95,6 @@ verify_docker_group() {
   fi
 }
 
-COMPOSE_TRACKER_FILE="compose_tracker.txt"
-update_compose_tracker() {
-  local components=($(components_with_compose "$@"))
-  [[ ${#components[@]} -gt 0 ]] && printf " -f ../%s/docker-compose.yml" "${components[@]}" >> "$COMPOSE_TRACKER_FILE" && return 0
-  return 1
-}
-
 get_compose_file_flags() {
-  [[ -f "../$COMPOSE_TRACKER_FILE" ]] && echo -n " -f docker-compose.yml -f docker-compose.override.yml " && cat "../$COMPOSE_TRACKER_FILE"
-}
-
-components_with_compose() {
-  for dir in "$@"; do
-    [[ -f "$dir/docker-compose.yml" ]] && echo "$dir"
-  done
+  cat "../compose_tracker.txt"
 }
