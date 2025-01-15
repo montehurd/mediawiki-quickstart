@@ -11,6 +11,7 @@
 # of flags passed to it. Remember - "thin wrapper"
 
 source "./config"
+source "./docker/docker.sh"
 
 args=()
 
@@ -34,9 +35,9 @@ fi
 cd "$MEDIAWIKI_PATH" || { echo "Failed to cd to $MEDIAWIKI_PATH"; exit 1; }
 
 if [ "${SHELLTO_TEST:-0}" -ne 1 ]; then
-    docker compose exec -u "$HOST_UID:$HOST_GID" "${args[@]}"
+    docker compose $(get_compose_file_flags) exec -u "$HOST_UID:$HOST_GID" "${args[@]}"
 else
-    echo "docker compose exec -u \"$HOST_UID:$HOST_GID\" ${args[@]}"
+    echo "docker compose $(get_compose_file_flags) exec -u \"$HOST_UID:$HOST_GID\" ${args[@]}"
 fi
 
 cd "$SCRIPT_PATH"

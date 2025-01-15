@@ -181,6 +181,7 @@ _rebuild_localization_cache() {
 declare -a INSTALLED_COMPONENTS=()
 
 install() {
+  rm Components.installed.txt || true
   INSTALLED_COMPONENTS=()
   for component_path in "$@"; do
     _install_from_manifest "$component_path"
@@ -189,6 +190,7 @@ install() {
   _run_bash_for_installed_components
   _rebuild_localization_cache
   _import_page_dumps_for_installed_components
+  echo "${INSTALLED_COMPONENTS[@]}" > Components.installed.txt
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

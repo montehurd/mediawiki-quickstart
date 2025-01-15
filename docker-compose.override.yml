@@ -1,6 +1,5 @@
 services:
 
-
   mediawiki:
     build:
       # TODO: should we have "selenium" folder or make it more generic?
@@ -29,33 +28,11 @@ services:
     environment:
       - MW_SERVER=http://localhost:8080
       - MW_SCRIPT_PATH=/w
-      - MW_ELASTIC_HOST=elasticsearch
-      - MW_ELASTIC_PORT=9200
-    depends_on:
-      - elasticsearch
     volumes:
       - ../skins:/var/local/skins
       - ../extensions:/var/local/extensions
       - ../installer:/var/local/installer
       - ../common:/var/local/common
-
-
-  elasticsearch:
-    # image: docker-registry.wikimedia.org/dev/cirrus-elasticsearch:7.10.2-s2
-    image: docker-registry.wikimedia.org/repos/search-platform/cirrussearch-elasticsearch-image:v7.10.2-12
-    volumes:
-      - elasticdata:/usr/share/elasticsearch/data
-    environment:
-      - discovery.type=single-node
-      - bootstrap.system_call_filter=false
-    ports:
-      - 9200:9200
-      - 9300:9300
-    networks:
-      default:
-        aliases:
-          - elasticsearch
-
 
   novnc:
     build:
@@ -71,8 +48,3 @@ services:
       - 8086:8086
     volumes:
       - ../selenium/novnc:/app
-
-
-volumes:
-  elasticdata:
-    driver: local

@@ -71,15 +71,17 @@ extensions/
   |--IPInfo/
   |----LocalSettings.php  (required)
   |----setup.sh           (optional)
-  |----dependencies.yml    (optional)
+  |----dependencies.yml   (optional)
   |----pages/             (optional)
+  |----docker-compose.yml (optional)
   ...
 skins/
   |--MonoBook/
   |----LocalSettings.php  (required)
   |----setup.sh           (optional)
-  |----dependencies.yml    (optional)
+  |----dependencies.yml   (optional)
   |----pages/             (optional)
+  |----docker-compose.yml (optional)
   ...
 ```
 
@@ -133,6 +135,16 @@ As you can see above, your component, whether extension or skin, can have depend
 ### pages/ (optional)
 
 If your component's manifest folder contains a `pages` folder, any page dump xml files in that folder will be imported when your component is installed
+
+### docker-compose.yml (optional)
+
+If your component needs additional containers, you can specify them in its own `docker-compose.yml`
+
+See the Elastica [docker-compose.yml](extensions/Elastica/docker-compose.yml) for an example
+
+Notice that it also specifies a couple values for the `mediawiki-web` container
+
+Keep such changes to core Mediawiki containers to a minimum - your component's `docker-compose.yml` should be mostly concerned with your component
 
 ## Installing components
 

@@ -13,7 +13,7 @@ remove() {
   fi
 
   if [ -f "$MEDIAWIKI_PATH/docker-compose.yml" ]; then
-    cd "$MEDIAWIKI_PATH" && docker compose down 2>&1 | verboseOrDotPerLine "Docker compose down"
+    cd "$MEDIAWIKI_PATH" && docker compose $(get_compose_file_flags) down 2>&1 | verboseOrDotPerLine "Docker compose down"
   fi
   docker image rm mediawiki-web.selenium:1.0 mediawiki.extras:1.0 2>&1 | verboseOrDotPerLine "Docker image rm" || true
 
@@ -23,6 +23,7 @@ remove() {
       rm -rf "$MEDIAWIKI_PATH"
     fi
   fi
+  rm "$SCRIPT_PATH/$COMPOSE_TRACKER_FILE" || true
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
