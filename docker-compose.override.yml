@@ -14,7 +14,7 @@ services:
       - ../selenium/node-preparation.sh:/var/local/node-preparation.sh
       - ../import-on-fresh-install/pages:/tmp/page-xml
       - ../import_page_xml.sh:/import_page_xml.sh
-      - ../compose_tracker.txt:/var/local/compose_tracker.txt
+      - ../compose_file_flags.txt:/var/local/compose_file_flags.txt
 
   mediawiki-web:
     build:

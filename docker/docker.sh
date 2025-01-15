@@ -96,5 +96,5 @@ verify_docker_group() {
 }
 
 get_compose_file_flags() {
-  cat "../compose_tracker.txt"
+  cat "../compose_file_flags.txt"
 }
