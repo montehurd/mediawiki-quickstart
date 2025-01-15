@@ -1,4 +1,4 @@
-FROM docker-registry.wikimedia.org/dev/bookworm-apache2:1.0.0
+FROM docker-registry.wikimedia.org/dev/bookworm-apache2:1.0.1
 
 COPY ./install-browser-for-puppeteer-core.js /var/local
 COPY ./install-browser-for-puppeteer-core.sh /var/local
