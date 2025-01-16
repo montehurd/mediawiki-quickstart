@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# set -x
-
 import_page_xml() {
     ./shellto -e VERBOSE m /import_page_xml.sh "$@"
 }

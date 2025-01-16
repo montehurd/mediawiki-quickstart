@@ -30,84 +30,84 @@ verify_shellto_command() {
 
 test_shellto_single_env_with_path() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" -e DISPLAY=mediawiki-novnc-1:0 mediawiki-web /var/local/install-browser-for-puppeteer-core.sh
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" -e DISPLAY=mediawiki-novnc-1:0 mediawiki-web /var/local/install-browser-for-puppeteer-core.sh
   ./shellto -e DISPLAY=mediawiki-novnc-1:0 w /var/local/install-browser-for-puppeteer-core.sh
 EOF
 }
 
 test_shellto_multiple_env_with_paths() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" -e VERBOSE -e GIT_CLONE_BASE_URL mediawiki /var/local/installer/install extensions/IPInfo skins/MonoBook
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" -e VERBOSE -e GIT_CLONE_BASE_URL mediawiki /var/local/installer/install extensions/IPInfo skins/MonoBook
   ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL m /var/local/installer/install extensions/IPInfo skins/MonoBook
 EOF
 }
 
 test_shellto_sh_c_with_env_var() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" mediawiki-web sh -c "FIREFOX_BIN=/usr/bin/firefox-esr npm run qunit"
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" mediawiki-web sh -c "FIREFOX_BIN=/usr/bin/firefox-esr npm run qunit"
   ./shellto w sh -c "FIREFOX_BIN=/usr/bin/firefox-esr npm run qunit"
 EOF
 }
 
 test_shellto_argument_separator() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" mediawiki composer phpunit -- --testdox --group Cache
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" mediawiki composer phpunit -- --testdox --group Cache
   ./shellto m composer phpunit -- --testdox --group Cache
 EOF
 }
 
 test_shellto_relative_dot_path() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" mediawiki-web find . -user root
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" mediawiki-web find . -user root
   ./shellto w find . -user root
 EOF
 }
 
 test_shellto_user_override() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" -u root mediawiki-web chown -R "123:456" /var/local
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" -u root mediawiki-web chown -R "123:456" /var/local
   ./shellto -u root w chown -R "123:456" /var/local
 EOF
 }
 
 test_shellto_basic_command() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" mediawiki composer install
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" mediawiki composer install
   ./shellto m composer install
 EOF
 }
 
 test_shellto_docker_path() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" mediawiki /docker/install.sh
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" mediawiki /docker/install.sh
   ./shellto m /docker/install.sh
 EOF
 }
 
 test_shellto_path_with_args() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" mediawiki /var/local/node-preparation.sh install_node_dependencies
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" mediawiki /var/local/node-preparation.sh install_node_dependencies
   ./shellto m /var/local/node-preparation.sh install_node_dependencies
 EOF
 }
 
 test_shellto_env_with_quoted_path() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" -e VERBOSE mediawiki /import_page_xml.sh "/tmp/page-xml"
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" -e VERBOSE mediawiki /import_page_xml.sh "/tmp/page-xml"
   ./shellto -e VERBOSE m /import_page_xml.sh "/tmp/page-xml"
 EOF
 }
 
 test_shellto_relative_subdir_path() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" mediawiki php tests/parser/parserTests.php
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" mediawiki php tests/parser/parserTests.php
   ./shellto m php tests/parser/parserTests.php
 EOF
 }
 
 test_shellto_command_with_subcommand() {
   verify_shellto_command << EOF
-  docker compose exec -u "$(id -u):$(id -g)" mediawiki-web npm run jest
+  docker compose $(./get_compose_file_flags) exec -u "$(id -u):$(id -g)" mediawiki-web npm run jest
   ./shellto w npm run jest
 EOF
 }

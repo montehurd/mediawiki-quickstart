@@ -191,7 +191,7 @@ _update_compose_file_flags() {
   components=$(_components_with_compose "$@")
   if [[ -n "$components" ]]; then
     for component in $components; do
-      echo -n " -f ../$component/docker-compose.yml" >> "/var/local/common/compose_file_flags.txt"
+      echo -n " -f $component/docker-compose.yml" >> "/var/local/common/compose_file_flags.txt"
     done
     return 0
   fi

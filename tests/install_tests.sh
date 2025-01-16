@@ -1,6 +1,11 @@
 #!/bin/bash
 
 source "config"
+source "./docker/docker.sh"
+
+# 'set +e' needed to allow subsequents tests to proceed if a test fails
+# Needed here because the docker file turns it off
+set +e
 
 test_fresh_install() {
   FORCE=1 SILENT=1 SKIP_COUNTDOWN=1 ./fresh_install 2>&1 | verboseOrDotPerLine ""
@@ -9,11 +14,23 @@ test_fresh_install() {
     return 1
   fi
   echo "Mediawiki directory created as expected"
-  if ! docker ps | grep -q "mediawiki-mediawiki-1"; then
+  if ! is_container_running "mediawiki-mediawiki-1"; then
     echo "mediawiki container not running"
     return 1
   fi
   echo "Mediawiki container running as expected"
+  # SILENT=1 ./install extensions/Elastica 2>&1 | verboseOrDotPerLine ""
+  # if [ ! -d "./mediawiki/extensions/Elastica" ]; then
+  #   echo "Elastica extension directory not created"
+  #   return 1
+  # fi
+  # # sleep 10
+  # echo "Elastica extension directory present as expected"
+  # if ! is_container_running "mediawiki-elasticsearch-1"; then
+  #   echo "elasticsearch container not running"
+  #   return 1
+  # fi
+  # echo "elasticsearch container running as expected"
   if ! curl -s -f -o /dev/null --retry 4 --retry-delay 2 --retry-max-time 15 -w "%{http_code}" "http://localhost:8080/wiki/Special:Version" | grep -q "200"; then
     echo "Special:Version page not responding with 200"
     return 1

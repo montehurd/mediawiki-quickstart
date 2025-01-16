@@ -1,0 +1,10 @@
+#!/bin/bash
+
+COMPOSE_FLAG_FILE_PATH="./common/compose_file_flags.txt"
+
+if [ ! -f "$COMPOSE_FLAG_FILE_PATH" ]; then
+   echo "Error: $COMPOSE_FLAG_FILE_PATH not found" >&2
+   exit 1
+fi
+
+cat "$COMPOSE_FLAG_FILE_PATH"

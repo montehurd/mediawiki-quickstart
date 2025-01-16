@@ -9,9 +9,7 @@ source "./import_extra_local_settings"
 
 start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
-    cd "$MEDIAWIKI_PATH"
-    docker compose $(get_compose_file_flags) up -d 2>&1 | verboseOrDotPerLine "Docker compose up" || exit 1
-    cd ..
+    docker compose $(./get_compose_file_flags) up -d 2>&1 | verboseOrDotPerLine "Docker compose up" || exit 1
 
     ./shellto -u root w chown -R "$(id -u):$(id -g)" /var/local
     ./shellto m composer install 2>&1 | verboseOrDotPerLine "Composer install"
@@ -29,7 +27,7 @@ start() {
   fi
 
   if ! is_container_running "mediawiki-mediawiki-1"; then
-    cd "$MEDIAWIKI_PATH" && docker compose $(get_compose_file_flags) up -d  2>&1 | verboseOrDotPerLine "Docker compose up -d"
+    docker compose $(./get_compose_file_flags) up -d  2>&1 | verboseOrDotPerLine "Docker compose up -d"
     sleep 1
   fi
   wait_until_url_available $SPECIAL_VERSION_URL

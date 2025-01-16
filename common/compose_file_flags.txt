@@ -1,1 +1,1 @@
- -f docker-compose.yml -f docker-compose.override.yml 
+ -f mediawiki/docker-compose.yml -f docker-compose.override.yml  -f extensions/Elastica/docker-compose.yml

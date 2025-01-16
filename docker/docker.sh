@@ -94,7 +94,3 @@ verify_docker_group() {
     return 1
   fi
 }
-
-get_compose_file_flags() {
-  cat "../common/compose_file_flags.txt"
-}
