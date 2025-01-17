@@ -12,7 +12,6 @@ source "./start"
 source "./import_page_xml"
 
 fresh_install() {
-  [ -d "$MEDIAWIKI_PATH" ] && cp "$SCRIPT_PATH/docker-compose.override.yml" "$MEDIAWIKI_PATH" || true
   verify_compose_version 2 || return 1
   verify_docker_group || return 1
   print_force_mode_notification_if_necessary
