@@ -5,9 +5,13 @@ const { execSync } = require( 'child_process' );
 
 function getPuppeteerCoreVersion() {
 	// return "21.5.6"
-	const output = execSync( 'npm list puppeteer-core' ).toString();
-	const match = output.match( /puppeteer-core@([\d.]+)/ );
-	return match ? match[ 1 ] : null;
+	try {
+		const output = execSync( 'npm list puppeteer-core' ).toString();
+		const match = output.match( /puppeteer-core@([\d.]+)/ );
+		return match ? match[ 1 ] : null;
+	} catch (error) {
+		return null;
+	}
 }
 
 function getChromeToChromiumMap() {
@@ -119,12 +123,13 @@ function main() {
 		const match = output.match( /\/.*$/m );
 		const installedPath = match ? match[ 0 ] : undefined;
 		if ( !installedPath ) {
-			throw new Error( 'Could not determine installed path' );
+			console.error( 'Error: Could not determine installed path' );
+			process.exit( 1 );
 		}
 		console.log( installedPath );
 		process.exit( 0 );
 	} catch ( error ) {
-		console.error( error.message );
+		console.error( `Error: ${ error.message }` );
 		process.exit( 1 );
 	}
 }

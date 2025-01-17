@@ -5,6 +5,10 @@ source "./common/utility.sh"
 
 run_selenium_tests() {
   ensure_selenium_ready 2>&1 | verboseOrDotPerLine "Ensuring Selenium ready..."
+  local ready_status=${PIPESTATUS[0]}
+  if [ $ready_status -ne 0 ]; then
+    exit $ready_status
+  fi
 
   local file_path
   file_path=${1:-"tests/selenium/**/specs/**/*.js"}
