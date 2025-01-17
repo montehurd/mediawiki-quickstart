@@ -40,7 +40,7 @@ list_selenium_tests() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-  ensure_selenium_ready 2>&1 | verboseOrDotPerLine "Ensuring Selenium ready..."
+  ensure_selenium_ready || exit 1
   echo
   echo "Selenium tests:"
   echo
