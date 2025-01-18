@@ -19,8 +19,8 @@ prepare() {
     exit 1
   fi
   echo -e "" > "$SCRIPT_PATH/common/docker-compose.components.yml"
-  echo "$MW_ENV" >.env
   cd "$original_dir"
+  echo "$MW_ENV" >.env
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

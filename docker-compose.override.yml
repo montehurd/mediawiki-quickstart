@@ -1,3 +1,12 @@
+x-environment: &default-environment
+  MEDIAWIKI_USER: Admin
+  MEDIAWIKI_PASSWORD: dockerpass
+  XDEBUG_ENABLE: 'true'
+  XHPROF_ENABLE: 'true'
+  XDEBUG_CONFIG: "client_host=host.docker.internal client_port=9004"
+  XDEBUG_MODE: debug
+  HOME: /var/www/html/w
+
 services:
 
   mediawiki:
@@ -14,6 +23,10 @@ services:
       - ./selenium/node-preparation.sh:/var/local/node-preparation.sh
       - ./import-on-fresh-install/pages:/tmp/page-xml
       - ./import_page_xml.sh:/import_page_xml.sh
+    environment:
+      <<: *default-environment
+    env_file: !reset
+      - .env
 
   mediawiki-web:
     build:
@@ -25,14 +38,23 @@ services:
     image: mediawiki-web.selenium:1.0
     pull_policy: build
     environment:
-      - MW_SERVER=http://localhost:8080
-      - MW_SCRIPT_PATH=/w
+      <<: *default-environment
+      MW_SERVER: http://localhost:8080
+      MW_SCRIPT_PATH: /w
+    env_file: !reset
+      - .env
     volumes:
       - ./skins:/var/local/skins
       - ./extensions:/var/local/extensions
       - ./installer:/var/local/installer
       - ./common:/var/local/common
       - chromium_cache:/var/local/chromium/
+
+  mediawiki-jobrunner:
+    environment:
+      <<: *default-environment
+    env_file: !reset
+      - .env
 
   novnc:
     build:
