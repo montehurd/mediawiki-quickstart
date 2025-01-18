@@ -3,21 +3,21 @@ services:
   mediawiki:
     build:
       # TODO: should we have "selenium" folder or make it more generic?
-      context: ../selenium
+      context: ./selenium
       dockerfile: Dockerfile.mediawiki.extras
     image: mediawiki.extras:1.0
     volumes:
-      - ../skins:/var/local/skins
-      - ../extensions:/var/local/extensions
-      - ../installer:/var/local/installer
-      - ../common:/var/local/common
-      - ../selenium/node-preparation.sh:/var/local/node-preparation.sh
-      - ../import-on-fresh-install/pages:/tmp/page-xml
-      - ../import_page_xml.sh:/import_page_xml.sh
+      - ./skins:/var/local/skins
+      - ./extensions:/var/local/extensions
+      - ./installer:/var/local/installer
+      - ./common:/var/local/common
+      - ./selenium/node-preparation.sh:/var/local/node-preparation.sh
+      - ./import-on-fresh-install/pages:/tmp/page-xml
+      - ./import_page_xml.sh:/import_page_xml.sh
 
   mediawiki-web:
     build:
-      context: ../selenium
+      context: ./selenium
       dockerfile: Dockerfile.mediawiki-web.selenium
     # when using build context and dockerfile (above), the image value below
     # becomes the name:tag the resulting image is given. this image then
@@ -28,14 +28,15 @@ services:
       - MW_SERVER=http://localhost:8080
       - MW_SCRIPT_PATH=/w
     volumes:
-      - ../skins:/var/local/skins
-      - ../extensions:/var/local/extensions
-      - ../installer:/var/local/installer
-      - ../common:/var/local/common
+      - ./skins:/var/local/skins
+      - ./extensions:/var/local/extensions
+      - ./installer:/var/local/installer
+      - ./common:/var/local/common
+      - chromium_cache:/var/local/chromium/
 
   novnc:
     build:
-      context: ../selenium/novnc
+      context: ./selenium/novnc
       dockerfile: Dockerfile
     image: mediawiki-novnc:1.0
     pull_policy: build
@@ -46,4 +47,7 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - ../selenium/novnc:/app
+      - ./selenium/novnc:/app
+
+volumes:
+  chromium_cache:

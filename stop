@@ -7,7 +7,7 @@ stop() {
   if [ ! -d "$MEDIAWIKI_PATH" ]; then
     return
   fi
-  docker compose $(./get_compose_file_flags) stop 2>&1 | verboseOrDotPerLine "Docker compose stop"
+  docker compose stop 2>&1 | verboseOrDotPerLine "Docker compose stop"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

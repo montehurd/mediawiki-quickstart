@@ -31,10 +31,8 @@ if [ "${#args[@]}" -eq 1 ]; then
   args+=("sh")
 fi
 
-flags=$(./get_compose_file_flags)
-
 if [ "${SHELLTO_TEST:-0}" -ne 1 ]; then
-    docker compose $flags exec -u "$HOST_UID:$HOST_GID" "${args[@]}"
+    docker compose exec -u "$HOST_UID:$HOST_GID" "${args[@]}"
 else
-    echo "docker compose $flags exec -u \"$HOST_UID:$HOST_GID\" ${args[@]}"
+    echo "docker compose exec -u \"$HOST_UID:$HOST_GID\" ${args[@]}"
 fi

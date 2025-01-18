@@ -186,16 +186,19 @@ _components_with_compose() {
   done
 }
 
-_update_compose_file_flags() {
+_update_component_docker_compose_includes() {
+  local components_file="/var/local/common/docker-compose.components.yml"
   local components
   components=$(_components_with_compose "$@")
-  if [[ -n "$components" ]]; then
-    for component in $components; do
-      echo -n " -f $component/docker-compose.yml" >> "/var/local/common/compose_file_flags.txt"
-    done
+  if [[ -z "$components" ]]; then
     return 0
   fi
-  return 1
+  local contents
+  for component in $components; do
+    contents=$(cat "$components_file")
+    _yq '.include[0].path = (.include[0].path // []) + ["../'$component'/docker-compose.yml"] | .include[0].path |= unique' "$contents" > "$components_file"
+  done
+  return 0
 }
 
 declare -a INSTALLED_COMPONENTS=()
@@ -209,7 +212,7 @@ install() {
   _run_bash_for_installed_components
   _rebuild_localization_cache
   _import_page_dumps_for_installed_components
-  _update_compose_file_flags "${INSTALLED_COMPONENTS[@]}"
+  _update_component_docker_compose_includes "${INSTALLED_COMPONENTS[@]}"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

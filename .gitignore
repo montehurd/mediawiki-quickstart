@@ -1,2 +1,2 @@
 /mediawiki/
-/common/compose_file_flags.txt
+/common/docker-compose.components.yml

@@ -1,0 +1,5 @@
+name: mediawiki
+include:
+  - path:
+    - ./mediawiki/docker-compose.yml
+    - ./common/docker-compose.components.yml
