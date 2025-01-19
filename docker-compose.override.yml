@@ -25,7 +25,7 @@ services:
       - ./import_page_xml.sh:/import_page_xml.sh
     environment:
       <<: *default-environment
-    env_file: !reset
+    env_file: !override
       - .env
 
   mediawiki-web:
@@ -41,7 +41,7 @@ services:
       <<: *default-environment
       MW_SERVER: http://localhost:8080
       MW_SCRIPT_PATH: /w
-    env_file: !reset
+    env_file: !override
       - .env
     volumes:
       - ./skins:/var/local/skins
@@ -53,7 +53,7 @@ services:
   mediawiki-jobrunner:
     environment:
       <<: *default-environment
-    env_file: !reset
+    env_file: !override
       - .env
 
   novnc:
