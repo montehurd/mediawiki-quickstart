@@ -17,11 +17,3 @@ XDEBUG_CONFIG=''
 "
 
 export MW_ENV
-
-# Prevent pre-override merge warnings
-# These appear at the stage of "docker compose" calls before
-# the docker-compose.override.yml values are merged
-# Post-merge we have what's needed
-export XDEBUG_CONFIG=''
-export MW_DOCKER_GID=''
-export MW_DOCKER_UID=''
