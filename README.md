@@ -20,7 +20,7 @@ Test running including Selenium tests you can watch as they execute
 1. Clone the repository
 
 ```bash
-git clone https://gitlab.wikimedia.org/mhurd/mediawiki-quickstart.git
+git clone https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart.git
 ```
 
 2. Navigate to the repository directory
