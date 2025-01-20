@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "config"
+source "./config"
 source "./docker/docker.sh"
 
 # 'set +e' needed to allow subsequents tests to proceed if a test fails
