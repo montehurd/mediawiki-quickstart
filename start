@@ -30,9 +30,17 @@ start() {
     docker compose up -d  2>&1 | verboseOrDotPerLine "Docker compose up -d"
     sleep 1
   fi
-  wait_until_url_available $SPECIAL_VERSION_URL
+  wait_until_url_available $SPECIAL_VERSION_URL 30 2>&1 | verboseOrDotPerLine "Waiting for Mediawiki page availability..."
+  local wait_status=${PIPESTATUS[0]}
+  if [ "$wait_status" -ne 0 ]; then
+    printf "\e[31mOpening troubleshooting section of 'README.md'...\e[0m\n"
+    open_url_when_available "https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart#troubleshooting"
+    exit 1
+  fi
   sleep 1
+  echo | verboseOrDotPerLine "Opening 'Special:Version' page..."
   open_special_version_page
+  echo -e "Success!\n"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

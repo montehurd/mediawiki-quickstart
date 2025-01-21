@@ -39,6 +39,14 @@ cd ~/mediawiki-quickstart
 ./fresh_install
 ```
 
+# Troubleshooting
+
+If `./fresh_install` doesn't work, you can try running the `./remove` script
+
+Then run `docker system prune -af` and try `./fresh_install` again
+
+Also, ensure you are running the latest Docker (or Docker Desktop) version - some older versions had bugs which prevented Mediawiki containers from running on some architectures
+
 # Component management (installing skins/extensions)
 
 Quickstart considers skins and extensions to be "components"

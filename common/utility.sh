@@ -117,11 +117,12 @@ wait_until_url_available() {
   max_wait="${2:-}" # Provide a default value for max_wait if $2 is not set (unset means we want infinite wait)
   elapsed_time=0
   while ! [[ "$(get_response_code "$url")" =~ ^(200|301)$ ]]; do
+    echo "Response code for '$url' is: $(get_response_code "$url")"
     sleep 1
     if [ -n "$max_wait" ]; then
       ((elapsed_time++))
       if [ "$elapsed_time" -ge "$max_wait" ]; then
-        echo "Timed out waiting for URL to be available."
+        printf "\e[31mTimed out waiting for '$url' to be available\e[0m\n"
         return 1
       fi
     fi
