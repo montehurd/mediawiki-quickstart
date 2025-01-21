@@ -33,6 +33,7 @@ start() {
   wait_until_url_available $SPECIAL_VERSION_URL 30 2>&1 | verboseOrDotPerLine "Waiting for Mediawiki page availability..."
   local wait_status=${PIPESTATUS[0]}
   if [ "$wait_status" -ne 0 ]; then
+    printf "\e[31mUnable to open '$SPECIAL_VERSION_URL'\e[0m\n"
     printf "\e[31mOpening troubleshooting section of 'README.md'...\e[0m\n"
     open_url_when_available "https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart#troubleshooting"
     exit 1
