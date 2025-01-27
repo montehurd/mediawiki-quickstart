@@ -2,6 +2,6 @@
 
 wfLoadExtension( 'Wikistories' );
 
-$wgWikistoriesDiscoveryMode = 'public';
+$wgWikistoriesDiscoveryMode = 'beta';
 $wgWikistoriesRestDomain = 'wikipedia.org';
 $wgUseInstantCommons = true;
