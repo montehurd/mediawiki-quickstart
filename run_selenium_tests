@@ -12,6 +12,11 @@ run_selenium_tests() {
     file_path="/var/www/html/w/$file_path"
   fi
 
+  if [ "$(./shellto w node -e "console.log(require('glob').sync('$file_path').length)")" = "0" ]; then
+    echo "No Selenium files found for pattern: '$file_path', skipping..."
+    exit 0
+  fi
+
   local test_name
   test_name=${2:-".*"}
   local log_level
