@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# Invocation example piping output to a text file:
+# Usage:
+#     ./ci.components.selenium
+
+# Example piping output to a text file:
 #     ./ci.components.selenium > "$(date +%Y_%m_%d)-results.txt"
 
 # Flag for printing fake results. Useful for making fast
