@@ -3,6 +3,9 @@
 # Usage:
 #     ./ci.components.selenium
 
+# Usage with verbose output:
+#     VERBOSE=1 ./ci.components.selenium
+
 # Example piping output to a text file:
 #     ./ci.components.selenium > "$(date +%Y_%m_%d)-results.txt"
 
