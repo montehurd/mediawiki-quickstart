@@ -1,0 +1,10 @@
+
+```
+#cloud-config
+runcmd:
+  - git clone https://gitlab.wikimedia.org/mhurd/vps-provisioning.git
+  - cd vps-provisioning
+  - ./docker.sh install
+  - ./runner.sh install
+  - ./runner.sh register "#YOUR_GITLAB_RUNNER_TOKEN#" "#YOUR_GITLAB_RUNNER_DESCRIPTION#"
+```
