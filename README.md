@@ -77,19 +77,21 @@ skins/
 ```text
 extensions/
   |--IPInfo/
-  |----LocalSettings.php  (required)
-  |----setup.sh           (optional)
-  |----dependencies.yml   (optional)
-  |----pages/             (optional)
-  |----docker-compose.yml (optional)
+  |----LocalSettings.php       (required)
+  |----setup.sh                (optional)
+  |----dependencies.yml        (optional)
+  |----pages/                  (optional)
+  |----docker-compose.yml      (optional)
+  |----setup.#SERVICE_NAME#.sh (optional)
   ...
 skins/
   |--MonoBook/
-  |----LocalSettings.php  (required)
-  |----setup.sh           (optional)
-  |----dependencies.yml   (optional)
-  |----pages/             (optional)
-  |----docker-compose.yml (optional)
+  |----LocalSettings.php       (required)
+  |----setup.sh                (optional)
+  |----dependencies.yml        (optional)
+  |----pages/                  (optional)
+  |----docker-compose.yml      (optional)
+  |----setup.#SERVICE_NAME#.sh (optional)
   ...
 ```
 
@@ -153,6 +155,10 @@ See the Elastica [docker-compose.yml](extensions/Elastica/docker-compose.yml) fo
 Notice how the Elastica `docker-compose.yml` also specifies a couple values for the `mediawiki-web` container
 
 This is allowed, of course, but try to keep such changes to core Mediawiki containers to a minimum - your component's `docker-compose.yml` should be mostly concerned with your component
+
+### setup.#SERVICE_NAME#.sh (optional)
+
+If your component's `docker-compose.yml` defines a service which needs its own setup commands to be run, you can add a `setup.#SERVICE_NAME#.sh` script to your component's manifest folder. When your component is installed, the setup script will be run in your service's container after the installer brings it up
 
 ## Installing components
 
