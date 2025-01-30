@@ -15,7 +15,7 @@
 
 source "./common/utility.sh"
 
-separator="--------------------------------------------------------------------------------"
+separator="------------------------------------------------------------"
 
 list_all_components() {
   find extensions skins -mindepth 1 -maxdepth 1 -type d | sort
@@ -23,12 +23,13 @@ list_all_components() {
 
 print_report_table() {
   local results=("$@")
-  echo -e "\n${separator}"
-  printf " %3s  %-40s%-20s\n" "#" "Component" "Selenium"
+  echo -e "${separator}"
+  local column_spacing=" %3s  %-40s  %-2s  %-2s  %-2s\n"
+  printf "$column_spacing" "#" "Component                        Stages" "1" "2" "3"
   echo -e "${separator}"
   local index=1
   for result in "${results[@]}"; do
-    printf " %3d  %-40s%-20s\n" "$index" $result
+    printf "$column_spacing" "$index" $result
     ((index++))
   done
   echo -e "${separator}\n"
@@ -37,18 +38,31 @@ print_report_table() {
 main() {
   local reports=()
   for component in $(list_all_components); do
+    local fresh_install_status
+    local component_install_status
     local selenium_status
     if [ "${FAKE_IT:-0}" = "1" ]; then
+      fresh_install_status=$((RANDOM % 2))
+      component_install_status=$((RANDOM % 2))
       selenium_status=$((RANDOM % 2))
     else
       FORCE=1 SILENT=1 SKIP_COUNTDOWN=1 SKIP_SKIN=1 ./fresh_install 2>&1 | verboseOrDotPerLine "Fresh install of Mediawiki..."
+      fresh_install_status=${PIPESTATUS[0]}
       SILENT=1 ./install "$component" 2>&1 | verboseOrDotPerLine "Install '$component'..."
+      component_install_status=${PIPESTATUS[0]}
       SILENT=1 ./run_selenium_tests "$component/tests/selenium/*specs/**/*.js" ".*" 2>&1 | verboseOrDotPerLine "Running '$component' Selenium tests..."
       selenium_status=${PIPESTATUS[0]}
     fi
-    local status_char=$([ "$selenium_status" = "0" ] && echo "✅" || echo "❌")
-    reports+=("$component $status_char")
+    local fresh_install_status_char=$([ "$fresh_install_status" = "0" ] && echo "✅" || echo "❌")
+    local component_install_status_char=$([ "$component_install_status" = "0" ] && echo "✅" || echo "❌")
+    local selenium_status_char=$([ "$selenium_status" = "0" ] && echo "✅" || echo "❌")
+    reports+=("$component $fresh_install_status_char $component_install_status_char $selenium_status_char")
   done
+  # echo "DEBUG: reports=(${reports[@]})"
+  echo -e "${separator}"
+  echo "Stage 1 - Fresh install of Mediawiki"
+  echo "Stage 2 - Component installation"
+  echo "Stage 3 - Component Selenium tests"
   print_report_table "${reports[@]}"
 }
 
