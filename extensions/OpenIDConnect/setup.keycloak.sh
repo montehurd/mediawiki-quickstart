@@ -18,7 +18,7 @@ CID=$(/opt/keycloak/bin/kcadm.sh create clients --target-realm $REALM --set clie
 /opt/keycloak/bin/kcadm.sh create clients/${CID}/client-secret --target-realm $REALM
 
 # create user
-/opt/keycloak/bin/kcadm.sh create users --target-realm $REALM --set username=$USERNAME --set enabled=true
+/opt/keycloak/bin/kcadm.sh create users --target-realm $REALM --set username=$USERNAME --set email=test@example.com --set firstName=Test --set lastName=User --set enabled=true
 
 # create password for user
 /opt/keycloak/bin/kcadm.sh set-password --target-realm $REALM --username $USERNAME --new-password $PASSWORD
