@@ -58,9 +58,9 @@ get_status_char() {
 
 process_component() {
   {
-    local fresh_install_status
-    local component_install_status
-    local selenium_status
+    local fresh_install_status=1
+    local component_install_status=1
+    local selenium_status=1
     if [ "${FAKE_IT:-0}" = "1" ]; then
       echo "Fake log text"
       fresh_install_status=$((RANDOM % 2))
@@ -74,10 +74,14 @@ process_component() {
       export SKIP_SKIN=1
       ./fresh_install 2>&1 | verboseOrDotPerLine "Fresh install of Mediawiki..."
       fresh_install_status=${PIPESTATUS[0]}
-      ./install "$1" 2>&1 | verboseOrDotPerLine "Install '$1'..."
-      component_install_status=${PIPESTATUS[0]}
-      ./run_selenium_tests "$1/tests/selenium/*specs/**/*.js" ".*" 2>&1 | verboseOrDotPerLine "Running '$1' Selenium tests..."
-      selenium_status=${PIPESTATUS[0]}
+      if [ $fresh_install_status -eq 0 ]; then
+        ./install "$1" 2>&1 | verboseOrDotPerLine "Install '$1'..."
+        component_install_status=${PIPESTATUS[0]}
+        if [ $component_install_status -eq 0 ]; then
+          ./run_selenium_tests "$1/tests/selenium/*specs/**/*.js" ".*" 2>&1 | verboseOrDotPerLine "Running '$1' Selenium tests..."
+          selenium_status=${PIPESTATUS[0]}
+        fi
+      fi
     fi
     local fresh_install_status_char=$(get_status_char "$fresh_install_status")
     local component_install_status_char=$(get_status_char "$component_install_status")
