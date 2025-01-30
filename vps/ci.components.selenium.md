@@ -27,7 +27,7 @@ write_files:
       Type=simple
       User=quickstart
       WorkingDirectory=/home/quickstart/mediawiki-quickstart
-      ExecStart=/bin/bash -c 'while true; do ./ci.components.selenium | tee "/var/log/selenium-results/$(date +%%Y_%%m_%%d)-results.txt"; done'
+      ExecStart=/bin/bash -c 'while true; do git pull && ./ci.components.selenium | tee "/var/log/selenium-results/$(date +%%Y_%%m_%%d)-results.txt"; done'
       Restart=always
 
       [Install]
