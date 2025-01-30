@@ -3,15 +3,15 @@
 # Usage:
 #     ./ci.components.selenium
 
-# Usage with verbose output:
+# Verbose log output:
 #     VERBOSE=1 ./ci.components.selenium
-
-# Example piping output to a text file:
-#     ./ci.components.selenium > "$(date +%Y_%m_%d)-results.txt"
 
 # Flag for printing fake results. Useful for making fast
 # layout tweaks without having to wait for actual results:
 #     FAKE_IT=1 ./ci.components.selenium
+
+# Specifying an output path:
+#     OUTPUT_PATH=/var/log/selenium-results ./ci.components.selenium
 
 source "./common/utility.sh"
 
@@ -22,9 +22,21 @@ list_all_components() {
 }
 
 print_report_table() {
+  echo "<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset=\"UTF-8\">
+      <title>Selenium Test Results</title>
+  </head>
+  <body>
+  <pre>
+${separator}
+Stage 1 - Fresh install of Mediawiki
+Stage 2 - Component installation
+Stage 3 - Component Selenium tests"
   local results=("$@")
   echo -e "${separator}"
-  local column_spacing=" %3s  %-40s  %-2s  %-2s  %-2s\n"
+  local column_spacing=" %3s  %-40s  %-3s  %-3s  %-3s\n"
   printf "$column_spacing" "#" "Component                        Stages" "1" "2" "3"
   echo -e "${separator}"
   local index=1
@@ -32,38 +44,76 @@ print_report_table() {
     printf "$column_spacing" "$index" $result
     ((index++))
   done
-  echo -e "${separator}\n"
+  echo "${separator}
+Log: <a href=$output_file_name.log>ANSI</a> <a href=$output_file_name.log.html>HTML</a>
+  </pre>
+  </body>
+  </html>"
 }
 
-main() {
-  local reports=()
-  for component in $(list_all_components); do
+get_status_char() {
+  local status_code=$1
+  [ "$status_code" = "0" ] && echo "✅" || echo "❌"
+}
+
+process_component() {
+  {
     local fresh_install_status
     local component_install_status
     local selenium_status
     if [ "${FAKE_IT:-0}" = "1" ]; then
+      echo "Fake log text"
       fresh_install_status=$((RANDOM % 2))
       component_install_status=$((RANDOM % 2))
       selenium_status=$((RANDOM % 2))
     else
-      FORCE=1 SILENT=1 SKIP_COUNTDOWN=1 SKIP_SKIN=1 ./fresh_install 2>&1 | verboseOrDotPerLine "Fresh install of Mediawiki..."
+      export VERBOSE=1
+      export FORCE=1
+      export SILENT=1
+      export SKIP_COUNTDOWN=1
+      export SKIP_SKIN=1
+      ./fresh_install 2>&1 | verboseOrDotPerLine "Fresh install of Mediawiki..."
       fresh_install_status=${PIPESTATUS[0]}
-      SILENT=1 ./install "$component" 2>&1 | verboseOrDotPerLine "Install '$component'..."
+      ./install "$1" 2>&1 | verboseOrDotPerLine "Install '$1'..."
       component_install_status=${PIPESTATUS[0]}
-      SILENT=1 ./run_selenium_tests "$component/tests/selenium/*specs/**/*.js" ".*" 2>&1 | verboseOrDotPerLine "Running '$component' Selenium tests..."
+      ./run_selenium_tests "$1/tests/selenium/*specs/**/*.js" ".*" 2>&1 | verboseOrDotPerLine "Running '$1' Selenium tests..."
       selenium_status=${PIPESTATUS[0]}
     fi
-    local fresh_install_status_char=$([ "$fresh_install_status" = "0" ] && echo "✅" || echo "❌")
-    local component_install_status_char=$([ "$component_install_status" = "0" ] && echo "✅" || echo "❌")
-    local selenium_status_char=$([ "$selenium_status" = "0" ] && echo "✅" || echo "❌")
-    reports+=("$component $fresh_install_status_char $component_install_status_char $selenium_status_char")
-  done
-  # echo "DEBUG: reports=(${reports[@]})"
-  echo -e "${separator}"
-  echo "Stage 1 - Fresh install of Mediawiki"
-  echo "Stage 2 - Component installation"
-  echo "Stage 3 - Component Selenium tests"
-  print_report_table "${reports[@]}"
+    local fresh_install_status_char=$(get_status_char "$fresh_install_status")
+    local component_install_status_char=$(get_status_char "$component_install_status")
+    local selenium_status_char=$(get_status_char "$selenium_status")
+  } >&3
+
+  echo "$1 $fresh_install_status_char $component_install_status_char $selenium_status_char"
+}
+
+main() {
+  local output_path="${OUTPUT_PATH:-.}" # Default to the current dir
+  local output_file_name="index"
+  local reports=()
+
+  # Open log file
+  exec 3>"$output_path/$output_file_name.log"
+  {
+    for component in $(list_all_components); do
+      reports+=("$(process_component "$component")")
+    done
+  } >&3
+
+  # Close log file
+  exec 3>&-
+
+  {
+    alpine_ansi2html < "$output_path/$output_file_name.log"
+  } > "$output_path/$output_file_name.log.html"
+
+  # Open HTML file
+  exec 3>"$output_path/$output_file_name.html"
+  {
+    print_report_table "${reports[@]}"
+  } >&3
+  # Close html file
+  exec 3>&-
 }
 
 main
