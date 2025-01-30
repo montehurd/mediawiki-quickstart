@@ -466,7 +466,24 @@ For each component manifest, do a `fresh_install` of Mediawiki, install the comp
 ./ci.components.selenium
 ```
 
-This takes a while to run since it does a `fresh_install` of Mediawiki each time
+This runs in a loop on a Horizon VPS configured with these cloud config [settings](vps/ci.components.selenium.md)
+
+The results of these runs are available on [https://quickstart-ci-components.wmcloud.org](https://quickstart-ci-components.wmcloud.org)
+
+If you want to run it locally, it takes a couple hours
+
+By default it places its output 3 files in the `mediawiki-quickstart` folder:
+
+- index.html      ( results chart )
+- index.log       ( raw asci logs ) 
+- index.log.html  ( html version of logs )
+
+You can invoke it with a path override:
+```bash
+OUTPUT_PATH=/some/path ./ci.components.selenium
+```
+
+Once started you can `tail -f index.log` in a separate terminal window to follow along live 
 
 # Custom MediaWiki 'LocalSettings'
 
