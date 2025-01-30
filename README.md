@@ -472,18 +472,18 @@ The results of these runs are available on [https://quickstart-ci-components.wmc
 
 If you want to run it locally, it takes a couple hours
 
-By default it places its output 3 files in the `mediawiki-quickstart` folder:
+By default it places its 3 output files in the `mediawiki-quickstart` folder:
 
 - index.html      ( results chart )
 - index.log       ( raw asci logs ) 
 - index.log.html  ( html version of logs )
 
-You can invoke it with a path override:
+You can invoke it with an optional path override:
 ```bash
 OUTPUT_PATH=/some/path ./ci.components.selenium
 ```
 
-Once started you can `tail -f index.log` in a separate terminal window to follow along live 
+Once started, you can `tail -f index.log` in a separate terminal window to follow along live 
 
 # Custom MediaWiki 'LocalSettings'
 
