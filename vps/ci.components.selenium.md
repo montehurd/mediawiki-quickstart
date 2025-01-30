@@ -28,7 +28,7 @@ write_files:
       User=quickstart
       WorkingDirectory=/home/quickstart/mediawiki-quickstart
       Environment="OUTPUT_PATH=/var/log/selenium-results"
-      ExecStart=/bin/bash -c 'while true; do git pull && ./ci.components.selenium | tee "/var/log/selenium-results/$(date +%%Y_%%m_%%d)-results.txt"; done'
+      ExecStart=/bin/bash -c 'while true; do git pull && ./ci.components.selenium; done'
       Restart=always
 
       [Install]
