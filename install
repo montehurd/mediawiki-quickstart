@@ -14,7 +14,7 @@ run_service_setup_for_components() {
   # commands in a "extensions/Elastica/setup.elasticsearch.sh" file
   #
   # For every component being installed, this function runs such setup
-  # scripts in their respective containers
+  # scripts, if found, in their respective containers
   local needs_restart=false
   for component in "$@"; do
     for host_script in "$component"/setup.*.sh; do
