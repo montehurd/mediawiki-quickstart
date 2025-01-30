@@ -8,12 +8,15 @@ MEDIAWIKI_PORT=8080
 SPECIAL_VERSION_URL="http://localhost:$MEDIAWIKI_PORT/wiki/Special:Version"
 HOST_UID=$(id -u)
 HOST_GID=$(id -g)
+HOST_IP=$(ipconfig getifaddr en0 || hostname -I 2>/dev/null | awk '{print $1}')
+# Use HOST_IP sparingly, especially inside containers
 
 MW_ENV="
 MW_DOCKER_PORT=$MEDIAWIKI_PORT
 MW_DOCKER_UID=$HOST_UID
 MW_DOCKER_GID=$HOST_GID
 XDEBUG_CONFIG=''
+HOST_IP=$HOST_IP
 "
 
 export MW_ENV
