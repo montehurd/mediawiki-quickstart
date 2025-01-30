@@ -10,6 +10,14 @@ is_container_running() {
   fi
 }
 
+is_service_running() {
+  if [ -n "$(docker compose ps -q "$1" 2>/dev/null)" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 are_containers_running() {
   local containers
   containers=("$@")

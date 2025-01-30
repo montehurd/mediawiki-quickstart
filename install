@@ -4,6 +4,40 @@ source "./docker/docker.sh"
 source "./config"
 source "./open_special_version_page"
 
+run_service_setup_for_components() {
+  # Execute any setup scripts found for services defined in component
+  # docker-compose.yml files
+  #
+  # ie if inside "extensions/Elastica/docker-compose.yml" we defined an
+  # "elasticsearch" service, we may need to run some setup command after
+  # that service is started. Quickstart makes this easy, just place such
+  # commands in a "extensions/Elastica/setup.elasticsearch.sh" file
+  #
+  # For every component being installed, this function runs such setup
+  # scripts in their respective containers
+  local needs_restart=false
+  for component in "$@"; do
+    for host_script in "$component"/setup.*.sh; do
+      [ -e "$host_script" ] || continue
+      local service_name=$(basename "$host_script" .sh | cut -d. -f2)
+      if ! is_service_running "$service_name"; then
+        echo -e "Warning: Found setup script '$host_script', but service '$service_name' is not running\nIs '$service_name' defined in '$component/docker-compose.yml'? Skipping..."
+        continue
+      fi
+      chmod +x "$host_script"
+      # Ensure /var/local exists, just in case
+      ./shellto -u root "$service_name" mkdir -p "/var/local/$(dirname "$host_script")" || exit 1
+      # Copy script into container's /var/local
+      docker compose cp "$host_script" "$service_name":"/var/local/$host_script"
+      # Execute it
+      ./shellto -u root "$service_name" "/var/local/$host_script"
+      needs_restart=true
+    done
+  done
+  [ "$needs_restart" = true ]
+  return
+}
+
 install() {
   if ! are_containers_running "mediawiki-mediawiki-web-1"; then
     echo "MediaWiki-web container is not running"
@@ -11,8 +45,18 @@ install() {
   fi
   export GIT_CLONE_BASE_URL
   if ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL m /var/local/installer/install "$@"; then
-    # Restart in case components with thier own docker-compose.yml were installed
+    # Restart in case components with thier own docker-compose.yml were installed.
+    # We need those services brought up
     ./restart
+
+    if run_service_setup_for_components "$@"; then
+      # Restart again if we ran any setup scripts
+      # Let's say "my_service" in a component docker-compose.yml did a shared volume on the
+      # QuickStart .env file and its "setup.my_service.sh" wrote a new env var to that file,
+      # this restart would ensure its immediate availablity to all other services.
+      # There are likely other scenarios where the restart would be useful too
+      ./restart
+    fi
     open_special_version_page
   fi
 }
