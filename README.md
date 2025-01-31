@@ -337,7 +337,7 @@ or
 ./run_selenium_tests "extensions/Echo/tests/selenium/*specs/**/*.js" ".*"
 ```
 
-Or
+or
 
 ```bash
 ./install extensions/Echo
@@ -374,7 +374,7 @@ Or
 ./run_selenium_tests "skins/MinervaNeue/tests/selenium/*specs/**/*.js" ".*"
 ```
 
-Or
+or
 
 ```bash
 ./install skins/MinervaNeue
