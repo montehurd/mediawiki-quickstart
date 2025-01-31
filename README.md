@@ -337,6 +337,13 @@ or
 ./run_selenium_tests "extensions/Echo/tests/selenium/*specs/**/*.js" ".*"
 ```
 
+Or
+
+```bash
+./install extensions/Echo
+./run_component_selenium_tests "extensions/Echo"
+```
+
 - Run all tests in all extensions
 
 ```bash
@@ -365,6 +372,13 @@ or
 ```bash
 ./install skins/MinervaNeue
 ./run_selenium_tests "skins/MinervaNeue/tests/selenium/*specs/**/*.js" ".*"
+```
+
+Or
+
+```bash
+./install skins/MinervaNeue
+./run_component_selenium_tests "skins/MinervaNeue"
 ```
 
 - Run all tests in all skins

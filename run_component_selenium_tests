@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./run_selenium_tests "$1/tests/selenium/*specs/**/*.js" ".*"
