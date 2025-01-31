@@ -5,6 +5,8 @@ CLIENT=wiki
 USERNAME=testuser
 PASSWORD=testpass
 
+sleep 15
+
 # login to keycloak
 /opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user $KC_BOOTSTRAP_ADMIN_USERNAME --password $KC_BOOTSTRAP_ADMIN_PASSWORD
 
