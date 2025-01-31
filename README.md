@@ -575,6 +575,12 @@ If a command is specified, it is run in the specified container, `shellto` then 
 
 - Browse to the Mediawiki page executing your breakpoint code
 
+- Execute this once in the browser's console:
+
+```javascript
+javascript:(function(){document.cookie="XDEBUG_SESSION=VSCODE;path=/";})();
+```
+
 # Miscellaneous
 
 - Skip installation of the `Vector` skin on a fresh install
