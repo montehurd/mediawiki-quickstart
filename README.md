@@ -82,7 +82,7 @@ extensions/
   |----dependencies.yml        (optional)
   |----pages/                  (optional)
   |----docker-compose.yml      (optional)
-  |----setup.#SERVICE_NAME#.sh (optional)
+  |----setup.SERVICE_NAME.sh (optional)
   ...
 skins/
   |--MonoBook/
@@ -91,7 +91,7 @@ skins/
   |----dependencies.yml        (optional)
   |----pages/                  (optional)
   |----docker-compose.yml      (optional)
-  |----setup.#SERVICE_NAME#.sh (optional)
+  |----setup.SERVICE_NAME.sh (optional)
   ...
 ```
 
@@ -156,9 +156,9 @@ Notice how the Elastica `docker-compose.yml` also specifies a couple values for 
 
 This is allowed, of course, but try to keep such changes to core Mediawiki containers to a minimum - your component's `docker-compose.yml` should be mostly concerned with your component
 
-### setup.#SERVICE_NAME#.sh (optional)
+### setup.SERVICE_NAME.sh (optional)
 
-If your component's `docker-compose.yml` defines a service which needs its own setup commands to be run, you can add a `setup.#SERVICE_NAME#.sh` script to your component's manifest folder. When your component is installed, the setup script will be run in your service's container after the installer brings it up
+If your component's `docker-compose.yml` defines a service which needs its own setup commands to be run, you can add a `setup.SERVICE_NAME.sh` script to your component's manifest folder. When your component is installed, the setup script will be run in your service's container after the installer brings it up
 
 ## Installing components
 
