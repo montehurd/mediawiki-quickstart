@@ -9,7 +9,7 @@ use_skin() {
   skin_name="$1"
   local skin_path
   skin_path="skins/$1"
-  ./install "$skin_path"
+  SILENT=1 ./install "$skin_path"
   if ! make_skin_default "$skin_name"; then
     echo "Failed to make "$skin_name" default"
     exit 1
