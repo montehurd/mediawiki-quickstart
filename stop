@@ -4,10 +4,7 @@ source "./config"
 source "./common/utility.sh"
 
 stop() {
-  if [ ! -d "$MEDIAWIKI_PATH" ]; then
-    return
-  fi
-  docker compose stop 2>&1 | verboseOrDotPerLine "Docker compose stop"
+  docker compose -p mediawiki stop 2>&1 | verboseOrDotPerLine "Docker compose stop"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

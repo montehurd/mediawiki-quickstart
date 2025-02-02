@@ -25,6 +25,7 @@ services:
       - ./import_page_xml.sh:/import_page_xml.sh
     environment:
       <<: *default-environment
+      RECLONE_REPOS: ${RECLONE_REPOS:-0}
     env_file: !override
       - .env
 

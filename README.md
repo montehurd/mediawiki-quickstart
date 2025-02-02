@@ -644,6 +644,13 @@ SKIP_COUNTDOWN=1 ./fresh_install
 SILENT=1 ./fresh_install
 ```
 
+- Force recloning of repositories instead of resetting them during installation
+
+```bash
+RECLONE_REPOS=1 ./fresh_install
+RECLONE_REPOS=1 ./install extensions/Math skins/Timeless
+```
+
 # Bug Reporting
 
 Open a Phabricator task [here](https://phabricator.wikimedia.org/maniphest/task/edit/form/default/?title=&description=Bug+Description&projects[]=mediawiki-quickstart) to report issues and make feature requests
