@@ -3,20 +3,8 @@
 source "./config"
 
 prepare() {
-  mkdir -p "$MEDIAWIKI_PATH"
-  local clone_depth="--depth=${CLONE_DEPTH:-2}"
-  # `git clone --depth=0` fails with `fatal: depth 0 is not a positive number`.
-  # For `CLONE_DEPTH=0`, skip `--depth` argument.
-  # See T376791.
-  if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
-    local clone_depth=""
-  fi
-  if ! (
-    cd "$MEDIAWIKI_PATH" && \
-    git clone --verbose "$GIT_CLONE_BASE_URL/core.git" . $clone_depth 2>&1 \
-    | verboseOrDotPerLine "Git clone '$GIT_CLONE_BASE_URL/core.git' $clone_depth" "use CLONE_DEPTH=0 for full depth"
-  ); then
-    echo "Failed to clone MediaWiki. Exiting."
+  if ! clone_or_recursively_reset "$GIT_CLONE_BASE_URL/core.git" "$MEDIAWIKI_PATH"; then
+    echo "Failed to clone or reset MediaWiki. Exiting."
     exit 1
   fi
   echo -e "" > "$SCRIPT_PATH/common/docker-compose.components.yml"

@@ -100,8 +100,8 @@ _install_from_manifest() {
   local repository
   repository="$GIT_CLONE_BASE_URL/$component_path"
   
-  if ! git clone --recurse-submodules --progress "$repository" "$component_path" $clone_depth 2>&1 | verboseOrDotPerLine "Git clone '$repository' $clone_depth to '$component_path'" "use CLONE_DEPTH=0 for full depth"; then
-    echo "Failed to clone repository '$repository'"
+  if ! clone_or_recursively_reset "$repository" "$component_path"; then
+    echo "Failed to clone or reset '$component_path'"
     exit 1
   fi
  

@@ -225,6 +225,90 @@ alpine_ansi2html() {
   "
 }
 
+# Executes git reset/clean/pull on a single git repository
+# Takes the repository directory path as an argument
+# Returns 0 on success, 1 on failure
+# The intention is to reset the repo just as if we had
+# cloned it fresh, minimizing how much we have to download
+# and optimizing for speed
+_reset_git_repo() {
+  local repo_path="$1"
+  (
+    cd "$repo_path"
+    git reset --hard HEAD  # Resets working directory to match HEAD commit
+    git clean -f -d -x     # Removes untracked files (-f), directories (-d), and ignored files (-x)
+    git pull               # Updates to latest changes from remote
+  )
+}
+
+_clone_git_repo() {
+  local repo_url="$1"
+  local target_path="$2"
+  if [ -z "$target_path" ]; then
+    echo "Error: Target path not specified"
+    return 1
+  fi
+  local clone_depth="--depth=${CLONE_DEPTH:-2}"
+  if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
+    local clone_depth=""
+  fi
+  if [ -d "$target_path" ]; then
+    rm -rf "$target_path"
+  fi
+  if ! git clone --recurse-submodules --progress $clone_depth "$repo_url" "$target_path" 2>&1 | \
+    verboseOrDotPerLine "Git clone '$repo_url' $clone_depth to '$target_path'" "use CLONE_DEPTH=0 for full depth"; then
+    echo "Failed to clone repository '$repo_url'"
+    return 1
+  fi
+  if [ ! -d "$target_path/.git" ]; then
+    return 1
+  fi
+  return 0
+}
+
+_reset_git_repos_recursively() {
+  local target_path="$1"
+  find "$target_path" -name ".git" -type d | while read -r git_dir_path; do
+    local repo_dir="$(dirname "$git_dir_path")"
+    _reset_git_repo "$repo_dir" 2>&1 | verboseOrDotPerLine "Resetting '$repo_dir'"
+  done
+  return 0
+}
+
+# Clones or resets repo
+#
+# RECLONE_REPOS env var controls whether repo are re-cloned or reset
+# If RECLONE_REPOS=1:
+#   Clones fresh repo, removing existing repo directory first
+# Otherwise:
+#   Recursively finds and resets all git repositories under target path
+#   This includes:
+#   - The main repository if the path points to one
+#   - Any submodules (which have their own .git directories)
+#   - Any independently cloned repositories in subdirectories
+#
+# Args:
+#   $1 - Git repository URL to clone from
+#   $2 - Target path for clone/reset
+#
+# Returns:
+#   0 on success, 1 on failure
+clone_or_recursively_reset() {
+  local repo_url="$1"
+  local target_path="$2"
+  if [ -z "$target_path" ]; then
+    echo "Error: Target path not specified"
+    return 1
+  fi
+  mkdir -p "$target_path"
+  if [[ "${RECLONE_REPOS:-0}" == "1" || ! -d "$target_path/.git" ]]; then
+    _clone_git_repo "$repo_url" "$target_path"
+    return $?
+  fi
+  _reset_git_repos_recursively "$target_path"
+  return $?
+}
+
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
   "$@"
 fi
