@@ -137,7 +137,7 @@ _run_bash_for_installed_components() {
   fi
   for component_path in "${INSTALLED_COMPONENTS[@]}"; do
     cd ~
-    _run_bash_from_manifest "$component_path" 2>&1 | verboseOrDotPerLine "Running '$component_path/setup.sh'..."
+    _run_bash_from_manifest "$component_path" 2>&1 | verboseOrDotPerLine "Running '$component_path/setup.sh' if found..."
   done
   cd ~
 }
