@@ -5,8 +5,11 @@ source "./common/utility.sh"
 
 prepare() {
   if [ -n "$MEDIAWIKI_PATH" ] && [ -d "$MEDIAWIKI_PATH" ]; then
-    docker run --rm -v "$MEDIAWIKI_PATH:/data" -u root alpine chown -Rf $(id -u):$(id -g) /data \
-      2>&1 | verboseOrDotPerLine "Ensuring host user can reset/remove files"
+    docker run --rm \
+      -v "$MEDIAWIKI_PATH:/data" \
+      -u root \
+      alpine sh -c "find /data -print0 | xargs -0 -P \$(nproc) chown -h -f $(id -u):$(id -g)" \
+    2>&1 | verboseOrDotPerLine "Ensuring host user can reset/remove files"
   fi
 
   if ! clone_or_recursively_reset "$GIT_CLONE_BASE_URL/core.git" "$MEDIAWIKI_PATH"; then
