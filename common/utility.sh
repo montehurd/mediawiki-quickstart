@@ -268,10 +268,11 @@ _clone_git_repo() {
 
 _reset_git_repos_recursively() {
   local target_path="$1"
-  find "$target_path" -name ".git" -type d | while read -r git_dir_path; do
-    local repo_dir="$(dirname "$git_dir_path")"
-    _reset_git_repo "$repo_dir" 2>&1 | verboseOrDotPerLine "Resetting '$repo_dir'"
-  done
+  local commands=$(find "$target_path" -name ".git" -type d | while read -r git_dir_path; do
+    echo "_reset_git_repo \"$(dirname "$git_dir_path")\""
+  done)
+  echo "$commands" | verboseOrDotPerLine "Resetting repos..."
+  parallel_process "$commands"
   return 0
 }
 
@@ -307,6 +308,33 @@ clone_or_recursively_reset() {
   fi
   _reset_git_repos_recursively "$target_path"
   return $?
+}
+
+# parallel_process - Executes multiple commands in parallel with visual output grouping
+#
+# Usage:
+#   parallel_process "$(cat <<EOF
+#   ls -la | grep "^d"
+#   echo 'hello' && sleep 2 && echo 'world'
+#   find . -name '*.txt' | sort | head -n 5
+#   sleep 3 && ps aux | grep bash
+#   EOF
+#   )"
+#
+# Takes a multiline string where each line is a command to execute.
+# Commands run in parallel (up to number of CPU cores).
+# Each line of output is prefixed with ⚡ N ⚡ where N is the command's index.
+# Commands can contain pipes, redirections and other shell constructs.
+# Output order is not guaranteed due to parallel execution.
+#
+parallel_process() {
+  local num_procs=$(getconf _NPROCESSORS_ONLN)
+  awk '{printf "%d:%s%c", NR-1, $0, 0}' <<< "$1" | \
+    xargs -0 -P "$num_procs" -n1 bash -c '
+      source "'"${BASH_SOURCE[0]}"'"
+      IFS=: read -r index cmd <<< "$1"
+      eval "$cmd" 2>&1 | awk "{print \"\033[32m⚡$index ⚡\033[0m \" \$0}"
+    ' _
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
