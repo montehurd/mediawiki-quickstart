@@ -237,7 +237,7 @@ _reset_git_repo() {
     cd "$repo_path"
     git reset --hard HEAD  # Resets working directory to match HEAD commit
     git clean -f -d -x     # Removes untracked files (-f), directories (-d), and ignored files (-x)
-    git pull               # Updates to latest changes from remote
+    git pull --verbose     # Updates to latest changes from remote
   )
 }
 
