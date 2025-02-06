@@ -235,9 +235,9 @@ _reset_git_repo() {
   local repo_path="$1"
   (
     cd "$repo_path"
-    git reset --hard HEAD  # Resets working directory to match HEAD commit
-    git clean -f -d -x     # Removes untracked files (-f), directories (-d), and ignored files (-x)
-    git pull --verbose     # Updates to latest changes from remote
+    git fetch --no-tags origin                               # Updates remote state without downloading tags
+    git clean -f -d -x                                       # Removes untracked files (-f), directories (-d), and ignored files (-x)
+    git reset --hard origin/$(git symbolic-ref --short HEAD) # Hard reset to latest commit on remote branch
   )
 }
 
