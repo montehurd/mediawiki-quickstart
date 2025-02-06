@@ -46,6 +46,7 @@ Stage 3 - Component Selenium tests"
   done
   echo "${separator}
 Log: <a href=$output_file_name.log>ANSI</a> <a href=$output_file_name.log.html>HTML</a>
+Generated: $(date '+%Y-%m-%d %H:%M:%S %Z')
   </pre>
   </body>
   </html>"
