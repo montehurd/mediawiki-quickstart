@@ -41,9 +41,19 @@ cd ~/mediawiki-quickstart
 
 # Troubleshooting
 
-If `./fresh_install` doesn't work, you can try running the `./remove` script
+If `./fresh_install` doesn't work, you can try:
 
-Then run `docker system prune -af` and try `./fresh_install` again
+```bash
+RECLONE_REPOS=1 ./fresh_install
+```
+
+If that doesn't work, try:
+
+```bash
+./remove
+docker system prune -af
+./fresh_install
+```
 
 Also, ensure you are running the latest Docker (or Docker Desktop) version - some older versions had bugs which prevented Mediawiki containers from running on some architectures
 
