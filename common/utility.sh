@@ -271,7 +271,7 @@ _reset_git_repos_recursively() {
   local commands=$(find "$target_path" -name ".git" -type d | while read -r git_dir_path; do
     echo "_reset_git_repo \"$(dirname "$git_dir_path")\""
   done)
-  parallel_process "$commands" 2>&1 | verboseOrDotPerLine "Resetting repos..."
+  parallel_process "$commands" 2>&1 | verboseOrDotPerLine "Resetting repo(s)..."
   return 0
 }
 
