@@ -62,7 +62,7 @@ verboseOrDotPerLine() {
     done
     echo
   fi
-  print_duration_since_start "$start_time" "⏲ %02d:%02d"
+  print_duration_since_start "$start_time" "\033[32m⏲\033[0m %02d:%02d"
 }
 
 get_response_code() {
