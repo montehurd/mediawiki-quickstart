@@ -33,7 +33,7 @@ verboseOrDotPerLine() {
       msg=" ($(highlight_key_value_pairs "$msg"))"
     fi
     echo
-    echo -e "${GREEN}${title}${NC}${msg}"
+    echo -e "\n${GREEN}${title}${NC}${msg}"
   fi
 
   if [ "${VERBOSE:-0}" = "1" ]; then
