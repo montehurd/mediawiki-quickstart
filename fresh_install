@@ -26,5 +26,5 @@ fresh_install() {
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
   start_time=$(date +%s)
   fresh_install "$@"
-  print_duration_since_start "$start_time" "\n⏲ Installation duration: %02d:%02d"
+  print_duration_since_start "$start_time" "\n⏲ Total duration: %02d:%02d"
 fi

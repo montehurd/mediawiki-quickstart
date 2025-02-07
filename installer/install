@@ -124,10 +124,7 @@ _import_page_dumps_for_installed_components() {
         fi
     done
     if [ ${#folders[@]} -gt 0 ]; then
-        echo "Importing pages from installed components"
         bash /import_page_xml.sh "${folders[@]}"
-    else
-        echo "No pages to import found in any installed components, skipping..."
     fi
 }
 
@@ -137,7 +134,7 @@ _run_bash_for_installed_components() {
   fi
   for component_path in "${INSTALLED_COMPONENTS[@]}"; do
     cd ~
-    _run_bash_from_manifest "$component_path" 2>&1 | verboseOrDotPerLine "Running '$component_path/setup.sh' if found..."
+    _run_bash_from_manifest "$component_path" 2>&1 | verboseOrDotPerLine "Running '$component_path/setup.sh' if found"
   done
   cd ~
 }
@@ -145,7 +142,7 @@ _run_bash_for_installed_components() {
 _run_bash_from_manifest() {
   local component_path="$1"
   local setup_script="$(_get_manifest_path "$component_path")/setup.sh"
-  echo -e "\nLooking for '${setup_script}'"
+  echo -e "Looking for '${setup_script}'"
   if [ -f "${setup_script}" ]; then
     echo "Running setup script '${setup_script}'"
     chmod +x "${setup_script}"
