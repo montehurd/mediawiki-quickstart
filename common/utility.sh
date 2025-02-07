@@ -12,6 +12,7 @@ verboseOrDotPerLine() {
   local BLUE='\033[0;34m'
   local NC='\033[0m'
   local msg=""
+  local start_time=$(date +%s)
 
   highlight_key_value_pairs() {
     echo "$1" | sed -E "s/([A-Za-z_][A-Za-z0-9_]*=[^ ,)]+)/\\${BLUE}\1\\${NC}/g"
@@ -61,6 +62,7 @@ verboseOrDotPerLine() {
     done
     echo
   fi
+  print_duration_since_start "$start_time" "⏲ %02d:%02d"
 }
 
 get_response_code() {
