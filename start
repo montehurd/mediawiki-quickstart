@@ -11,6 +11,7 @@ start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
     docker compose up -d 2>&1 | verboseOrDotPerLine "Docker compose up" || exit 1
 
+    ./shellto -u root m sh -c 'chmod 777 /var/local/composer'
     ./shellto -u root w chown -R "$(id -u):$(id -g)" /var/local
     ./shellto m composer install 2>&1 | verboseOrDotPerLine "Composer install"
     ./shellto m sh -c 'php maintenance/install.php --server "$MW_SERVER" --scriptpath="$MW_SCRIPT_PATH" --dbtype "$MW_DBTYPE" --dbpath "$MW_DBPATH" --lang "$MW_LANG" --pass "$MW_PASS" --skins "" "$MW_SITENAME" "$MW_USER"' 2>&1 | verboseOrDotPerLine "maintenance/install.php"
