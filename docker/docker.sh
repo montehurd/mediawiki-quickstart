@@ -52,7 +52,7 @@ get_compose_version() {
 }
 
 verify_compose_version() {
-  echo -e "\n\nVerifying 'docker compose' version..."
+  echo -e "\nVerifying 'docker compose' version..."
 
   local required_major_version
   local error_message
@@ -87,7 +87,6 @@ is_user_in_docker_group() {
 }
 
 verify_docker_group() {
-  echo
   if [[ "$(uname -s)" != "Linux" ]]; then
     echo "Skipping Linux user group check"
     return 0
