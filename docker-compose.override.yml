@@ -7,6 +7,7 @@ x-environment: &default-environment
   XDEBUG_MODE: debug
   HOME: /var/www/html/w
   COMPOSER_CACHE_DIR: /var/local/composer
+  NPM_CONFIG_CACHE: /var/local/npm
 
 services:
 
@@ -25,6 +26,7 @@ services:
       - ./import-on-fresh-install/pages:/tmp/page-xml
       - ./import_page_xml.sh:/import_page_xml.sh
       - composer_cache:/var/local/composer
+      - npm_cache:/var/local/npm
     environment:
       <<: *default-environment
       RECLONE_REPOS: ${RECLONE_REPOS:-0}
@@ -53,6 +55,7 @@ services:
       - ./common:/var/local/common
       - chromium_cache:/var/local/chromium/
       - composer_cache:/var/local/composer
+      - npm_cache:/var/local/npm
 
   mediawiki-jobrunner:
     environment:
@@ -61,6 +64,7 @@ services:
       - .env
     volumes:
       - composer_cache:/var/local/composer
+      - npm_cache:/var/local/npm
 
   novnc:
     build:
@@ -80,3 +84,4 @@ services:
 volumes:
   chromium_cache:
   composer_cache:
+  npm_cache:
