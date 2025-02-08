@@ -23,9 +23,11 @@ services:
       - ./selenium/node-preparation.sh:/var/local/node-preparation.sh
       - ./import-on-fresh-install/pages:/tmp/page-xml
       - ./import_page_xml.sh:/import_page_xml.sh
+      - composer_cache:/var/local/composer
     environment:
       <<: *default-environment
       RECLONE_REPOS: ${RECLONE_REPOS:-0}
+      COMPOSER_CACHE_DIR: /var/local/composer
     env_file: !override
       - .env
 
@@ -74,3 +76,4 @@ services:
 
 volumes:
   chromium_cache:
+  composer_cache:
