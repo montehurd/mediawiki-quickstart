@@ -47,6 +47,7 @@ Stage 3 - Component Selenium tests"
   echo "${separator}
 Log: <a href=$output_file_name.log>ANSI</a> <a href=$output_file_name.log.html>HTML</a>
 Generated: $(date '+%Y-%m-%d %H:%M:%S %Z')
+Commit: $(git rev-parse --short HEAD)
   </pre>
   </body>
   </html>"
