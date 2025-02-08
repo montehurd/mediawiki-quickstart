@@ -172,7 +172,7 @@ _rebuild_localization_cache() {
   if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
     return
   fi
-  php maintenance/rebuildLocalisationCache.php --force 2>&1 | verboseOrDotPerLine "Rebuild Mediawiki localization cache"
+  php maintenance/rebuildLocalisationCache.php --force --threads=$(getconf _NPROCESSORS_ONLN) 2>&1 | verboseOrDotPerLine "Rebuild Mediawiki localization cache"
 }
 
 _components_with_compose() {
