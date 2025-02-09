@@ -205,11 +205,19 @@ install() {
   for component_path in "$@"; do
     _install_from_manifest "$component_path"
   done
-  _install_php_and_node_dependencies
-  _run_bash_for_installed_components
-  _rebuild_localization_cache
-  _import_page_dumps_for_installed_components
-  _update_component_docker_compose_includes "${INSTALLED_COMPONENTS[@]}"
+
+  # Only proceed with post-install steps if components were actually installed
+  if [ ${#INSTALLED_COMPONENTS[@]} -gt 0 ]; then
+    _install_php_and_node_dependencies
+    _run_bash_for_installed_components
+    _rebuild_localization_cache
+    _import_page_dumps_for_installed_components
+    _update_component_docker_compose_includes "${INSTALLED_COMPONENTS[@]}"
+    exit 0
+  else
+    # Return special exit code to indicate no components needed installation
+    exit 2
+  fi
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

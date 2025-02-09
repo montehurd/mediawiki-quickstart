@@ -44,7 +44,10 @@ install() {
     exit 1
   fi
   export GIT_CLONE_BASE_URL
-  if ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL m /var/local/installer/install "$@"; then
+  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL m /var/local/installer/install "$@"
+  local install_status=$?
+
+  if [ $install_status -eq 0 ]; then
     # Restart in case components with thier own docker-compose.yml were installed.
     # We need those services brought up
     ./restart
@@ -53,11 +56,17 @@ install() {
       # Restart again if we ran any setup scripts
       # Let's say "my_service" in a component docker-compose.yml did a shared volume on the
       # QuickStart .env file and its "setup.my_service.sh" wrote a new env var to that file,
-      # this restart would ensure its immediate availablity to all other services.
+      # this restart would ensure its immediate availability to all other services.
       # There are likely other scenarios where the restart would be useful too
       ./restart
     fi
     open_special_version_page
+  elif [ $install_status -eq 2 ]; then
+    # No components were installed, exit normally
+    return 0
+  else
+    # Other error occurred
+    return $install_status
   fi
 }
 
