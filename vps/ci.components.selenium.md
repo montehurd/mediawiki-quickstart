@@ -28,7 +28,7 @@ write_files:
       User=quickstart
       WorkingDirectory=/home/quickstart/mediawiki-quickstart
       Environment="OUTPUT_PATH=/var/log/selenium-results"
-      ExecStart=/bin/bash -c 'while true; do git pull && ./ci.components.selenium; done'
+      ExecStart=/bin/bash -c 'while true; do if ! git pull; then if df -h . | awk "NR==2 {print \$5}" | sed "s/%//" | awk "\$1 > 95"; then docker system prune -af && git pull; fi; fi && ./ci.components.selenium; done'
       Restart=always
 
       [Install]
