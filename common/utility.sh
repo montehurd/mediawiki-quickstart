@@ -243,6 +243,9 @@ _reset_git_repo() {
   )
 }
 
+# Export so can be used by parallel_process
+export -f _reset_git_repo
+
 _clone_git_repo() {
   local repo_url="$1"
   local target_path="$2"
@@ -333,7 +336,6 @@ parallel_process() {
   local num_procs=$(getconf _NPROCESSORS_ONLN)
   awk '{printf "%d:%s%c", NR-1, $0, 0}' <<< "$1" | \
     xargs -0 -P "$num_procs" -n1 bash -c '
-      source "'"${BASH_SOURCE[0]}"'"
       IFS=: read -r index cmd <<< "$1"
       eval "$cmd" 2>&1 | awk "{print \"\033[32m|${index}|\033[0m \" \$0}"
     ' _
