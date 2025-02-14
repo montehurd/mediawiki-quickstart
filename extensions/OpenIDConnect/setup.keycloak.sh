@@ -5,25 +5,33 @@ CLIENT=wiki
 USERNAME=testuser
 PASSWORD=testpass
 
+check_keycloak() {
+    exec 3<>/dev/tcp/localhost/8080
+    if [ $? -eq 0 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # attempt to login to keycloak
 MAX_RETRIES=24
 RETRY_COUNT=0
-while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-	/opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user $KC_BOOTSTRAP_ADMIN_USERNAME --password $KC_BOOTSTRAP_ADMIN_PASSWORD
-
-	if [ $? -eq 0 ]; then
-		break
+while true; do
+	if check_keycloak; then
+		/opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user $KC_BOOTSTRAP_ADMIN_USERNAME --password $KC_BOOTSTRAP_ADMIN_PASSWORD
+		if [ $? -eq 0 ]; then
+			break
+		fi
 	fi
-
+	RETRY_COUNT=$((RETRY_COUNT + 1))
+	if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
+		echo "Authentication failed after $MAX_RETRIES attempts"
+		exit 1
+	fi
 	echo "Authentication failed, retrying..."
 	sleep 5
-	RETRY_COUNT=$((RETRY_COUNT + 1))
 done
-
-if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
-	echo "Authentication failed after $MAX_RETRIES attempts"
-	exit 1
-fi
 
 # create realm
 /opt/keycloak/bin/kcadm.sh create realms --set enabled=true --set realm=$REALM
