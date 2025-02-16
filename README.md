@@ -44,12 +44,6 @@ cd ~/mediawiki-quickstart
 If `./fresh_install` doesn't work, you can try:
 
 ```bash
-RECLONE_REPOS=1 ./fresh_install
-```
-
-If that doesn't work, try:
-
-```bash
 ./remove
 docker system prune -af
 ./fresh_install
@@ -652,13 +646,6 @@ SKIP_COUNTDOWN=1 ./fresh_install
 
 ```bash
 SILENT=1 ./fresh_install
-```
-
-- Force recloning of repositories instead of resetting them during installation
-
-```bash
-RECLONE_REPOS=1 ./fresh_install
-RECLONE_REPOS=1 ./install extensions/Math skins/Timeless
 ```
 
 # Bug Reporting
