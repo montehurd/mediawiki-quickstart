@@ -9,11 +9,7 @@ prepare() {
   if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
     local clone_depth=""
   fi
-  if ! (
-    cd "$MEDIAWIKI_PATH" && \
-    git clone --verbose "$GIT_CLONE_BASE_URL/core.git" . $clone_depth 2>&1 \
-    | verboseOrDotPerLine "Git clone '$GIT_CLONE_BASE_URL/core.git' $clone_depth" "use CLONE_DEPTH=0 for full depth"
-  ); then
+  if ! clone_git_repo "$GIT_CLONE_BASE_URL/core.git" "$MEDIAWIKI_PATH"; then
     echo "Failed to clone MediaWiki. Exiting."
     exit 1
   fi
