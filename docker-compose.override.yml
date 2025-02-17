@@ -29,6 +29,7 @@ services:
       - npm_cache:/var/local/npm
     environment:
       <<: *default-environment
+      CLONE_DEPTH: ${CLONE_DEPTH:-2}
     env_file: !override
       - .env
 
