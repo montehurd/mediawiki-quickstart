@@ -48,7 +48,7 @@ CLIENT_UUID=$(/opt/keycloak/bin/kcadm.sh create clients --target-realm $REALM --
 echo "CLIENT_UUID=$CLIENT_UUID" >> /root/.env
 
 /opt/keycloak/bin/kcadm.sh update clients/$CLIENT_UUID --target-realm $REALM --set 'redirectUris=["http://*"]'
-/opt/keycloak/bin/kcadm.sh update clients/$CLIENT_UUID --target-realm $REALM --body "{\"attributes\": {\"backchannel.logout.url\": \"http://${HOST_IP}:8080/w/rest.php/pluggableauth/v1/logout\", \"backchannel.logout.session.required\": \"false\"}}"
+/opt/keycloak/bin/kcadm.sh update clients/$CLIENT_UUID --target-realm $REALM --body "{\"attributes\": {\"backchannel.logout.url\": \"http://host:8080/w/rest.php/pluggableauth/v1/logout\", \"backchannel.logout.session.required\": \"false\"}}"
 
 # create client secret for client
 /opt/keycloak/bin/kcadm.sh create clients/${CLIENT_UUID}/client-secret --target-realm $REALM
