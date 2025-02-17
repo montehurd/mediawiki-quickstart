@@ -9,10 +9,25 @@ prepare() {
   if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
     local clone_depth=""
   fi
-  if ! clone_git_repo "$GIT_CLONE_BASE_URL/core.git" "$MEDIAWIKI_PATH"; then
+
+  if ! docker run --rm --entrypoint=sh \
+    -v "$SCRIPT_PATH/common:/common" \
+    -v "$MEDIAWIKI_PATH:/mediawiki" \
+    -w /mediawiki \
+    -e GIT_CLONE_BASE_URL="$GIT_CLONE_BASE_URL" \
+    -e CLONE_DEPTH="${CLONE_DEPTH:-}" \
+    -e VERBOSE \
+    alpine/git:latest \
+    -c '
+      apk add --no-cache bash >/dev/null 2>&1 &&
+      bash -c "
+        . /common/utility.sh &&
+        clone_git_repo \"$GIT_CLONE_BASE_URL/core.git\" ."
+    '; then
     echo "Failed to clone MediaWiki. Exiting."
     exit 1
   fi
+
   echo -e "" > "$SCRIPT_PATH/common/docker-compose.components.yml"
   echo "$MW_ENV" >.env
 }
