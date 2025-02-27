@@ -6,38 +6,104 @@ source "./common/utility.sh"
 run_selenium_tests() {
   ensure_selenium_ready || exit 1
 
-  local file_path
-  file_path=${1:-"tests/selenium/**/specs/**/*.js"}
-  if [[ ! "$file_path" = /* ]]; then
-    file_path="/var/www/html/w/$file_path"
-  fi
+  # local file_path
+  # file_path=${1:-"tests/selenium/**/specs/**/*.js"}
+  # if [[ ! "$file_path" = /* ]]; then
+  #   file_path="/var/www/html/w/$file_path"
+  # fi
 
-  if [ "$(./shellto w node -e "console.log(require('glob').sync('$file_path').length)")" = "0" ]; then
-    echo "No Selenium files found for pattern: '$file_path', skipping..."
-    exit 0
-  fi
+  # if [ "$(./shellto w node -e "console.log(require('glob').sync('$file_path').length)")" = "0" ]; then
+  #   echo "No Selenium files found for pattern: '$file_path', skipping..."
+  #   exit 0
+  # fi
 
-  local test_name
-  test_name=${2:-".*"}
-  local log_level
-  log_level=${3:-"error"}
+
+# Get Glob path to first 'wdio.conf.js' in file_path's 'specs/' folder
+# local wdio_conf_js_path="$(./shellto w sed 's|\(.*specs/\).*|\1**/wdio.conf.js|' <<< "$file_path")"
+# echo "$wdio_conf_js_path"
+# exit 1
+
+
+  # local test_name
+  # test_name=${2:-".*"}
+  # local log_level
+  # log_level=${3:-"error"}
   # logLevel can be one of these: ( trace | debug | info | warn | error | silent ) https://webdriver.io/docs/configurationfile/
 
-  local retries
-  retries=${SELENIUM_RETRIES:-0}
-  local instances
-  instances=${SELENIUM_INSTANCES:-1}
+  # local retries
+  # retries=${SELENIUM_RETRIES:-0}
+  # local instances
+  # instances=${SELENIUM_INSTANCES:-1}
+
+# "/var/www/html/w/tests/selenium/wdio.conf.js"
+
+# w npx wdio "/var/local/wdio.conf.override.js" \
+
+# w npx wdio "/var/www/html/w/tests/selenium/wdio.conf.js" \
+
+# 	capabilities: [ {
+# 		browserName: 'chrome',
+# 		'goog:chromeOptions': {
+# 			args: [
+# 				'--incognito',
+
+
+
+# PASS THE PATH OF THE WDIO.CONF.JS IN USE TO THE OVERRIDEES FILE!!!
+# THE OVERRIDES FILE WITH MERGE THE TWO CONFIGS!!!!!!!
+
+  local component_path=${1:-""}
+
+# ONLY HAVE ONE PARAMETER!!
+# then relay all args after the first one so any can pass through!!! like --logLevel etc below
+
+# echo "/var/www/html/w/${component_path}tests/selenium/wdio.conf.js" 
+# exit 1
+
+    # -e WDIO_CONF_PATH="/var/www/html/w/${component_path}tests/selenium/wdio.conf.js" \
+    #
+
+
+
+# echo "/var/www/html/w/${component_path}"
+# exit 1
+
+
+
+
+
+    # -w "/var/www/html/w/extensions/WikiLambda" \
+
+
+
+# TODO
+# - BREAKS THE SELENIUM TESTS WE RUN ON QUICKSTART ITSELF!!!!!
+# - overrides won't work
+#  
 
   ./shellto \
     $([[ "${SILENT:-0}" == "1" ]] || echo "-it") \
     -e DISPLAY=mediawiki-novnc-1:0 \
     -e NODE_PATH=/var/www/html/w/node_modules \
-    w npx wdio "/var/local/wdio.conf.override.js" \
-      --spec "$file_path" \
-      --logLevel "$log_level" \
-      --mochaOpts.grep "$test_name" \
-      --specFileRetries "$retries" \
-      --maxInstances "$instances"
+    -e CHROME_PATH="$(./shellto w bash -c 'source /var/www/html/w/.env && echo $CHROME_PATH')" \
+    -w "/var/www/html/w/${component_path}" \
+    w npm run selenium-test
+    # w npx wdio "/var/www/html/w/extensions/WikiLambda/tests/selenium/wdio.conf.js"
+    # --config "/var/local/wdio.conf.override.js"
+
+
+
+
+
+    # w npx wdio "tests/selenium/wdio.conf.js"
+    # -e WDIO_CONF_JS="/var/www/html/w/${component_path}/tests/selenium/wdio.conf.js" \
+    # -w "/var/www/html/w/${component_path}/" \
+    # w npx wdio "/var/local/wdio.conf.override.js"
+      # --logLevel "$log_level" \
+      # --mochaOpts.grep "$test_name" \
+      # --specFileRetries "$retries" \
+      # --maxInstances "$instances" \
+      # --spec "$file_path"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
