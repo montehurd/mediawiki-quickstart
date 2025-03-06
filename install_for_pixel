@@ -1,0 +1,39 @@
+#!/bin/bash
+
+export CLONE_DEPTH=10
+export VERBOSE=1
+export FORCE=1
+export SKIP_COUNTDOWN=1
+
+export MW_DBTYPE=mysql
+export MW_DBSERVER=mediawiki-mysql-1
+export COMPOSE_PROFILES="default,mysql"
+export MW_DBNAME=my_wiki
+export MW_DBUSER=root
+export MW_DBPASS=""
+export MW_DBPORT=3306
+./mysql_restore_from_backup mysql-backups/database_2025-02-12_16-49-46-0600\(CST\).tar.gz
+
+get_latest_release_branch() {
+  # Get the latest branch version that starts with a digit
+  local latest_branch=$(git ls-remote -h --sort="-version:refname" \
+    https://gerrit.wikimedia.org/r/mediawiki/core \
+    --patterns "refs/heads/wmf/[0-9]*" | head -1)
+  local branch_name=$(echo "$latest_branch" | sed 's/.*refs\/heads\///')
+  echo "$branch_name"
+}
+
+# reference
+export BRANCH=$(get_latest_release_branch)
+./fresh_install
+./install skins/MinervaNeue skins/Modern skins/CologneBlue skins/MonoBook skins/Timeless
+./install extensions/BetaFeatures extensions/CampaignEvents extensions/Cite extensions/Echo extensions/Gadgets extensions/GlobalPreferences extensions/QuickSurveys extensions/Linter extensions/DiscussionTools extensions/Math extensions/MobileFrontend extensions/SyntaxHighlight_GeSHi extensions/NearbyPages extensions/Popups extensions/RelatedArticles extensions/SandboxLink extensions/Thanks extensions/UniversalLanguageSelector extensions/VisualEditor extensions/CommunityConfiguration extensions/WikimediaMessages extensions/GrowthExperiments
+
+# test
+# export BRANCH=master
+# ./fresh_install
+# ./install skins/MinervaNeue skins/Modern skins/CologneBlue skins/MonoBook skins/Timeless
+# ./install extensions/BetaFeatures extensions/CampaignEvents extensions/Cite extensions/Echo extensions/Gadgets extensions/GlobalPreferences extensions/QuickSurveys extensions/Linter extensions/DiscussionTools extensions/Math extensions/MobileFrontend extensions/SyntaxHighlight_GeSHi extensions/NearbyPages extensions/Popups extensions/RelatedArticles extensions/SandboxLink extensions/Thanks extensions/UniversalLanguageSelector extensions/VisualEditor extensions/CommunityConfiguration extensions/WikimediaMessages extensions/GrowthExperiments
+
+# install wikilambda only when using it
+# ./install extensions/WikiLambda
