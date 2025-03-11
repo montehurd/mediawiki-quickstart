@@ -6,13 +6,37 @@ source "./docker/docker.sh"
 
 delete_mediawiki_folder() {
   if [ -n "$MEDIAWIKI_PATH" ] && [ -d "$MEDIAWIKI_PATH" ]; then
-    if ! rm -rf "$MEDIAWIKI_PATH"; then
-      docker run --rm \
-        -v "$MEDIAWIKI_PATH:/data" \
-        -u root \
-        alpine sh -c "find /data -print0 | xargs -0 -P \$(nproc) chown -h -f $(id -u):$(id -g)" \
-      2>&1 | verboseOrDotPerLine "Ensuring host user can reset/remove files"
-      rm -rf "$MEDIAWIKI_PATH"
+    # If many extensions and skins have been installed
+    # it can take forever to delete the mediawiki folder
+    # due to the the presense of many 'node_modules' dirs
+    #
+    # Files in these dirs can also have ownership, due
+    # to node weirdness, that can make them challenging
+    # to delete without identifying such files and asserting
+    # ownership over them
+    #
+    # To address this we move existing mediawiki dir to
+    # '/tmp' so we can proceed immediately after the mv
+    # completes, and we launch a detached process to finish
+    # the removal in the background
+    local temp_dir="/tmp/mediawiki_delete_$RANDOM"
+    # Perform the move
+    if mv "$MEDIAWIKI_PATH" "$temp_dir"; then
+      # Launch detached removal process with permissions
+      # assertion fallback
+      (
+        if ! rm -rf "$temp_dir"; then
+          docker run --rm \
+            -v "$temp_dir:/data" \
+            -u root \
+            alpine sh -c "find /data -print0 | xargs -0 -P \$(nproc) chown -h -f $(id -u):$(id -g)" \
+          >/dev/null 2>&1
+          rm -rf "$temp_dir"
+        fi
+      ) &>/dev/null &
+    else
+      echo "Failed to move mediawiki directory to temp location"
+      exit 1
     fi
   fi
 }
