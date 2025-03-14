@@ -267,7 +267,7 @@ clone_git_repo() {
     local clone_depth=""
   fi
   if ! git clone --recurse-submodules --progress $clone_depth "$repo_url" "$target_path" 2>&1 | \
-    verboseOrDotPerLine "Git clone '$repo_url' $clone_depth to '$target_path'" "use CLONE_DEPTH=0 for full depth"; then
+    verboseOrDotPerLine "Git clone '$repo_url' ${clone_depth:-full depth} to '$target_path'" "use CLONE_DEPTH=0 for full depth"; then
     echo "Failed to clone repository '$repo_url'"
     return 1
   fi
