@@ -258,21 +258,28 @@ clone_git_repo() {
   local repo_url="$1"
   local target_path="$2"
   local recurse_submodules="$3"
+  local branch="${4:-}"
   if [ -z "$target_path" ]; then
     echo "Error: Target path not specified"
     return 1
   fi
   mkdir -p "$target_path"
-  local clone_depth="--depth=${CLONE_DEPTH:-2}"
+
+  local branch_arg=""
+  if [ -n "$branch" ]; then
+    branch_arg="-b $branch "
+  fi
+  local recurse_flag=""
+  if [ "$recurse_submodules" = true ]; then
+    recurse_flag="--recurse-submodules "
+  fi
+  local clone_depth="--depth=${CLONE_DEPTH:-2} "
   if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
     clone_depth=""
   fi
-  local recurse_flag=" "
-  if [ "$recurse_submodules" = true ]; then
-    recurse_flag=" --recurse-submodules "
-  fi
-  if ! git clone --progress --single-branch $recurse_flag $clone_depth "$repo_url" "$target_path" 2>&1 | \
-    verboseOrDotPerLine "Git clone '$repo_url' ${clone_depth:-full depth}${recurse_flag}to '$target_path'" "use CLONE_DEPTH=0 for full depth"; then
+
+  if ! git clone --progress --single-branch ${branch_arg} ${recurse_flag} ${clone_depth} "${repo_url}" "${target_path}" 2>&1 | \
+    verboseOrDotPerLine "Git clone ${branch_arg}${recurse_flag}${clone_depth:-full depth}${repo_url} to '${target_path}'" "use CLONE_DEPTH=0 for full depth"; then
     echo "Failed to clone repository '$repo_url'"
     return 1
   fi
