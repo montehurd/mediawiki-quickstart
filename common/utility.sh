@@ -257,6 +257,7 @@ parallel_process() {
 clone_git_repo() {
   local repo_url="$1"
   local target_path="$2"
+  local recurse_submodules="$3"
   if [ -z "$target_path" ]; then
     echo "Error: Target path not specified"
     return 1
@@ -264,10 +265,14 @@ clone_git_repo() {
   mkdir -p "$target_path"
   local clone_depth="--depth=${CLONE_DEPTH:-2}"
   if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
-    local clone_depth=""
+    clone_depth=""
   fi
-  if ! git clone --recurse-submodules --progress --single-branch $clone_depth "$repo_url" "$target_path" 2>&1 | \
-    verboseOrDotPerLine "Git clone '$repo_url' ${clone_depth:-full depth} to '$target_path'" "use CLONE_DEPTH=0 for full depth"; then
+  local recurse_flag=" "
+  if [ "$recurse_submodules" = true ]; then
+    recurse_flag=" --recurse-submodules "
+  fi
+  if ! git clone --progress --single-branch $recurse_flag $clone_depth "$repo_url" "$target_path" 2>&1 | \
+    verboseOrDotPerLine "Git clone '$repo_url' ${clone_depth:-full depth}${recurse_flag}to '$target_path'" "use CLONE_DEPTH=0 for full depth"; then
     echo "Failed to clone repository '$repo_url'"
     return 1
   fi
