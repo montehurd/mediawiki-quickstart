@@ -22,9 +22,11 @@ delete_mediawiki_folder() {
     local temp_dir="/tmp/mediawiki_delete_$RANDOM"
     # Perform the move
     if mv "$MEDIAWIKI_PATH" "$temp_dir"; then
+      sleep 1
       # Launch detached removal process with permissions
       # assertion fallback
       (
+        sleep 1
         if ! rm -rf "$temp_dir"; then
           docker run --rm \
             -v "$temp_dir:/data" \
