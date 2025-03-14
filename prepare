@@ -10,7 +10,7 @@ prepare() {
     local clone_depth=""
   fi
 
-  if ! docker run --rm --entrypoint=sh \
+  if ! docker run --rm \
     -v "$SCRIPT_PATH/common:/common" \
     -v "$MEDIAWIKI_PATH:/mediawiki" \
     -w /mediawiki \
@@ -18,12 +18,13 @@ prepare() {
     -e CLONE_DEPTH="${CLONE_DEPTH:-}" \
     -e VERBOSE \
     -e HOST_UID="$(id -u)" \
-    alpine/git:latest \
-    -c '
-      apk add --no-cache bash >/dev/null 2>&1
+    bash:5.1.16-alpine3.21 /usr/local/bin/bash -c '
+      apk add --no-cache git >/dev/null 2>&1
       adduser -D -u ${HOST_UID} tempuser 2>/dev/null
-      # utility.sh is bash, use HOST_ID user so host can delete the repo without issue
-      su tempuser -c "bash -c \". /common/utility.sh && clone_git_repo \"$GIT_CLONE_BASE_URL/core.git\" .\""
+      # use HOST_ID user so host can delete the repo without issue
+      su tempuser
+      source /common/utility.sh
+      clone_git_repo "$GIT_CLONE_BASE_URL/core.git" .
     '; then
     echo "Failed to clone MediaWiki. Exiting."
     exit 1
