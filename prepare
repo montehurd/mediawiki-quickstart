@@ -16,6 +16,7 @@ prepare() {
     -w /mediawiki \
     -e GIT_CLONE_BASE_URL="$GIT_CLONE_BASE_URL" \
     -e CLONE_DEPTH="${CLONE_DEPTH:-}" \
+    -e BRANCH="${BRANCH:-}" \
     -e VERBOSE \
     -e HOST_UID="$(id -u)" \
     bash:5.1.16-alpine3.21 /usr/local/bin/bash -c '
@@ -24,7 +25,7 @@ prepare() {
       # use HOST_ID user so host can delete the repo without issue
       su tempuser
       source /common/utility.sh
-      clone_git_repo "$GIT_CLONE_BASE_URL/core.git" . false
+      clone_git_repo "$GIT_CLONE_BASE_URL/core.git" . false "$BRANCH"
     '; then
     echo "Failed to clone MediaWiki. Exiting."
     exit 1
