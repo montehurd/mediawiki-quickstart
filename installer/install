@@ -100,7 +100,7 @@ _install_from_manifest() {
   local repository
   repository="$GIT_CLONE_BASE_URL/$component_path"
 
-  if ! clone_git_repo "$repository" "$component_path" true; then
+  if ! clone_git_repo "$repository" "$component_path" true "${BRANCH:-}"; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
