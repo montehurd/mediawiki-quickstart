@@ -33,11 +33,12 @@ print_report_table() {
 ${separator}
 Stage 1 - Fresh install of Mediawiki
 Stage 2 - Component installation
-Stage 3 - Component Selenium tests"
+Stage 3 - Component Selenium tests (via 'run_component_selenium_tests')
+Stage 4 - Component Selenium tests (via 'run_selenium_tests')"
   local results=("$@")
   echo -e "${separator}"
-  local column_spacing=" %3s  %-40s  %-3s  %-3s  %-3s\n"
-  printf "$column_spacing" "#" "Component                        Stages" "1" "2" "3"
+  local column_spacing=" %3s  %-40s  %-3s  %-3s  %-3s  %-3s\n"
+  printf "$column_spacing" "#" "Component                        Stages" "1" "2" "3" "4"
   echo -e "${separator}"
   local index=1
   for result in "${results[@]}"; do
@@ -62,35 +63,40 @@ process_component() {
   {
     local fresh_install_status=1
     local component_install_status=1
-    local selenium_status=1
+    local run_component_selenium_tests_status=1
+    local run_selenium_tests_status=1
     if [ "${FAKE_IT:-0}" = "1" ]; then
       echo "Fake log text"
       fresh_install_status=$((RANDOM % 2))
       component_install_status=$((RANDOM % 2))
-      selenium_status=$((RANDOM % 2))
+      run_component_selenium_tests_status=$((RANDOM % 2))
+      run_selenium_tests_status=$((RANDOM % 2))
     else
       export VERBOSE=1
       export FORCE=1
       export SILENT=1
       export SKIP_COUNTDOWN=1
-      export SKIP_SKIN=1
+      # export SKIP_SKIN=1
       ./fresh_install 2>&1 | verboseOrDotPerLine "Fresh install of Mediawiki..."
       fresh_install_status=${PIPESTATUS[0]}
       if [ $fresh_install_status -eq 0 ]; then
         ./install "$1" 2>&1 | verboseOrDotPerLine "Install '$1'..."
         component_install_status=${PIPESTATUS[0]}
         if [ $component_install_status -eq 0 ]; then
-          ./run_component_selenium_tests "$1" 2>&1 | verboseOrDotPerLine "Running '$1' Selenium tests..."
-          selenium_status=${PIPESTATUS[0]}
+          ./run_component_selenium_tests "$1" 2>&1 | verboseOrDotPerLine "Running 'run_component_selenium_tests' for '$1'..."
+          run_component_selenium_tests_status=${PIPESTATUS[0]}
+          ./run_selenium_tests "$1/tests/selenium/*specs/**/*.js" ".*" 2>&1 | verboseOrDotPerLine "Running 'run_selenium_tests' for '$1'..."
+          run_selenium_tests_status=${PIPESTATUS[0]}
         fi
       fi
     fi
     local fresh_install_status_char=$(get_status_char "$fresh_install_status")
     local component_install_status_char=$(get_status_char "$component_install_status")
-    local selenium_status_char=$(get_status_char "$selenium_status")
+    local run_component_selenium_tests_status_char=$(get_status_char "$run_component_selenium_tests_status")
+    local run_selenium_tests_status_char=$(get_status_char "$run_selenium_tests_status")
   } >&3
 
-  echo "$1 $fresh_install_status_char $component_install_status_char $selenium_status_char"
+  echo "$1 $fresh_install_status_char $component_install_status_char $run_component_selenium_tests_status_char $run_selenium_tests_status_char"
 }
 
 main() {
