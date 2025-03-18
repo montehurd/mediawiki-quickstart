@@ -83,9 +83,9 @@ process_component() {
         ./install "$1" 2>&1 | verboseOrDotPerLine "Install '$1'..."
         component_install_status=${PIPESTATUS[0]}
         if [ $component_install_status -eq 0 ]; then
-          ./run_component_selenium_tests "$1" 2>&1 | verboseOrDotPerLine "Running 'run_component_selenium_tests' for '$1'..."
+          ./run_component_selenium_tests "$1" 2>&1 | verboseOrDotPerLine "Running Selenium tests for '$1' via 'run_component_selenium_tests \"$1\"'..."
           run_component_selenium_tests_status=${PIPESTATUS[0]}
-          ./run_selenium_tests "$1/tests/selenium/*specs/**/*.js" ".*" 2>&1 | verboseOrDotPerLine "Running 'run_selenium_tests' for '$1'..."
+          ./run_selenium_tests "$1/tests/selenium/*specs/**/*.js" ".*" 2>&1 | verboseOrDotPerLine "Running Selenium tests for '$1' via 'run_selenium_tests \"$1/tests/selenium/*specs/**/*.js\" \".*\"'..."
           run_selenium_tests_status=${PIPESTATUS[0]}
         fi
       fi
