@@ -81,6 +81,19 @@ services:
     volumes:
       - ./selenium/novnc:/app
 
+  # Use COMPOSE_PROFILES to do fresh install with mysql:
+  #   COMPOSE_PROFILES="default,mysql" ./fresh_install
+  mysql:
+    image: ghcr.io/montehurd/mediawiki-docker-images/mysql:latest
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    profiles: ["mysql"]
+
 volumes:
   chromium_cache:
   composer_cache:

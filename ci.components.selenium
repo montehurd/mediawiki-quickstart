@@ -31,11 +31,12 @@ print_report_table() {
   <body>
   <pre>
 ${separator}
-Stage 1 - Fresh install of Mediawiki
-Stage 2 - Component installation
-Stage 3 - Component Selenium tests exist
-Stage 4 - Component Selenium tests (via 'run_component_selenium_tests')
-Stage 5 - Component Selenium tests (via 'run_selenium_tests')"
+Stages:
+1 - Fresh install of Mediawiki
+2 - Component installation
+3 - Component Selenium tests exist
+4 - Component Selenium tests (via 'run_component_selenium_tests')
+5 - Component Selenium tests (via 'run_selenium_tests')"
   local results=("$@")
   echo -e "${separator}"
   local column_spacing=" %3s  %-40s  %-3s  %-3s  %-3s  %-3s  %-3s\n"
