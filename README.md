@@ -284,7 +284,31 @@ Run a variety of tests using the commands below
 ./run_jest
 ````
 
-## Selenium
+## Selenium (basic)
+
+The `run_component_selenium_tests` script kicks off Selenium tests for your component via its `package.json` `selenium-test` script
+
+This (`npm run selenium-test`) is the normal ingress point CI uses to trigger Selenium tests
+
+- Run all tests in a specific extension
+
+```bash
+./install extensions/Echo
+./run_component_selenium_tests extensions/Echo
+```
+
+- Run all tests in a specific skin
+
+```bash
+./install skins/MinervaNeue
+./run_component_selenium_tests skins/MinervaNeue
+```
+
+## Selenium (advanced)
+
+The `run_selenium_tests` script kicks off Selenium tests for your extension or skin via direct invocation of `wdio`
+
+This ingress point allows for more fine-grain control of what tests gets run, also allowing for other `wdio` flags to be set, but it can occasionally have issues if a component depends on code in its `wdio.conf.js`, which this bypasses
 
 ### Mediawiki core
 
@@ -341,13 +365,6 @@ or
 ./run_selenium_tests "extensions/Echo/tests/selenium/*specs/**/*.js" ".*"
 ```
 
-or
-
-```bash
-./install extensions/Echo
-./run_component_selenium_tests extensions/Echo
-```
-
 - Run all tests in all extensions
 
 ```bash
@@ -376,13 +393,6 @@ or
 ```bash
 ./install skins/MinervaNeue
 ./run_selenium_tests "skins/MinervaNeue/tests/selenium/*specs/**/*.js" ".*"
-```
-
-or
-
-```bash
-./install skins/MinervaNeue
-./run_component_selenium_tests skins/MinervaNeue
 ```
 
 - Run all tests in all skins
