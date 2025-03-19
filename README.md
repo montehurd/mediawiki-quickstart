@@ -658,6 +658,32 @@ SKIP_COUNTDOWN=1 ./fresh_install
 SILENT=1 ./fresh_install
 ```
 
+- Specify branch for Mediawiki core installation
+
+```bash
+BRANCH="wmf/1.44.0-wmf.20" ./fresh_install
+```
+
+- Specify branch for component(s) installation
+
+```bash
+BRANCH="wmf/1.44.0-wmf.20" ./install extension/IPInfo skin/Monobook
+```
+
+- Specify MySQL database connection (by default `fresh_install` uses sqlite) for Mediawiki core installation
+
+```bash
+MW_DBTYPE=mysql MW_DBSERVER=pixel-clean-mysql-1 MW_DBNAME=my_wiki MW_DBUSER=root MW_DBPASS="" MW_DBPORT=3306 ./fresh_install
+```
+
+- Specify MySQL database connection for component(s) installation
+
+```bash
+MW_DBTYPE=mysql MW_DBSERVER=pixel-clean-mysql-1 MW_DBNAME=my_wiki MW_DBUSER=root MW_DBPASS="" MW_DBPORT=3306 ./install extensions/IPInfo skin/Monobook
+```
+
+- Reminder: Environment variables can be exported to your current shell session to avoid repeating them for each command
+
 # Bug Reporting
 
 Open a Phabricator task [here](https://phabricator.wikimedia.org/maniphest/task/edit/form/default/?title=&description=Bug+Description&projects[]=mediawiki-quickstart) to report issues and make feature requests
