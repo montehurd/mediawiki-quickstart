@@ -15,11 +15,24 @@ start() {
     ./shellto -u root m sh -c 'chmod 777 /var/local/npm'
     ./shellto -u root w chown -R "$(id -u):$(id -g)" /var/local
     ./shellto m composer install 2>&1 | verboseOrDotPerLine "Composer install"
-    ./shellto m sh -c 'php maintenance/run.php install \
+    ./shellto \
+      -e MW_DBTYPE \
+      -e MW_DBPATH \
+      -e MW_DBPORT \
+      -e MW_DBSERVER \
+      -e MW_DBNAME \
+      -e MW_DBUSER \
+      -e MW_DBPASS \
+      m sh -c 'php maintenance/run.php install \
       --server "$MW_SERVER" \
       --scriptpath="$MW_SCRIPT_PATH" \
-      --dbtype "$MW_DBTYPE" \
-      --dbpath "$MW_DBPATH" \
+      --dbtype "${MW_DBTYPE:-sqlite}" \
+      --dbpath "${MW_DBPATH:-/var/www/html/w/cache/sqlite}" \
+      ${MW_DBSERVER:+--dbserver "$MW_DBSERVER"} \
+      ${MW_DBNAME:+--dbname "$MW_DBNAME"} \
+      ${MW_DBUSER:+--dbuser "$MW_DBUSER"} \
+      ${MW_DBPASS:+--dbpass "$MW_DBPASS"} \
+      ${MW_DBPORT:+--dbport "$MW_DBPORT"} \
       --lang "$MW_LANG" \
       --pass "$MW_PASS" \
       --skins "" \
