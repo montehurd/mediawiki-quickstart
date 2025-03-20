@@ -704,6 +704,11 @@ export MW_DBPORT=3306
 ./install extensions/IPInfo
 ```
 
+- When using Quickstart's built-in MySQL container, you can save a "seed data" backup to the "mysql-backups" folder
+```bash
+./shellto mysql tar cvfz /var/lib/mysql-backups/database_$(date '+%Y-%m-%d_%H-%M-%S%z(%Z)').tar.gz var/lib/mysql
+```
+
 # Bug Reporting
 
 Open a Phabricator task [here](https://phabricator.wikimedia.org/maniphest/task/edit/form/default/?title=&description=Bug+Description&projects[]=mediawiki-quickstart) to report issues and make feature requests
