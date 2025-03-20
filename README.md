@@ -670,19 +670,39 @@ BRANCH="wmf/1.44.0-wmf.20" ./fresh_install
 BRANCH="wmf/1.44.0-wmf.20" ./install extension/IPInfo skin/Monobook
 ```
 
-- Specify MySQL database connection (by default `fresh_install` uses sqlite) for Mediawiki core installation
+# MySQL
+
+Quickstart uses SQLite by default
+
+To use MySQL you have a few options
+
+In the MySQL example below the relevant environment variables are exported to the shell session so they don't have to be repeated for both `fresh_install` and `install` commands
+
+( you could also add these env var exports to Quickstart's `config` file so they'd get automatically used by all calls to `fresh_install` and `install` )
 
 ```bash
-MW_DBTYPE=mysql MW_DBSERVER=pixel-clean-mysql-1 MW_DBNAME=my_wiki MW_DBUSER=root MW_DBPASS="" MW_DBPORT=3306 ./fresh_install
+# Let Quickstart know you want to use MySQL
+export MW_DBTYPE=mysql
+
+# MW_DBSERVER can one of the following three options
+# 1: a network address
+export MW_DBSERVER=#YOUR_MYSQL_SERVER_LOCATION#
+# 2: 'host.docker.internal' if the MySQL server is hosted directly on the Docker host machine
+export MW_DBSERVER=host.docker.internal
+# 3: 'mediawiki-mysql-1' if you want to use Quickstart's built-in MySQL container
+export MW_DBSERVER=mediawiki-mysql-1
+  # If using Quickstart's built-in MySQL container, you must also use the following COMPOSE_PROFILES to instruct docker to start the mysql container in addition to the 'default' containers. Reminder: only use this if 'MW_DBSERVER=mediawiki-mysql-1' 
+  export COMPOSE_PROFILES="default,mysql"
+  # If using Quickstart's built-in MySQL container, you can use SEED_DATA_URL to give Quickstart's MySQL container a zipped up '/var/lib/mysql' "seed data" folder to use'. Reminder: only use this if 'MW_DBSERVER=mediawiki-mysql-1'
+  export SEED_DATA_URL="https://wikimedia.github.io/pixel-seed-data/database_2025-02-12_16-49-46-0600(CST).tar.gz"
+
+export MW_DBNAME=my_wiki
+export MW_DBUSER=root
+export MW_DBPASS=""
+export MW_DBPORT=3306
+./fresh_install
+./install extensions/IPInfo
 ```
-
-- Specify MySQL database connection for component(s) installation
-
-```bash
-MW_DBTYPE=mysql MW_DBSERVER=pixel-clean-mysql-1 MW_DBNAME=my_wiki MW_DBUSER=root MW_DBPASS="" MW_DBPORT=3306 ./install extensions/IPInfo skin/Monobook
-```
-
-- Reminder: Environment variables can be exported to your current shell session to avoid repeating them for each command
 
 # Bug Reporting
 
