@@ -693,8 +693,6 @@ export MW_DBSERVER=host.docker.internal
 export MW_DBSERVER=mediawiki-mysql-1
   # If using Quickstart's built-in MySQL container, you must also use the following COMPOSE_PROFILES to instruct docker to start the mysql container in addition to the 'default' containers. Reminder: only use this if 'MW_DBSERVER=mediawiki-mysql-1' 
   export COMPOSE_PROFILES="default,mysql"
-  # If using Quickstart's built-in MySQL container, you can use SEED_DATA_URL to give Quickstart's MySQL container a zipped up '/var/lib/mysql' "seed data" folder to use'. Reminder: only use this if 'MW_DBSERVER=mediawiki-mysql-1'
-  export SEED_DATA_URL="https://wikimedia.github.io/pixel-seed-data/database_2025-02-12_16-49-46-0600(CST).tar.gz"
 
 export MW_DBNAME=my_wiki
 export MW_DBUSER=root
@@ -704,9 +702,16 @@ export MW_DBPORT=3306
 ./install extensions/IPInfo
 ```
 
-- When using Quickstart's built-in MySQL container, you can save a "seed data" backup to the "mysql-backups" folder
+## MySQL backup and restoration
+
+- When using Quickstart's built-in MySQL container, you can save a zipped backup of the "mysql-data" folder to the "mysql-backups" folder
 ```bash
-./shellto mysql tar cvfz /var/lib/mysql-backups/database_$(date '+%Y-%m-%d_%H-%M-%S%z(%Z)').tar.gz var/lib/mysql
+./mysql_backup
+```
+
+- You can also restore a zipped backup from "mysql-backups" to "mysql-data"
+```bash
+./mysql_restore_from_backup mysql-backups/database_2025-02-12_16-49-46-0600\(CST\).tar.gz
 ```
 
 # Bug Reporting

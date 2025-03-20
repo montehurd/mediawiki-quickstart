@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./shellto mysql tar cvfz /var/lib/mysql-backups/database_$(date '+%Y-%m-%d_%H-%M-%S%z(%Z)').tar.gz var/lib/mysql

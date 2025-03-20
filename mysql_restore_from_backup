@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# If a seed data backup is needed, run this before `fresh_install`, on the host
+# ( no container exists yet - can alpine containerize later )
+
+# Pass a path to a MySQL archive, such as 'mysql-backups/database_2025-02-12_16-49-46-0600(CST).tar.gz'
+# The 'mysql_backup' script creates such archives of the 'mysql-data' folder
+if [ -z "$1" ]; then
+    echo "Error: No backup file specified"
+    echo "Usage: $0 <path-to-backup-file>"
+    exit 1
+fi
+
+BACKUP_ZIP_PATH=$1
+
+if [ -d "mysql-data" ]; then
+    rm -rf mysql-data/*
+fi
+
+mkdir -p mysql-data
+
+tar -C mysql-data --strip-components=3 -xzvf $BACKUP_ZIP_PATH
