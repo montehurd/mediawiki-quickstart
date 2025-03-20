@@ -678,7 +678,9 @@ To use MySQL you have a few options
 
 In the MySQL example below the relevant environment variables are exported to the shell session so they don't have to be repeated for both `fresh_install` and `install` commands
 
-( you could also add these env var exports to Quickstart's `config` file so they'd get automatically used by all calls to `fresh_install` and `install` )
+Remember that exported env vars persist in your shell session until you start a new shell window or reload the session
+
+You could also add these env var exports to Quickstart's `config` or your `~/.bashrc` or `~/.zshrc` (on MacOS) file so they'd get automatically used by all calls to `fresh_install` and `install`
 
 ```bash
 # Let Quickstart know you want to use MySQL
