@@ -1,3 +1,5 @@
 /mediawiki/
 /common/docker-compose.components.yml
 .env
+/mysql/
+/mysql-backups/
