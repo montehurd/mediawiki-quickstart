@@ -5,10 +5,11 @@ services:
       - MW_ELASTIC_HOST=elasticsearch
       - MW_ELASTIC_PORT=9200
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
+        required: true
 
   elasticsearch:
-    # image: docker-registry.wikimedia.org/dev/cirrus-elasticsearch:7.10.2-s2
     image: docker-registry.wikimedia.org/repos/search-platform/cirrussearch-elasticsearch-image:v7.10.2-12
     volumes:
       - elasticdata:/usr/share/elasticsearch/data
@@ -22,6 +23,12 @@ services:
       default:
         aliases:
           - elasticsearch
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=10s"]
+      interval: 2s
+      timeout: 2s
+      retries: 25
+      start_period: 10s
 
 volumes:
   elasticdata:
