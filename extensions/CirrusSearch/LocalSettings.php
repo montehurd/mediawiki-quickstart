@@ -12,6 +12,7 @@ $wgSearchType = 'CirrusSearch';
 #    curl -X GET "localhost:9200/_cat/indices?v"
 # Also useful:
 #    curl http://localhost:9200
+#    curl -s "http://localhost:9200/_cluster/health?pretty"
 #    http://localhost:8080/w/api.php
 #    http://localhost:8080/w/api.php?action=cirrus-config-dump
 #    http://localhost:8080/w/api.php?action=cirrus-check-sanity&from=1
