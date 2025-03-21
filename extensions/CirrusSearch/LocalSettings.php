@@ -12,3 +12,8 @@ $wgSearchType = 'CirrusSearch';
 #    curl -X GET "localhost:9200/_cat/indices?v"
 # Also useful:
 #    curl http://localhost:9200
+#    http://localhost:8080/w/api.php?action=cirrus-config-dump
+#    http://localhost:8080/w/api.php?action=cirrus-check-sanity
+#    http://localhost:8080/w/api.php?action=cirrus-mapping-dump
+#    http://localhost:8080/w/api.php?action=cirrus-profiles-dump
+#    http://localhost:8080/w/api.php?action=cirrus-settings-dump
