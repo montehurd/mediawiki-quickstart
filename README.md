@@ -513,13 +513,19 @@ OUTPUT_PATH=/some/path ./ci.components.selenium
 
 Once started, you can `tail -f index.log` in a separate terminal window to follow along live 
 
-# Custom MediaWiki 'LocalSettings'
+# Overriding MediaWiki 'LocalSettings.php' values
 
-To apply custom MediaWiki settings during `./fresh_install`, edit [`import-on-fresh-install/LocalSettings.extra.php`](import-on-fresh-install/LocalSettings.extra.php)
+To apply custom MediaWiki settings during `./fresh_install`, add a file to the `import-on-fresh-install/` folder such as:
 
-This file will be included by MediaWiki's `LocalSettings.php`
+`import-on-fresh-install/LocalSettings.#YOUR_DESCRIPTION#.php`
 
-Keep in mind this is not the place to add settings for extensions or skins - your component's [LocalSettings.php](#localsettingsphp-required) is the place for this
+Files named according to that pattern will be included by MediaWiki's `LocalSettings.php`
+
+You can use such files to override MediaWiki's `LocalSettings.php` settings
+
+You can also override default component settings if needed
+
+But keep in mind this is NOT the place to add default settings for extensions or skins - your component's [LocalSettings.php](#localsettingsphp-required) is the place for this
 
 # Importing Mediawiki XML page dumps
 
