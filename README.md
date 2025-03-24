@@ -513,7 +513,7 @@ OUTPUT_PATH=/some/path ./ci.components.selenium
 
 Once started, you can `tail -f index.log` in a separate terminal window to follow along live 
 
-# Overriding MediaWiki 'LocalSettings.php' values
+# Adding/overriding MediaWiki 'LocalSettings.php' values
 
 To apply custom MediaWiki settings during `./fresh_install`, add a file to the `import-on-fresh-install/` folder such as:
 
