@@ -676,6 +676,18 @@ BRANCH="wmf/1.44.0-wmf.20" ./fresh_install
 BRANCH="wmf/1.44.0-wmf.20" ./install extension/IPInfo skin/Monobook
 ```
 
+- Skip rebuilding the localization cache after installing components (can save time but might cause UI issues). Can also be used with `fresh_install` since it uses the component installer to install the Vector skin
+
+```bash
+SKIP_LOCALIZATION_CACHE_REBUILD=1 ./install extensions/IPInfo
+```
+
+- Skip importing XML page dumps (can speed up installation when you don't need the page content)
+
+```bash
+SKIP_PAGE_IMPORT=1 ./fresh_install
+```
+
 # MySQL
 
 Quickstart uses SQLite by default

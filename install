@@ -44,7 +44,7 @@ install() {
     exit 1
   fi
   export GIT_CLONE_BASE_URL
-  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH m /var/local/installer/install "$@"
+  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT m /var/local/installer/install "$@"
   local install_status=$?
 
   if [ $install_status -eq 0 ]; then

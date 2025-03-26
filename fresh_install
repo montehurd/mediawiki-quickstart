@@ -20,7 +20,9 @@ fresh_install() {
   remove
   prepare
   start
-  import_page_xml "/tmp/page-xml"
+  if [[ "${SKIP_PAGE_IMPORT:-0}" != "1" ]]; then
+    import_page_xml "/tmp/page-xml"
+  fi
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

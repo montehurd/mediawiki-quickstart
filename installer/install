@@ -210,8 +210,12 @@ install() {
   if [ ${#INSTALLED_COMPONENTS[@]} -gt 0 ]; then
     _install_php_and_node_dependencies
     _run_bash_for_installed_components
-    _rebuild_localization_cache
-    _import_page_dumps_for_installed_components
+    if [[ "${SKIP_LOCALIZATION_CACHE_REBUILD:-0}" != "1" ]]; then
+      _rebuild_localization_cache
+    fi
+    if [[ "${SKIP_PAGE_IMPORT:-0}" != "1" ]]; then
+      _import_page_dumps_for_installed_components
+    fi
     _update_component_docker_compose_includes "${INSTALLED_COMPONENTS[@]}"
     exit 0
   else
