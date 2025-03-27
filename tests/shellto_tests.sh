@@ -38,7 +38,7 @@ EOF
 test_shellto_multiple_env_with_paths() {
   verify_shellto_command << EOF
   docker compose exec -u "$(id -u):$(id -g)" -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT mediawiki /var/local/installer/install extensions/IPInfo skins/MonoBook
-  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL m /var/local/installer/install extensions/IPInfo skins/MonoBook
+  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT m /var/local/installer/install extensions/IPInfo skins/MonoBook
 EOF
 }
 
