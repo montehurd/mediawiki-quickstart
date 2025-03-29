@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "./common/utility.sh"
+
 # If a seed data backup is needed, run this before `fresh_install`, on the host
 # ( no container exists yet - can alpine containerize later )
 
@@ -19,4 +21,4 @@ fi
 
 mkdir -p mysql-data
 
-tar -C mysql-data --strip-components=3 -xzvf $BACKUP_ZIP_PATH
+tar -C mysql-data --strip-components=3 -xzvf $BACKUP_ZIP_PATH 2>&1 | verboseOrDotPerLine "Restoring from MySQL backup"

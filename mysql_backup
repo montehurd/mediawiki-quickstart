@@ -1,3 +1,5 @@
 #!/bin/bash
 
-./shellto mysql tar cvfz /var/lib/mysql-backups/database_$(date '+%Y-%m-%d_%H-%M-%S%z(%Z)').tar.gz var/lib/mysql
+source "./common/utility.sh"
+
+./shellto mysql tar cvfz /var/lib/mysql-backups/database_$(date '+%Y-%m-%d_%H-%M-%S%z(%Z)').tar.gz var/lib/mysql 2>&1 | verboseOrDotPerLine "Creating MySQL backup"
