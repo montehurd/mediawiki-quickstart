@@ -58,10 +58,6 @@ ensure_image_consistency() {
   return 0
 }
 
-test_mediawiki_web_image_consistency() {
-  ensure_image_consistency "mediawiki-web" "./selenium/Dockerfile.mediawiki-web.selenium"
-}
-
 test_mediawiki_image_consistency() {
   ensure_image_consistency "mediawiki" "./selenium/Dockerfile.mediawiki.extras"
 }
