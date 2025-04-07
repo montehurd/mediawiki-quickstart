@@ -13,7 +13,6 @@ services:
 
   mediawiki:
     build:
-      # TODO: should we have "selenium" folder or make it more generic?
       context: ./selenium
       dockerfile: Dockerfile.mediawiki.extras
     image: mediawiki.extras:1.0
@@ -34,14 +33,6 @@ services:
       - .env
 
   mediawiki-web:
-    build:
-      context: ./selenium
-      dockerfile: Dockerfile.mediawiki-web.selenium
-    # when using build context and dockerfile (above), the image value below
-    # becomes the name:tag the resulting image is given. this image then
-    # overrides the mediawiki-web image from mediawiki's docker-compose.yml
-    image: mediawiki-web.selenium:1.0
-    pull_policy: build
     environment:
       <<: *default-environment
       MW_SERVER: http://localhost:8080
@@ -53,7 +44,6 @@ services:
       - ./extensions:/var/local/extensions
       - ./installer:/var/local/installer
       - ./common:/var/local/common
-      - chromium_cache:/var/local/chromium/
       - composer_cache:/var/local/composer
       - npm_cache:/var/local/npm
 
@@ -66,6 +56,32 @@ services:
       - composer_cache:/var/local/composer
       - npm_cache:/var/local/npm
 
+  selenium:
+    build:
+      context: ./selenium
+      dockerfile: Dockerfile.selenium
+    image: mediawiki-selenium:1.0
+    platform: linux/amd64
+    # user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
+    working_dir: /var/www/html/w
+    environment:
+      <<: *default-environment
+      MW_SERVER: http://localhost:8080
+      MW_SCRIPT_PATH: /w
+    env_file: !override
+      - .env
+    # 'service:mediawiki-web' network_mode makes the selenium container share the network namespace
+    # with the web container - meaning they share the same IP address and localhost refers to the same place
+    # This vastly simplifies isolating/running selenium in a separate container
+    network_mode: "service:mediawiki-web"
+    volumes:
+      - ./mediawiki:/var/www/html/w:cached
+      - chromium_cache:/var/local/chromium
+      - npm_cache:/var/local/npm
+    depends_on:
+      - mediawiki-web
+      - novnc
+
   novnc:
     image: ghcr.io/montehurd/mediawiki-docker-images/novnc:latest
     environment:
@@ -74,8 +90,6 @@ services:
       - 8086:8086
     profiles: ["selenium"]
 
-  # Use COMPOSE_PROFILES to do fresh install with mysql:
-  #   COMPOSE_PROFILES="default,mysql" ./fresh_install
   mysql:
     image: ghcr.io/montehurd/mediawiki-docker-images/mysql:latest
     healthcheck:
@@ -83,22 +97,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    # Ensure container only starts when 'mysql' profile used
     profiles: ["mysql"]
     volumes:
       - ./mysql-data:/var/lib/mysql
       - ./mysql-backups:/var/lib/mysql-backups
-  # Show MySQL tables:
-  #   ./shellto mysql mysql -u root -e "SHOW DATABASES;"
-  # View queries in realtime:
-  #   ./shellto mysql mariadb -u root -p <ENTER><ENTER>
-  #   Then paste this and <ENTER>
-  #     SET GLOBAL general_log = 'ON';
-  #     SET GLOBAL general_log_file = '/var/lib/mysql/general.log';
-  #   Then tail the log file:
-  #     ./shellto mysql tail -f /var/lib/mysql/general.log
-  # View entire db schema:
-  #   ./shellto mysql mysqldump -u root -p --no-data my_wiki <ENTER><ENTER>
 
 volumes:
   chromium_cache:

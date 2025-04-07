@@ -4,7 +4,7 @@ source "./common/utility.sh"
 source "./selenium/selenium.sh"
 
 list_selenium_tests() {
-  ./shellto w sh -c "
+  ./shellto s sh -c "
     node -e \"
       const Mocha = require('mocha');
       const fs = require('fs');

@@ -1,4 +1,9 @@
-FROM docker-registry.wikimedia.org/dev/bookworm-apache2:1.0.1
+FROM debian:bookworm
+
+ARG NODE_MAJOR=18
+ENV NODE_MAJOR=${NODE_MAJOR}
+
+ENV NODE_PATH=/var/www/html/w/node_modules
 
 COPY ./install-browser-for-puppeteer-core.js /var/local
 COPY ./install-browser-for-puppeteer-core.sh /var/local
@@ -8,10 +13,14 @@ COPY ./install-chrome-dependencies.sh /var/local
 
 RUN set -ex && \
     apt-get update && \
-    apt-get install -y firefox-esr && \
-    /var/local/node-preparation.sh ensure_node_major_version_installed 18 && \
+    apt-get install -y curl && \
+    /var/local/node-preparation.sh ensure_node_major_version_installed ${NODE_MAJOR} && \
     /var/local/install-chrome-dependencies.sh && \
     curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq && \
-    chmod +x /usr/bin/yq
+    chmod +x /usr/bin/yq && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html/w
+
+CMD ["tail", "-f", "/dev/null"]

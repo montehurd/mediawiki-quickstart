@@ -39,8 +39,8 @@ run_service_setup_for_components() {
 }
 
 install() {
-  if ! is_service_running "mediawiki-web"; then
-    echo "MediaWiki-web container is not running"
+  if ! is_service_running "mediawiki"; then
+    echo "MediaWiki container is not running"
     exit 1
   fi
   export GIT_CLONE_BASE_URL

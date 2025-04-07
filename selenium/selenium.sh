@@ -14,7 +14,7 @@ ensure_selenium_ready() {
     open_url_when_available "http://localhost:8086/vnc_lite.html?autoconnect=true" 2>&1 | verboseOrDotPerLine "Waiting for NoVNC page availability"
   fi
 
-  if ! ./shellto w /var/local/install-browser-for-puppeteer-core.sh; then
+  if ! ./shellto s /var/local/install-browser-for-puppeteer-core.sh; then
     echo
     exit 1
   fi

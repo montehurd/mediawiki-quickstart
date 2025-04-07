@@ -1,6 +1,5 @@
 #!/bin/bash
 
-apt-get update && \
 apt-get install -y \
     ca-certificates \
     fonts-liberation \
@@ -37,6 +36,4 @@ apt-get install -y \
     libxtst6 \
     lsb-release \
     wget \
-    xdg-utils && \
-apt-get clean && \
-rm -rf /var/lib/apt/lists/*
+    xdg-utils

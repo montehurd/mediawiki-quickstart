@@ -12,7 +12,7 @@ run_selenium_tests() {
     file_path="/var/www/html/w/$file_path"
   fi
 
-  if [ "$(./shellto w node -e "console.log(require('glob').sync('$file_path').length)")" = "0" ]; then
+  if [ "$(./shellto s node -e "console.log(require('glob').sync('$file_path').length)")" = "0" ]; then
     echo "No Selenium files found for pattern: '$file_path', skipping..."
     exit 0
   fi
@@ -32,7 +32,7 @@ run_selenium_tests() {
     $([[ "${SILENT:-0}" == "1" ]] || echo "-it") \
     -e DISPLAY=mediawiki-novnc-1:0 \
     -e NODE_PATH=/var/www/html/w/node_modules \
-    w npx wdio "/var/local/wdio.conf.override.js" \
+    s npx wdio "/var/local/wdio.conf.override.js" \
       --spec "$file_path" \
       --logLevel "$log_level" \
       --mochaOpts.grep "$test_name" \

@@ -22,6 +22,7 @@ for arg in "$@"; do
     j) args+=("mediawiki-jobrunner") ;;
     n) args+=("novnc") ;;
     e) args+=("elasticsearch") ;;
+    s) args+=("selenium") ;;
     *) args+=("$arg") ;;  # Preserve all other arguments as-is
   esac
 done

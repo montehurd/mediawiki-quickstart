@@ -13,7 +13,7 @@ run_selenium_tests() {
     -e DISPLAY=mediawiki-novnc-1:0 \
     -e NODE_PATH=/var/www/html/w/node_modules \
     -w "/var/www/html/w/${component_path}" \
-    w bash -c '
+    s bash -c '
       source /var/www/html/w/.env
       export CHROME_PATH
       npm run selenium-test
