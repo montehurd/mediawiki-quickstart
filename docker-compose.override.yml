@@ -90,6 +90,8 @@ services:
       - 8086:8086
     profiles: ["selenium"]
 
+  # Use COMPOSE_PROFILES to do fresh install with mysql:
+  #   COMPOSE_PROFILES="default,mysql" ./fresh_install
   mysql:
     image: ghcr.io/montehurd/mediawiki-docker-images/mysql:latest
     healthcheck:
@@ -97,10 +99,22 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    # Ensure container only starts when 'mysql' profile used
     profiles: ["mysql"]
     volumes:
       - ./mysql-data:/var/lib/mysql
       - ./mysql-backups:/var/lib/mysql-backups
+  # Show MySQL tables:
+  #   ./shellto mysql mysql -u root -e "SHOW DATABASES;"
+  # View queries in realtime:
+  #   ./shellto mysql mariadb -u root -p <ENTER><ENTER>
+  #   Then paste this and <ENTER>
+  #     SET GLOBAL general_log = 'ON';
+  #     SET GLOBAL general_log_file = '/var/lib/mysql/general.log';
+  #   Then tail the log file:
+  #     ./shellto mysql tail -f /var/lib/mysql/general.log
+  # View entire db schema:
+  #   ./shellto mysql mysqldump -u root -p --no-data my_wiki <ENTER><ENTER>
 
 volumes:
   chromium_cache:
