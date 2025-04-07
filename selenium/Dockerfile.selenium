@@ -1,4 +1,4 @@
-FROM node:18-bookworm
+FROM node:18-bookworm-slim
 
 ENV NODE_PATH=/var/www/html/w/node_modules
 
