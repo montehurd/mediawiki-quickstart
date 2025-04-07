@@ -62,14 +62,11 @@ services:
       dockerfile: Dockerfile.selenium
     image: mediawiki-selenium:1.0
     platform: linux/amd64
-    # user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
     working_dir: /var/www/html/w
     environment:
       <<: *default-environment
       MW_SERVER: http://localhost:8080
       MW_SCRIPT_PATH: /w
-    env_file: !override
-      - .env
     # 'service:mediawiki-web' network_mode makes the selenium container share the network namespace
     # with the web container - meaning they share the same IP address and localhost refers to the same place
     # This vastly simplifies isolating/running selenium in a separate container
