@@ -2,10 +2,11 @@ FROM node:18-bookworm-slim
 
 ENV NODE_PATH=/var/www/html/w/node_modules
 
-COPY ./install-browser-for-puppeteer-core.js /var/local
-COPY ./install-browser-for-puppeteer-core.sh /var/local
-COPY ./wdio.conf.override.js /var/local
-COPY ./install-chrome-dependencies.sh /var/local
+COPY ./install-browser-for-puppeteer-core.js \
+     ./install-browser-for-puppeteer-core.sh \
+     ./wdio.conf.override.js \
+     ./install-chrome-dependencies.sh \
+     /var/local/
 
 RUN set -ex && \
     apt-get update && \
