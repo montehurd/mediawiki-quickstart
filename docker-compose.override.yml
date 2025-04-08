@@ -67,19 +67,11 @@ services:
       - npm_cache:/var/local/npm
 
   novnc:
-    build:
-      context: ./selenium/novnc
-      dockerfile: Dockerfile
-    image: mediawiki-novnc:1.0
-    pull_policy: build
+    image: ghcr.io/montehurd/mediawiki-docker-images/novnc:latest
     environment:
-      - DISPLAY_WIDTH=1280
-      - DISPLAY_HEIGHT=1024
       - NOVNC_PORT=8086
     ports:
       - 8086:8086
-    volumes:
-      - ./selenium/novnc:/app
 
   # Use COMPOSE_PROFILES to do fresh install with mysql:
   #   COMPOSE_PROFILES="default,mysql" ./fresh_install
