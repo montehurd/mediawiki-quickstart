@@ -4,8 +4,7 @@ source "./common/container-readiness.sh"
 
 run_qunit(){
   fresh_install_if_containers_not_running
-  # At the moment QUnit test runs headless
-  ./shellto w sh -c "FIREFOX_BIN=/usr/bin/firefox-esr npm run qunit"
+  docker compose up --no-deps qunit
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

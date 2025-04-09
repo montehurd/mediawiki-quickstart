@@ -80,6 +80,24 @@ services:
       - novnc
     profiles: ["selenium"]
 
+  qunit:
+    build:
+      context: ./selenium
+      dockerfile: Dockerfile.qunit
+    image: mediawiki-qunit:1.0
+    platform: linux/amd64
+    working_dir: /var/www/html/w
+    environment:
+      MW_SERVER: http://localhost:8080
+      MW_SCRIPT_PATH: /w
+    # 'service:mediawiki-web' network_mode makes the qunit container share the network namespace
+    # with the web container - meaning they share the same IP address and localhost refers to the same place
+    # This vastly simplifies isolating/running qunit in a separate container
+    network_mode: "service:mediawiki-web"
+    volumes:
+      - ./mediawiki:/var/www/html/w:cached
+    profiles: ["qunit"]
+
   novnc:
     image: ghcr.io/montehurd/mediawiki-docker-images/novnc:latest
     environment:
