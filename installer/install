@@ -2,7 +2,6 @@
 
 set -eu
 
-source "/var/local/installer/php.sh"
 source "/var/local/common/utility.sh"
 
 if [ -z "${GIT_CLONE_BASE_URL:-}" ]; then
@@ -156,7 +155,7 @@ _install_php_and_node_dependencies() {
   if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
     return
   fi
-  if ! install_php_dependencies_for_components; then
+  if ! /var/local/installer/install_php_dependencies_for_components; then
     echo "Failed to install php dependencies"
     exit 1
   fi
