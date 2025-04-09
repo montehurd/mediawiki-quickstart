@@ -12,16 +12,12 @@ x-environment: &default-environment
 services:
 
   mediawiki:
-    build:
-      context: ./docker
-      dockerfile: Dockerfile.mediawiki.extras
-    image: mediawiki.extras:1.0
+    image: ghcr.io/montehurd/mediawiki-docker-images/mediawiki:latest
     volumes:
       - ./skins:/var/local/skins
       - ./extensions:/var/local/extensions
       - ./installer:/var/local/installer
       - ./common:/var/local/common
-      - ./docker/node-preparation.sh:/var/local/node-preparation.sh
       - ./import-on-fresh-install/pages:/tmp/page-xml
       - ./import_page_xml.sh:/import_page_xml.sh
       - composer_cache:/var/local/composer
