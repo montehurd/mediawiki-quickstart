@@ -41,8 +41,5 @@ run_selenium_tests() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-  if [ "${SILENT:-0}" -ne 1 ]; then
-    open_url_when_available "http://localhost:8086/vnc_lite.html?autoconnect=true" &
-  fi
   run_selenium_tests "$@"
 fi

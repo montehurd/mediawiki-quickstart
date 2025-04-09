@@ -6,7 +6,16 @@ source "./common/utility.sh"
 ensure_selenium_ready() {
   echo | verboseOrDotPerLine "Ensuring Selenium ready..."
   fresh_install_if_containers_not_running
-  if ! ./shellto -e DISPLAY=mediawiki-novnc-1:0 w /var/local/install-browser-for-puppeteer-core.sh; then
+
+  if ! is_container_running "mediawiki-novnc-1"; then
+    docker compose up -d novnc 2>&1 | verboseOrDotPerLine "Starting NoVNC container"
+  fi
+
+  if [ "${SILENT:-0}" -ne 1 ]; then
+    open_url_when_available "http://localhost:8086/vnc_lite.html?autoconnect=true" 2>&1 | verboseOrDotPerLine "Waiting for NoVNC page availability"
+  fi
+
+  if ! ./shellto w /var/local/install-browser-for-puppeteer-core.sh; then
     echo
     exit 1
   fi

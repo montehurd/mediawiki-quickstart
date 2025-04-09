@@ -72,6 +72,7 @@ services:
       - NOVNC_PORT=8086
     ports:
       - 8086:8086
+    profiles: ["selenium"]
 
   # Use COMPOSE_PROFILES to do fresh install with mysql:
   #   COMPOSE_PROFILES="default,mysql" ./fresh_install
