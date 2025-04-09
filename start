@@ -2,7 +2,7 @@
 
 source "./config"
 source "./common/utility.sh"
-source "./docker/docker.sh"
+source "./docker.sh"
 source "./use_skin"
 source "./open_special_version_page"
 source "./import_extra_local_settings"

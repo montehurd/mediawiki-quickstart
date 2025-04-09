@@ -2,7 +2,7 @@
 
 source "./config"
 source "./common/utility.sh"
-source "./docker/docker.sh"
+source "./docker.sh"
 
 delete_mediawiki_folder() {
   if [ -n "$MEDIAWIKI_PATH" ] && [ -d "$MEDIAWIKI_PATH" ]; then

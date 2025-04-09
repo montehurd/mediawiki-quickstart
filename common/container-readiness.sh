@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "./docker/docker.sh"
+source "./docker.sh"
 source "./fresh_install"
 
 fresh_install_if_containers_not_running() {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "./docker/docker.sh"
+source "./docker.sh"
 source "./config"
 source "./open_special_version_page"
 

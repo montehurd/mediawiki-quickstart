@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source "./config"
-source "./docker/docker.sh"
+source "./docker.sh"
 
 # 'set +e' needed to allow subsequents tests to proceed if a test fails
 # Needed here because the docker file turns it off

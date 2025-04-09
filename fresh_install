@@ -4,7 +4,7 @@ set -u
 
 source "./config"
 source "./common/utility.sh"
-source "./docker/docker.sh"
+source "./docker.sh"
 source "./remove"
 source "./prepare"
 source "./start"
