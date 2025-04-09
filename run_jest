@@ -4,7 +4,7 @@ source "./common/container-readiness.sh"
 
 run_jest() {
   fresh_install_if_containers_not_running
-  ./shellto w npm run jest
+  ./shellto m npm run jest
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
