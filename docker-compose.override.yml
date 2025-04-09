@@ -13,7 +13,7 @@ services:
 
   mediawiki:
     build:
-      context: ./selenium
+      context: ./docker
       dockerfile: Dockerfile.mediawiki.extras
     image: mediawiki.extras:1.0
     volumes:
@@ -21,7 +21,7 @@ services:
       - ./extensions:/var/local/extensions
       - ./installer:/var/local/installer
       - ./common:/var/local/common
-      - ./selenium/node-preparation.sh:/var/local/node-preparation.sh
+      - ./docker/node-preparation.sh:/var/local/node-preparation.sh
       - ./import-on-fresh-install/pages:/tmp/page-xml
       - ./import_page_xml.sh:/import_page_xml.sh
       - composer_cache:/var/local/composer
