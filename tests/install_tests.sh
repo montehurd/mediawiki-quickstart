@@ -59,7 +59,7 @@ ensure_image_consistency() {
 }
 
 test_mediawiki_image_consistency() {
-  ensure_image_consistency "mediawiki" "./selenium/Dockerfile.mediawiki.extras"
+  ensure_image_consistency "mediawiki" "./docker/Dockerfile.mediawiki.extras"
 }
 
 test_no_files_owned_by_root() {
