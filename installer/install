@@ -3,7 +3,6 @@
 set -eu
 
 source "/var/local/installer/php.sh"
-source "/var/local/installer/node.sh"
 source "/var/local/common/utility.sh"
 
 if [ -z "${GIT_CLONE_BASE_URL:-}" ]; then
@@ -161,7 +160,7 @@ _install_php_and_node_dependencies() {
     echo "Failed to install php dependencies"
     exit 1
   fi
-  if ! install_node_dependencies_for_components "${INSTALLED_COMPONENTS[@]}"; then
+  if ! /var/local/installer/install_node_dependencies_for_components "${INSTALLED_COMPONENTS[@]}"; then
     echo "Failed to install node dependencies"
     exit 1
   fi

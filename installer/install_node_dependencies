@@ -1,0 +1,17 @@
+#!/bin/bash
+
+install_node_dependencies() {
+  if [ -f "package-lock.json" ]; then
+    echo "Found '$(pwd)/package-lock.json', using 'npm ci'..."
+    npm ci
+  elif [ -f "package.json" ]; then
+    echo "No package-lock.json found but found '$(pwd)/package.json', using 'npm install'..."
+    npm install
+  else
+    echo "No package-lock.json or package.json found in '$(pwd)'. Skipping npm install/ci"
+  fi
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  install_node_dependencies "$@"
+fi

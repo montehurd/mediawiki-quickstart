@@ -37,7 +37,7 @@ start() {
       --pass "$MW_PASS" \
       --skins "" \
         "$MW_SITENAME" "$MW_USER"' 2>&1 | verboseOrDotPerLine "php maintenance/run.php install"
-    ./shellto m /var/local/node-preparation.sh install_node_dependencies 2>&1 | verboseOrDotPerLine "Installing Mediawiki core Node dependencies"
+    ./shellto m /var/local/installer/install_node_dependencies 2>&1 | verboseOrDotPerLine "Installing Mediawiki core Node dependencies"
 
     sleep 2
     import_extra_local_settings 2>&1 | verboseOrDotPerLine "Importing extra local settings"
