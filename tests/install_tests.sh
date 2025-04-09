@@ -14,7 +14,7 @@ test_fresh_install() {
     return 1
   fi
   echo "Mediawiki directory created as expected"
-  if ! is_container_running "mediawiki-mediawiki-1"; then
+  if ! is_service_running "mediawiki"; then
     echo "mediawiki container not running"
     return 1
   fi

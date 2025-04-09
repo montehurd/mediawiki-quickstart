@@ -39,7 +39,7 @@ run_service_setup_for_components() {
 }
 
 install() {
-  if ! are_containers_running "mediawiki-mediawiki-web-1"; then
+  if ! is_service_running "mediawiki-web"; then
     echo "MediaWiki-web container is not running"
     exit 1
   fi

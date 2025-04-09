@@ -2,14 +2,6 @@
 
 set -eu
 
-is_container_running() {
-  if [ "$(docker inspect -f '{{.State.Running}}' "$1" 2>/dev/null)" = "true" ]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 is_service_running() {
   if [ -n "$(docker compose ps -q "$1" 2>/dev/null)" ]; then
     return 0
@@ -18,12 +10,11 @@ is_service_running() {
   fi
 }
 
-are_containers_running() {
-  local containers
-  containers=("$@")
-
-  for container in "${containers[@]}"; do
-    if ! is_container_running "$container"; then
+are_services_running() {
+  local services
+  services=("$@")
+  for service in "${services[@]}"; do
+    if ! is_service_running "$service"; then
       return 1
     fi
   done

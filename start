@@ -49,7 +49,7 @@ start() {
     return 0
   fi
 
-  if ! is_container_running "mediawiki-mediawiki-1"; then
+  if ! is_service_running "mediawiki"; then
     docker compose up -d  2>&1 | verboseOrDotPerLine "Docker compose up -d"
     sleep 1
   fi
