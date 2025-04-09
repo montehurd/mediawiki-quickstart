@@ -7,6 +7,10 @@ ensure_selenium_ready() {
   echo | verboseOrDotPerLine "Ensuring Selenium ready..."
   fresh_install_if_containers_not_running
 
+  if ! is_service_running "selenium"; then
+    docker compose up -d selenium 2>&1 | verboseOrDotPerLine "Starting Selenium container"
+  fi
+
   if [ "${SILENT:-0}" -ne 1 ]; then
     if ! is_service_running "novnc"; then
       docker compose up -d novnc 2>&1 | verboseOrDotPerLine "Starting NoVNC container"

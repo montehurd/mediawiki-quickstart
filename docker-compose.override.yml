@@ -78,6 +78,7 @@ services:
     depends_on:
       - mediawiki-web
       - novnc
+    profiles: ["selenium"]
 
   novnc:
     image: ghcr.io/montehurd/mediawiki-docker-images/novnc:latest
