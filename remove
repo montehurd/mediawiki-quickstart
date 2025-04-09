@@ -48,7 +48,7 @@ remove() {
     exit 1
   fi
   docker compose -p mediawiki down --remove-orphans 2>&1 | verboseOrDotPerLine "Docker compose down"
-  docker image rm mediawiki-web.selenium:1.0 mediawiki.extras:1.0 2>&1 | verboseOrDotPerLine "Docker image rm" || true
+  docker image rm mediawiki.extras:1.0 2>&1 | verboseOrDotPerLine "Docker image rm" || true
   delete_mediawiki_folder
 }
 
