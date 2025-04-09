@@ -57,12 +57,7 @@ services:
       - npm_cache:/var/local/npm
 
   selenium:
-    build:
-      context: ./selenium
-      dockerfile: Dockerfile.selenium
-    image: mediawiki-selenium:1.0
-    platform: linux/amd64
-    working_dir: /var/www/html/w
+    image: ghcr.io/montehurd/mediawiki-docker-images/selenium:latest
     environment:
       <<: *default-environment
       MW_SERVER: http://localhost:8080
@@ -73,6 +68,7 @@ services:
     network_mode: "service:mediawiki-web"
     volumes:
       - ./mediawiki:/var/www/html/w:cached
+      - ./selenium/wdio.conf.override.js:/var/local/wdio.conf.override.js
       - chromium_cache:/var/local/chromium
       - npm_cache:/var/local/npm
     depends_on:
@@ -81,12 +77,7 @@ services:
     profiles: ["selenium"]
 
   qunit:
-    build:
-      context: ./selenium
-      dockerfile: Dockerfile.qunit
-    image: mediawiki-qunit:1.0
-    platform: linux/amd64
-    working_dir: /var/www/html/w
+    image: ghcr.io/montehurd/mediawiki-docker-images/qunit:latest
     environment:
       MW_SERVER: http://localhost:8080
       MW_SCRIPT_PATH: /w
