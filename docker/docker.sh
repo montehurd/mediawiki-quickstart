@@ -35,18 +35,6 @@ is_container_present() {
   return $?
 }
 
-are_containers_present() {
-  local containers
-  containers=("$@")
-
-  for container in "${containers[@]}"; do
-    if ! is_container_present "$container"; then
-      return 1
-    fi
-  done
-  return 0
-}
-
 get_compose_version() {
   docker compose version --short 2>/dev/null
 }
