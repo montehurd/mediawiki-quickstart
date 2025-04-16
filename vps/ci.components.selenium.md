@@ -1,54 +1,58 @@
-
-```
 #cloud-config
+users:
+  - name: quickstart
+    groups: [sudo, docker]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
 runcmd:
   - git clone https://gitlab.wikimedia.org/mhurd/vps-provisioning.git
   - cd vps-provisioning
   - ./docker.sh install
-  - ./user.sh create "quickstart" "quickstart"
   - mkdir -p /var/log/selenium-results
   - chown -R quickstart:quickstart /var/log/selenium-results
   - su quickstart -c "git clone https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart.git /home/quickstart/mediawiki-quickstart"
-  - chmod +x /home/quickstart/mediawiki-quickstart/ci.components.selenium
+  - sleep 5
+  - |
+    cat > /etc/systemd/system/results-server.service << 'EOL'
+    [Unit]
+    Description=Simple HTTP Server for Selenium Results
+    After=network.target
+
+    [Service]
+    Type=simple
+    User=quickstart
+    WorkingDirectory=/var/log/selenium-results
+    ExecStart=/usr/bin/python3 -m http.server 8088
+    Restart=always
+
+    [Install]
+    WantedBy=multi-user.target
+    EOL
+  - |
+    cat > /etc/systemd/system/selenium-test.service << 'EOL'
+    [Unit]
+    Description=Continuous Selenium Test Runner
+    After=network.target
+
+    [Service]
+    Type=simple
+    User=quickstart
+    WorkingDirectory=/home/quickstart/mediawiki-quickstart
+    Environment="FORCE=1"
+    Environment="SKIP_COUNTDOWN=1"
+    Environment="SILENT=1"
+    Environment="SKIP_LOCALIZATION_CACHE_REBUILD=1"
+    Environment="SKIP_PAGE_IMPORT=1"
+    Environment="OUTPUT_PATH=/var/log/selenium-results"
+    ExecStart=/bin/bash -c 'while true; do if ! git pull; then if df -h . | awk "NR==2 {print \$5}" | sed "s/%//" | awk "\$1 > 95"; then docker system prune -af && git pull; fi; fi && ./ci.components.selenium; done'
+    Restart=always
+
+    [Install]
+    WantedBy=multi-user.target
+    EOL
+  - sleep 5
   - systemctl daemon-reload
-  - systemctl enable selenium-test
-  - systemctl start selenium-test
   - systemctl enable results-server
   - systemctl start results-server
-
-write_files:
-  - path: /etc/systemd/system/selenium-test.service
-    content: |
-      [Unit]
-      Description=Continuous Selenium Test Runner
-      After=network.target
-
-      [Service]
-      Type=simple
-      User=quickstart
-      WorkingDirectory=/home/quickstart/mediawiki-quickstart
-      Environment="SILENT=1"
-      Environment="RECLONE_REPOS=1"
-      Environment="OUTPUT_PATH=/var/log/selenium-results"
-      ExecStart=/bin/bash -c 'while true; do if ! git pull; then if df -h . | awk "NR==2 {print \$5}" | sed "s/%//" | awk "\$1 > 95"; then docker system prune -af && git pull; fi; fi && ./ci.components.selenium; done'
-      Restart=always
-
-      [Install]
-      WantedBy=multi-user.target
-
-  - path: /etc/systemd/system/results-server.service
-    content: |
-      [Unit]
-      Description=Simple HTTP Server for Selenium Results
-      After=network.target
-
-      [Service]
-      Type=simple
-      User=quickstart
-      WorkingDirectory=/var/log/selenium-results
-      ExecStart=/usr/bin/python3 -m http.server 8088
-      Restart=always
-
-      [Install]
-      WantedBy=multi-user.target
-```
+  - systemctl enable selenium-test
+  - systemctl start selenium-test
