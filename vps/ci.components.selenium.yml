@@ -1,9 +1,13 @@
 #cloud-config
+users:
+  - name: quickstart
+    groups: [sudo, docker]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
 runcmd:
   - git clone https://gitlab.wikimedia.org/mhurd/vps-provisioning.git
   - cd vps-provisioning
   - ./docker.sh install
-  - ./user.sh create "quickstart" "quickstart"
   - mkdir -p /var/log/selenium-results
   - chown -R quickstart:quickstart /var/log/selenium-results
   - su quickstart -c "git clone https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart.git /home/quickstart/mediawiki-quickstart"
