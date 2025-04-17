@@ -9,6 +9,7 @@ ensure_selenium_ready() {
 
   if ! is_service_running "selenium"; then
     docker compose up -d selenium 2>&1 | verboseOrDotPerLine "Starting Selenium container"
+    ./shellto -u root s chown -R $(id -u):$(id -g) /var/local
   fi
 
   if [ "${SILENT:-0}" -ne 1 ]; then
