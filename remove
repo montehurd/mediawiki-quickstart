@@ -15,25 +15,30 @@ delete_mediawiki_folder() {
     # to delete without identifying such files and asserting
     # ownership over them
     #
-    # To address this we move existing mediawiki dir to
-    # '/tmp' so we can proceed immediately after the mv
+    # To address this we move existing mediawiki dir to a
+    # temp dir so we can proceed immediately after the mv
     # completes, and we launch a detached process to finish
     # the removal in the background
-    local temp_dir="/tmp/mediawiki_delete_$RANDOM"
+    local temp_dir=$(mktemp -d)
     # Perform the move
     if mv "$MEDIAWIKI_PATH" "$temp_dir"; then
       sleep 1
       # Launch detached removal process with permissions
       # assertion fallback
       (
-        sleep 1
-        if ! rm -rf "$temp_dir"; then
+        # Assuming fresh_install takes a couple minutes,
+        # wait a bit for it to finish so more resources
+        # are available for it to do so quickly
+        #
+        # Also perform rm -rf on low priority threads
+        sleep 240
+        if ! nice -n 19 rm -rf "$temp_dir"; then
           docker run --rm \
             -v "$temp_dir:/data" \
             -u root \
             alpine sh -c "find /data -print0 | xargs -0 -P \$(nproc) chown -h -f $(id -u):$(id -g)" \
           >/dev/null 2>&1
-          rm -rf "$temp_dir"
+          nice -n 19 rm -rf "$temp_dir"
         fi
       ) &>/dev/null &
     else
