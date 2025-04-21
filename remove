@@ -33,7 +33,7 @@ delete_mediawiki_folder() {
         # Also perform rm -rf on low priority threads
         sleep 240
         if ! nice -n 19 rm -rf "$temp_dir"; then
-          docker run --rm \
+          docker run --rm --cpus=0.5 \
             -v "$temp_dir:/data" \
             -u root \
             alpine sh -c "find /data -print0 | xargs -0 -P \$(nproc) chown -h -f $(id -u):$(id -g)" \
