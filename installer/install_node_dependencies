@@ -1,15 +1,25 @@
 #!/bin/bash
 
+source "/var/local/common/utility.sh"
+
+set -eu
+
 install_node_dependencies() {
-  if [ -f "package-lock.json" ]; then
-    echo "Found '$(pwd)/package-lock.json', using 'npm ci'..."
-    npm ci
-  elif [ -f "package.json" ]; then
-    echo "No package-lock.json found but found '$(pwd)/package.json', using 'npm install'..."
-    npm install
-  else
-    echo "No package-lock.json or package.json found in '$(pwd)'. Skipping npm install/ci"
+  if ! /var/local/installer/configure_npm_workspaces 2>&1 | verboseOrDotPerLine "Hoisting all skin/extension Node dependency satisfaction to MW core, if needed"; then
+    echo "Failed to configure MW core 'package.json' to use NPM workspaces wildcard paths for skins/extensions. Exiting"
+    return 1
   fi
+
+  if ! [ -f "package.json" ]; then
+    echo "Expected 'package.json' not found in '$(pwd)'"
+    return 1
+  fi
+
+  if ! npm install --legacy-peer-deps 2>&1 | verboseOrDotPerLine "NPM install"; then
+    echo "NPM install failed. Exiting"
+    return 1
+  fi
+  return 0
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

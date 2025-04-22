@@ -1,0 +1,27 @@
+#!/bin/bash
+
+source "/var/local/common/utility.sh"
+
+set -eu
+
+install_php_dependencies() {
+  if ! cp composer.local.json-sample composer.local.json 2>&1 | verboseOrDotPerLine "Hoisting all skin/extension PHP dependency satisfaction to MW core, if needed"; then
+    echo "Failed to copy composer.local.json-sample. Exiting"
+    return 1
+  fi
+
+  if ! composer update 2>&1 | verboseOrDotPerLine "Composer update"; then
+    echo "Composer update failed. Exiting"
+    return 1
+  fi
+
+  if ! composer install 2>&1 | verboseOrDotPerLine "Composer install"; then
+    echo "Composer install failed. Exiting"
+    return 1
+  fi
+  return 0
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  install_php_dependencies "$@"
+fi

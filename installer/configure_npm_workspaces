@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+// Modify MediaWiki's package.json to add workspace configuration.
+// This tells npm to hoist skin/extension dependencies to the root
+// node_modules. Means running 'npm install' in mw core will also
+// satisfy all skin/extension node dependencies. Is vastly faster
+// that having to resolve node dependencies in each extension/skin,
+// and also results in a vastly smaller node_modules dependency tree
+const fs = require('fs')
+const path = require('path')
+
+const packageJsonPath = './package.json'
+let packageJson;
+
+try {
+  packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+} catch (error) {
+  console.error('Error reading package.json:', error.message)
+  process.exit(1)
+}
+
+fs.writeFileSync(`${packageJsonPath}.orig`, JSON.stringify(packageJson, null, 2))
+
+packageJson.private = true // Required for workspaces
+packageJson.workspaces = packageJson.workspaces || [".", "extensions/*", "skins/*"]
+
+fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
+
+console.log("Successfully modified mw core package.json to use 'workspaces' including all extension/skins")

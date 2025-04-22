@@ -155,12 +155,16 @@ _install_php_and_node_dependencies() {
   if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
     return
   fi
-  if ! /var/local/installer/install_php_dependencies_for_components; then
-    echo "Failed to install php dependencies"
+  if ! /var/local/installer/install_php_dependencies; then
+    echo "Failed to install PHP dependencies"
     exit 1
   fi
-  if ! /var/local/installer/install_node_dependencies_for_components "${INSTALLED_COMPONENTS[@]}"; then
-    echo "Failed to install node dependencies"
+  if ! /var/local/installer/run_mediawiki_maintenance_update; then
+    echo "Mediawiki maintenance update failed. Exiting"
+    return 1
+  fi
+  if ! /var/local/installer/install_node_dependencies; then
+    echo "Failed to install Node dependencies"
     exit 1
   fi
 }

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+source "/var/local/common/utility.sh"
+
+set -eu
+
+run_mediawiki_maintenance_update() {
+  if ! php maintenance/run.php update --quick 2>&1 | verboseOrDotPerLine "Mediawiki maintenance update"; then
+      echo "PHP maintenance update failed. Exiting"
+      return 1
+  fi
+  return 0
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  run_mediawiki_maintenance_update "$@"
+fi
