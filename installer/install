@@ -43,16 +43,6 @@ _is_component_enabled() {
   fi
 }
 
-_get_dependencies() {
-  local component_path="$1"
-  local dependencies_file="$(_get_manifest_path "$component_path")/dependencies.yml"
-  if [ -f "$dependencies_file" ]; then
-    _yq '.[]' "$(cat "$dependencies_file")"
-  else
-    echo ""
-  fi
-}
-
 _get_component_local_settings_path() {
   local component_path="$1"
   echo "$(_get_manifest_path "$component_path")/LocalSettings.php"
@@ -80,15 +70,6 @@ _install_from_manifest() {
     return
   fi
  
-  local dependencies
-  dependencies=$(_get_dependencies "$component_path")
-  if [ -n "$dependencies" ]; then
-    for dependency in $dependencies; do
-      echo "Installing '$(_get_component_name "$component_path")' dependency '$dependency'"
-      _install_from_manifest "$dependency"
-    done
-  fi
-
   local clone_depth="--depth=${CLONE_DEPTH:-2}"
   if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
     local clone_depth=""
@@ -227,5 +208,6 @@ install() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-  install "$@"
+  COMPONENTS=$(/var/local/common/hydrate_dependencies_list "$@")
+  install $COMPONENTS
 fi

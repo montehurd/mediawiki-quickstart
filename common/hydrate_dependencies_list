@@ -1,0 +1,60 @@
+#!/bin/bash
+
+set -eu
+
+# Resolves component dependencies recursively and outputs a complete,
+# deduplicated installation order with each component appearing only
+# after all its dependencies. This flattened list is better than
+# having the installer itself recurse
+
+source "/var/local/common/utility.sh"
+
+_get_manifest_path() {
+  local component_path="$1"
+  echo "/var/local/$component_path"
+}
+
+_get_dependencies() {
+  local component_path="$1"
+  local dependencies_file="$(_get_manifest_path "$component_path")/dependencies.yml"
+  if [ -f "$dependencies_file" ]; then
+    _yq '.[]' "$(cat "$dependencies_file")"
+  fi
+}
+
+RESULT=()
+
+_is_in_results() {
+  local component="$1"
+  for item in "${RESULT[@]}"; do
+    if [ "$item" = "$component" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+_process_component() {
+  local component="$1"
+  _is_in_results "$component" && return
+  local deps
+  deps=$(_get_dependencies "$component")
+  if [ -n "$deps" ]; then
+    for dep in $deps; do
+      _process_component "$dep"
+    done
+  fi
+  RESULT+=("$component")
+}
+
+hydrate_dependencies_list() {
+  RESULT=()
+  for component in "$@"; do
+    _process_component "$component"
+  done
+  echo "${RESULT[@]}"
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  hydrate_dependencies_list "$@"
+fi
