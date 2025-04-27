@@ -4,6 +4,11 @@ set -eu
 
 source "/var/local/common/utility.sh"
 
+# Path for tracking installed components (for thread safety)
+INSTALLED_COMPONENTS_TRACKING_FILE="/tmp/installed_components_this_run.txt"
+COMPONENTS_PHP_LOCK="/tmp/components_php.lock"
+COMPONENTS_TRACKING_LOCK="/tmp/components_tracking.lock"
+
 if [ -z "${GIT_CLONE_BASE_URL:-}" ]; then
   echo "Error: GIT_CLONE_BASE_URL environment variable must be set"
   exit 1
@@ -84,11 +89,19 @@ _install_from_manifest() {
     exit 1
   fi
  
-  # Include the component's LocalSettings.php in MediaWiki's LocalSettings.php
-  echo -e "\n# Local settings for '$(_get_component_name "$component_path")' $(_get_component_type "$component_path")" >> Components.php
-  echo "require_once \"$local_settings_path\";" >> Components.php
+  # Thread-safe write to Components.php
+  (
+    flock -x 200
+    echo "" >> Components.php
+    echo "# Local settings for '$(_get_component_name "$component_path")' $(_get_component_type "$component_path")" >> Components.php
+    echo "require_once \"$local_settings_path\";" >> Components.php
+  ) 200>"$COMPONENTS_PHP_LOCK"
 
-  INSTALLED_COMPONENTS+=("$component_path")
+  # Thread-safe tracking of installed component
+  (
+    flock -x 201
+    echo "$component_path" >> "$INSTALLED_COMPONENTS_TRACKING_FILE"
+  ) 201>"$COMPONENTS_TRACKING_LOCK"
 }
 
 _import_page_dumps_for_installed_components() {
@@ -185,12 +198,48 @@ declare -a INSTALLED_COMPONENTS=()
 
 install() {
   INSTALLED_COMPONENTS=()
+
+  # Create and initialize lock files
+  > "$INSTALLED_COMPONENTS_TRACKING_FILE"
+  > "$COMPONENTS_PHP_LOCK"
+  > "$COMPONENTS_TRACKING_LOCK"
+  chmod 666 "$COMPONENTS_PHP_LOCK"
+  chmod 666 "$COMPONENTS_TRACKING_LOCK"
+  chmod 666 "$INSTALLED_COMPONENTS_TRACKING_FILE"
+
+  # Export function for parallel execution
+  export -f _install_from_manifest
+  export -f _get_component_local_settings_path
+  export -f _get_manifest_path
+  export -f _get_component_type
+  export -f _get_component_name
+  export -f _is_component_enabled
+  export -f clone_git_repo
+  export -f verboseOrDotPerLine
+  export -f print_duration_since_start
+  # Export variables for parallel execution
+  export INSTALLED_COMPONENTS_TRACKING_FILE
+  export COMPONENTS_PHP_LOCK
+  export COMPONENTS_TRACKING_LOCK
+  export GIT_CLONE_BASE_URL
+  export CLONE_DEPTH
+  export BRANCH
+
+  # Build commands for parallel execution
+  local COMMANDS=""
   for component_path in "$@"; do
-    _install_from_manifest "$component_path"
+    COMMANDS+="_install_from_manifest \"$component_path\"
+"
   done
 
-  # Only proceed with post-install steps if components were actually installed
-  if [ ${#INSTALLED_COMPONENTS[@]} -gt 0 ]; then
+  # Execute commands in parallel
+  parallel_process "$COMMANDS"
+
+  # Build INSTALLED_COMPONENTS from tracking file
+  if [ -s "$INSTALLED_COMPONENTS_TRACKING_FILE" ]; then
+    mapfile -t INSTALLED_COMPONENTS < "$INSTALLED_COMPONENTS_TRACKING_FILE"
+
+    # Only proceed with post-install steps if components were actually installed
     _install_php_and_node_dependencies
     _run_bash_for_installed_components
     if [[ "${SKIP_LOCALIZATION_CACHE_REBUILD:-0}" != "1" ]]; then
