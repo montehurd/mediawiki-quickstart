@@ -254,8 +254,27 @@ parallel_process() {
     ' _
 }
 
+# map_gerrit_to_github() {
+#   local url=$1
+#   local name
+#   case $url in
+#     */core.git)
+#       echo "https://github.com/wikimedia/mediawiki.git"
+#       ;;
+#     */extensions/*)
+#       name=${url##*/}
+#       echo "https://github.com/wikimedia/mediawiki-extensions-${name%.git}"
+#       ;;
+#     */skins/*)
+#       name=${url##*/}
+#       echo "https://github.com/wikimedia/mediawiki-skins-${name%.git}"
+#       ;;
+#   esac
+# }
+
 clone_git_repo() {
   local repo_url="$1"
+  # repo_url=$(map_gerrit_to_github "$repo_url")
   local target_path="$2"
   local recurse_submodules="$3"
   local branch="${4:-}"
