@@ -4,11 +4,6 @@ set -eu
 
 source "/var/local/common/utility.sh"
 
-# Path for tracking installed components (for thread safety)
-INSTALLED_COMPONENTS_TRACKING_FILE="/tmp/installed_components_this_run.txt"
-COMPONENTS_PHP_LOCK="/tmp/components_php.lock"
-COMPONENTS_TRACKING_LOCK="/tmp/components_tracking.lock"
-
 if [ -z "${GIT_CLONE_BASE_URL:-}" ]; then
   echo "Error: GIT_CLONE_BASE_URL environment variable must be set"
   exit 1
@@ -37,79 +32,30 @@ _ensure_containers_running() {
   return 0
 }
 
-_is_component_enabled() {
-  local component_path="$1"
-  local output
-  output=$(php /var/local/installer/isComponentEnabled.php --component="$(_get_component_name "$component_path")" --type="$(_get_component_type "$component_path")")
-  if [ "$output" == "1" ]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 _get_component_local_settings_path() {
   local component_path="$1"
   echo "$(_get_manifest_path "$component_path")/LocalSettings.php"
 }
 
-# Note: caller must declare the following:
-#   declare -a INSTALLED_COMPONENTS=()
-_install_from_manifest() {
+_clone_component() {
   local component_path="$1"
-  local local_settings_path="$(_get_component_local_settings_path "$component_path")"
- 
-  printf "\n\033[34mInstalling '%s'\033[0m\n" "$(_get_component_name "$component_path")"
-
-  if [ ! -f "$local_settings_path" ]; then
-    printf "    \e[31mRequired '%s' does not exist\e[0m\n\
-    There is a folder for skins and a folder for extensions\n\
-    Ensure your component's manifest folder is in the correct one,\n\
-    containing its own 'LocalSettings.php'\n\
-\e[31mExiting\e[0m\n" "$local_settings_path"
-    exit 1
-  fi
- 
-  if _is_component_enabled "$component_path"; then
-    echo "Component '$(_get_component_name "$component_path")' is already installed and active, skipping..."
-    return
-  fi
  
   local clone_depth="--depth=${CLONE_DEPTH:-2}"
   if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
     local clone_depth=""
   fi
 
-  # Generate the repository URL based on component type and name
-  local repository
-  repository="$GIT_CLONE_BASE_URL/$component_path"
+  local repository="$GIT_CLONE_BASE_URL/$component_path"
 
   if ! clone_git_repo "$repository" "$component_path" true "${BRANCH:-}"; then
     echo "Failed to clone repository '$repository'"
     exit 1
   fi
- 
-  # Thread-safe write to Components.php
-  (
-    flock -x 200
-    echo "" >> Components.php
-    echo "# Local settings for '$(_get_component_name "$component_path")' $(_get_component_type "$component_path")" >> Components.php
-    echo "require_once \"$local_settings_path\";" >> Components.php
-  ) 200>"$COMPONENTS_PHP_LOCK"
-
-  # Thread-safe tracking of installed component
-  (
-    flock -x 201
-    echo "$component_path" >> "$INSTALLED_COMPONENTS_TRACKING_FILE"
-  ) 201>"$COMPONENTS_TRACKING_LOCK"
 }
 
 _import_page_dumps_for_installed_components() {
-    if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
-        return
-    fi
     local folders=()
-    for component_path in "${INSTALLED_COMPONENTS[@]}"; do
+    for component_path in "$@"; do
         local pages_folder="$(_get_manifest_path "$component_path")/pages"
         if [ -d "$pages_folder" ]; then
             folders+=("$pages_folder")
@@ -121,10 +67,7 @@ _import_page_dumps_for_installed_components() {
 }
 
 _run_bash_for_installed_components() {
-  if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
-    return
-  fi
-  for component_path in "${INSTALLED_COMPONENTS[@]}"; do
+  for component_path in "$@"; do
     cd ~
     _run_bash_from_manifest "$component_path" 2>&1 | verboseOrDotPerLine "Running '$component_path/setup.sh' if found"
   done
@@ -146,9 +89,6 @@ _run_bash_from_manifest() {
 }
 
 _install_php_and_node_dependencies() {
-  if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
-    return
-  fi
   if ! /var/local/installer/install_php_dependencies; then
     echo "Failed to install PHP dependencies"
     exit 1
@@ -165,9 +105,6 @@ _install_php_and_node_dependencies() {
 
 _rebuild_localization_cache() {
   sleep 1
-  if [[ ${#INSTALLED_COMPONENTS[@]} -eq 0 ]]; then
-    return
-  fi
   php maintenance/rebuildLocalisationCache.php --force --threads=$(getconf _NPROCESSORS_ONLN) 2>&1 | verboseOrDotPerLine "Rebuild Mediawiki localization cache"
 }
 
@@ -194,69 +131,73 @@ _update_component_docker_compose_includes() {
   return 0
 }
 
-declare -a INSTALLED_COMPONENTS=()
+_link_components() {
+  for component_path in "$@"; do
+    echo "" >> Components.php
+    echo "# Local settings for '$(_get_component_name "$component_path")' $(_get_component_type "$component_path")" >> Components.php
+    local local_settings_path="$(_get_component_local_settings_path "$component_path")"
+    echo "require_once \"$local_settings_path\";" >> Components.php
+  done
+}
 
 install() {
-  INSTALLED_COMPONENTS=()
+  # Return special exit code 2 to indicate no components needed installation
+  (( $# )) || return 2
 
-  # Create and initialize lock files
-  > "$INSTALLED_COMPONENTS_TRACKING_FILE"
-  > "$COMPONENTS_PHP_LOCK"
-  > "$COMPONENTS_TRACKING_LOCK"
-  chmod 666 "$COMPONENTS_PHP_LOCK"
-  chmod 666 "$COMPONENTS_TRACKING_LOCK"
-  chmod 666 "$INSTALLED_COMPONENTS_TRACKING_FILE"
+  for component_path in "$@"; do
+    local local_settings_path="$(_get_component_local_settings_path "$component_path")"
+    printf "\n\033[34mInstalling '%s'\033[0m\n" "$(_get_component_name "$component_path")"
+    if [ ! -f "$local_settings_path" ]; then
+      printf "    \e[31mRequired '%s' does not exist\e[0m\n\
+      There is a folder for skins and a folder for extensions\n\
+      Ensure your component's manifest folder is in the correct one,\n\
+      containing its own 'LocalSettings.php'\n\
+  \e[31mExiting\e[0m\n" "$local_settings_path"
+      exit 1
+    fi
+  done
 
   # Export function for parallel execution
-  export -f _install_from_manifest
-  export -f _get_component_local_settings_path
-  export -f _get_manifest_path
-  export -f _get_component_type
-  export -f _get_component_name
-  export -f _is_component_enabled
+  export -f _clone_component
   export -f clone_git_repo
   export -f verboseOrDotPerLine
   export -f print_duration_since_start
+  # export -f map_gerrit_to_github
+
   # Export variables for parallel execution
-  export INSTALLED_COMPONENTS_TRACKING_FILE
-  export COMPONENTS_PHP_LOCK
-  export COMPONENTS_TRACKING_LOCK
   export GIT_CLONE_BASE_URL
   export CLONE_DEPTH
   export BRANCH
 
   # Build commands for parallel execution
-  local COMMANDS=""
+  local CLONE_COMMANDS=""
   for component_path in "$@"; do
-    COMMANDS+="_install_from_manifest \"$component_path\"
+    CLONE_COMMANDS+="_clone_component \"$component_path\"
 "
   done
 
-  # Execute commands in parallel
-  parallel_process "$COMMANDS"
+  # Execute clone commands in parallel
+  parallel_process "$CLONE_COMMANDS"
 
-  # Build INSTALLED_COMPONENTS from tracking file
-  if [ -s "$INSTALLED_COMPONENTS_TRACKING_FILE" ]; then
-    mapfile -t INSTALLED_COMPONENTS < "$INSTALLED_COMPONENTS_TRACKING_FILE"
+  # Linking needs to happen in-order (ie not parallel/async)
+  _link_components "$@"
 
-    # Only proceed with post-install steps if components were actually installed
-    _install_php_and_node_dependencies
-    _run_bash_for_installed_components
-    if [[ "${SKIP_LOCALIZATION_CACHE_REBUILD:-0}" != "1" ]]; then
-      _rebuild_localization_cache
-    fi
-    if [[ "${SKIP_PAGE_IMPORT:-0}" != "1" ]]; then
-      _import_page_dumps_for_installed_components
-    fi
-    _update_component_docker_compose_includes "${INSTALLED_COMPONENTS[@]}"
-    exit 0
-  else
-    # Return special exit code to indicate no components needed installation
-    exit 2
+  _install_php_and_node_dependencies
+  _run_bash_for_installed_components "$@"
+  if [[ "${SKIP_LOCALIZATION_CACHE_REBUILD:-0}" != "1" ]]; then
+    _rebuild_localization_cache
   fi
+  if [[ "${SKIP_PAGE_IMPORT:-0}" != "1" ]]; then
+    _import_page_dumps_for_installed_components "$@"
+  fi
+  _update_component_docker_compose_includes "$@"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  # echo "REQUESTED COMPONENTS: $@"
   COMPONENTS=$(/var/local/common/hydrate_dependencies_list "$@")
-  install $COMPONENTS
+  # echo "HYDRATED COMPONENTS: $COMPONENTS"
+  UNINSTALLED_COMPONENTS=$(php maintenance/run.php /var/local/installer/FilterOutInstalledComponents --components "$COMPONENTS")
+  # echo "UNINSTALLED COMPONENTS: $UNINSTALLED_COMPONENTS"
+  install $UNINSTALLED_COMPONENTS
 fi
