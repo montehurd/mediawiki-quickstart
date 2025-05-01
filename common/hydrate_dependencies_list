@@ -9,14 +9,9 @@ set -eu
 
 source "/var/local/common/utility.sh"
 
-_get_manifest_path() {
-  local component_path="$1"
-  echo "/var/local/$component_path"
-}
-
 _get_dependencies() {
   local component_path="$1"
-  local dependencies_file="$(_get_manifest_path "$component_path")/dependencies.yml"
+  local dependencies_file="/var/local/${component_path}/dependencies.yml"
   if [ -f "$dependencies_file" ]; then
     _yq '.[]' "$(cat "$dependencies_file")"
   fi
