@@ -1,0 +1,70 @@
+#!/bin/bash
+
+set -eu
+
+source "/var/local/common/utility.sh"
+
+_get_manifest_path() {
+  local component_path="$1"
+  echo "/var/local/$component_path"
+}
+
+_import_page_dumps_for_installed_components() {
+    local folders=()
+    for component_path in "$@"; do
+        local pages_folder="$(_get_manifest_path "$component_path")/pages"
+        if [ -d "$pages_folder" ]; then
+            folders+=("$pages_folder")
+        fi
+    done
+    if [ ${#folders[@]} -gt 0 ]; then
+        bash /import_page_xml.sh "${folders[@]}"
+    fi
+}
+
+_run_bash_for_installed_components() {
+  for component_path in "$@"; do
+    cd ~
+    _run_bash_from_manifest "$component_path" 2>&1 | verboseOrDotPerLine "Running '$component_path/setup.sh' if found"
+  done
+  cd ~
+}
+
+_run_bash_from_manifest() {
+  local component_path="$1"
+  local setup_script="$(_get_manifest_path "$component_path")/setup.sh"
+  echo -e "Looking for '${setup_script}'"
+  if [ -f "${setup_script}" ]; then
+    echo "Running setup script '${setup_script}'"
+    chmod +x "${setup_script}"
+    cd ~
+    "${setup_script}"
+  else
+    echo "No '${setup_script}' found, skipping..."
+  fi
+}
+
+_rebuild_localization_cache() {
+  sleep 1
+  php maintenance/rebuildLocalisationCache.php --force --threads=$(getconf _NPROCESSORS_ONLN) 2>&1 | verboseOrDotPerLine "Rebuild Mediawiki localization cache"
+}
+
+install2() {
+  if ! /var/local/installer/run_mediawiki_maintenance_update; then
+    echo "Mediawiki maintenance update failed. Exiting"
+    return 1
+  fi
+
+  _run_bash_for_installed_components "$@"
+
+  if [[ "${SKIP_LOCALIZATION_CACHE_REBUILD:-0}" != "1" ]]; then
+    _rebuild_localization_cache
+  fi
+  if [[ "${SKIP_PAGE_IMPORT:-0}" != "1" ]]; then
+    _import_page_dumps_for_installed_components "$@"
+  fi
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  install2 "$@"
+fi

@@ -6,6 +6,8 @@ set -eu
 # deduplicated installation order with each component appearing only
 # after all its dependencies. This flattened list is better than
 # having the installer itself recurse
+#
+# Already installed components are also filtered out of results
 
 source "/var/local/common/utility.sh"
 
@@ -42,7 +44,7 @@ _process_component() {
   RESULT+=("$component")
 }
 
-hydrate_dependencies_list() {
+_hydrate_dependencies_list() {
   RESULT=()
   for component in "$@"; do
     _process_component "$component"
@@ -51,5 +53,7 @@ hydrate_dependencies_list() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-  hydrate_dependencies_list "$@"
+  COMPONENTS=$(_hydrate_dependencies_list "$@")
+  UNINSTALLED_COMPONENTS=$(php /var/local/installer/filterOutInstalledComponents.php --components "$COMPONENTS")
+  echo "$UNINSTALLED_COMPONENTS"
 fi

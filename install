@@ -44,16 +44,30 @@ install() {
     exit 1
   fi
   export GIT_CLONE_BASE_URL
-  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT m /var/local/installer/install "$@"
+
+  local components=$(./shellto -e VERBOSE m /var/local/common/hydrate_dependencies_list "$@")
+
+  # Installation steps that need to happen before component docker-compose.yml services are brought up
+  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH m /var/local/installer/install $components
+
   local install_status=$?
 
-  if [ $install_status -eq 0 ]; then
-    # Restart in case components with thier own docker-compose.yml were installed.
-    # We need those services brought up
-    ./restart
+  if [ $install_status -eq 2 ]; then
+    # No components were installed, exit normally
+    return 0
+  fi
 
+  # In case components with thier own docker-compose.yml were installed, bring their services up
+  docker compose up -d --wait 2>&1 | verboseOrDotPerLine "Docker compose up ( for any component containers )" || exit 1
+
+  # Installation steps that need to happen after component docker-compose.yml services are brought up
+  ./shellto -e VERBOSE -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT m /var/local/installer/install2 $components
+
+  install_status=$?
+
+  if [ $install_status -eq 0 ]; then
     if run_service_setup_for_components "$@"; then
-      # Restart again if we ran any setup scripts
+      # Restart if we ran any component service setup scripts
       # Let's say "my_service" in a component docker-compose.yml did a shared volume on the
       # QuickStart .env file and its "setup.my_service.sh" wrote a new env var to that file,
       # this restart would ensure its immediate availability to all other services.
@@ -61,9 +75,6 @@ install() {
       ./restart
     fi
     open_special_version_page
-  elif [ $install_status -eq 2 ]; then
-    # No components were installed, exit normally
-    return 0
   else
     # Other error occurred
     return $install_status
