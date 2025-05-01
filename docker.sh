@@ -32,29 +32,38 @@ get_compose_version() {
 
 verify_compose_version() {
   echo -e "\nVerifying 'docker compose' version..."
-
-  local required_major_version
-  local error_message
-  local compose_version
-  local major_version
-
-  required_major_version="${1:-}"
+  local required_major_version="${1:-}"
+  local required_minor_version="${2:-}"
+  local required_patch_version="${3:-}"
   if [ -z "$required_major_version" ]; then
     echo -e "Error: Required major version is not provided!\n"
     return 1
   fi
+  if [ -z "$required_minor_version" ]; then
+    echo -e "Error: Required minor version is not provided!\n"
+    return 1
+  fi
+  if [ -z "$required_patch_version" ]; then
+    echo -e "Error: Required patch version is not provided!\n"
+    return 1
+  fi
 
-  error_message="Failure! 'docker compose version' must be $required_major_version or greater\nTo update see: https://docs.docker.com/compose/migrate/\n"
+  local error_message="Failure! 'docker compose version' must be '${required_major_version}.${required_minor_version}.${required_patch_version}' or greater\nTo update see: https://docs.docker.com/compose/migrate/\n"
 
-  compose_version=$(get_compose_version)
+  local compose_version=$(get_compose_version)
   if [ -z "$compose_version" ]; then
     echo -e "$error_message"
     return 1
   fi
 
-  major_version=$(echo "$compose_version" | cut -d '.' -f 1)
-  if [ -n "$major_version" ] && [ "$major_version" -ge "$required_major_version" ]; then
-    echo -e "Success! 'docker compose version' is at least $required_major_version\n"
+  local major_version=$(echo "$compose_version" | cut -d '.' -f 1 | tr -cd '0-9')
+  local minor_version=$(echo "$compose_version" | cut -d '.' -f 2 | tr -cd '0-9')
+  local patch_version=$(echo "$compose_version" | cut -d '.' -f 3 | tr -cd '0-9')
+
+  if [ "$major_version" -gt "$required_major_version" ] \
+    || { [ "$major_version" -eq "$required_major_version" ] && [ "$minor_version" -gt "$required_minor_version" ]; } \
+    || { [ "$major_version" -eq "$required_major_version" ] && [ "$minor_version" -eq "$required_minor_version" ] && [ "$patch_version" -ge "$required_patch_version" ]; }; then
+    echo -e "Success! 'docker compose version' is at least '${required_major_version}.${required_minor_version}.${required_patch_version}'\n"
     return 0
   fi
   echo -e "$error_message"
