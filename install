@@ -46,6 +46,10 @@ install() {
   export GIT_CLONE_BASE_URL
 
   local components=$(./shellto -e VERBOSE m /var/local/common/hydrate_dependencies_list "$@")
+  if [ -z "$components" ]; then
+    echo "All requested components already installed"
+    return 0
+  fi
 
   # Installation steps that need to happen before component docker-compose.yml services are brought up
   ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH m /var/local/installer/prepare $components 2>&1 | verboseOrDotPerLine "Prepare component(s) installation"
