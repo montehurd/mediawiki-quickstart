@@ -67,7 +67,7 @@ install() {
   # Installation steps that need to happen after component docker-compose.yml services are brought up
   # ( install is split into 'prepare'/'finalize' stages so we don't have to use hacky methods to message
   # to the host the correct place to invoke 'docker compose up -d --wait' )
-  ./shellto -e VERBOSE -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT m /var/local/installer/finalize $components 2>&1 | verboseOrDotPerLine "Finalize component(s) installation"
+  ./shellto -e VERBOSE -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT -u root m /var/local/installer/finalize $components 2>&1 | verboseOrDotPerLine "Finalize component(s) installation"
 
   install_status=$?
 
