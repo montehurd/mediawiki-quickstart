@@ -170,14 +170,15 @@ install() {
   export BRANCH
 
   # Build commands for parallel execution
-  local CLONE_COMMANDS=""
+  local clone_commands=""
   for component_path in "$@"; do
-    CLONE_COMMANDS+="_clone_component \"$component_path\"
+    clone_commands+="_clone_component \"$component_path\"
 "
   done
+  clone_commands="${clone_commands%$'\n'}"
 
   # Execute clone commands in parallel
-  parallel_process "$CLONE_COMMANDS"
+  parallel_process "$clone_commands"
 
   # Linking needs to happen in-order (ie not parallel/async)
   _link_components "$@"
