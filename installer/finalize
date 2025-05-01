@@ -49,7 +49,7 @@ _rebuild_localization_cache() {
   php maintenance/rebuildLocalisationCache.php --force --threads=$(getconf _NPROCESSORS_ONLN) 2>&1 | verboseOrDotPerLine "Rebuild Mediawiki localization cache"
 }
 
-install2() {
+finalize() {
   if ! /var/local/installer/run_mediawiki_maintenance_update; then
     echo "Mediawiki maintenance update failed. Exiting"
     return 1
@@ -66,5 +66,5 @@ install2() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-  install2 "$@"
+  finalize "$@"
 fi

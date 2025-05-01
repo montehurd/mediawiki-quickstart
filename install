@@ -48,7 +48,7 @@ install() {
   local components=$(./shellto -e VERBOSE m /var/local/common/hydrate_dependencies_list "$@")
 
   # Installation steps that need to happen before component docker-compose.yml services are brought up
-  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH m /var/local/installer/install $components
+  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH m /var/local/installer/prepare $components
 
   local install_status=$?
 
@@ -61,7 +61,9 @@ install() {
   docker compose up -d --wait 2>&1 | verboseOrDotPerLine "Docker compose up ( for any component containers )" || exit 1
 
   # Installation steps that need to happen after component docker-compose.yml services are brought up
-  ./shellto -e VERBOSE -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT m /var/local/installer/install2 $components
+  # ( install is split into 'prepare'/'finalize' stages so we don't have to use hacky methods to message
+  # to the host the correct place to invoke 'docker compose up -d --wait' )
+  ./shellto -e VERBOSE -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT m /var/local/installer/finalize $components
 
   install_status=$?
 

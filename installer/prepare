@@ -96,7 +96,7 @@ _link_components() {
   done
 }
 
-install() {
+prepare() {
   # Return special exit code 2 to indicate no components needed installation
   (( $# )) || return 2
 
@@ -145,5 +145,5 @@ install() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-  install "$@"
+  prepare "$@"
 fi
