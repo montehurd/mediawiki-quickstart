@@ -1,4 +1,4 @@
 #!/bin/bash
 
-apt update
-apt install -y ghostscript imagemagick xpdf-utils
+apt-get update
+apt-get install -y ghostscript imagemagick xpdf-utils
