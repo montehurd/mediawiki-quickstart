@@ -134,14 +134,14 @@ prepare() {
   clone_commands="${clone_commands%$'\n'}"
 
   # Execute clone commands in parallel
-  parallel_process "$clone_commands"
+  parallel_process "$clone_commands" 2>&1 | verboseOrDotPerLine "Cloning component(s)"
 
   # Linking needs to happen in-order (ie not parallel/async)
-  _link_components "$@"
+  _link_components "$@" 2>&1 | verboseOrDotPerLine "Linking component(s) LocalSettings.php to Mediawiki Core LocalSettings.php"
 
   _install_php_and_node_dependencies
 
-  _update_component_docker_compose_includes "$@"
+  _update_component_docker_compose_includes "$@" 2>&1 | verboseOrDotPerLine "Linking any component(s) docker-compose.yml to Quickstart's docker-compose.yml"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
