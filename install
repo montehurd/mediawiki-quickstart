@@ -88,5 +88,7 @@ install() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  installer_start_time=$(date +%s)
   install "$@"
+  print_duration_since_start "$installer_start_time" "\n\033[32m⏲\033[0m Component installer duration: %02d:%02d"
 fi
