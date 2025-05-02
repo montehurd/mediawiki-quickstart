@@ -7,7 +7,7 @@ open_special_version_page() {
   if [ "${SILENT:-0}" = "1" ]; then
     return
   fi
-  open_url_when_available "$SPECIAL_VERSION_URL"
+  open_url_when_available "$SPECIAL_VERSION_URL" | verboseOrDotPerLine "Opening 'Special:Version' page when available"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

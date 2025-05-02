@@ -63,7 +63,7 @@ start() {
     exit 1
   fi
   sleep 1
-  open_special_version_page | verboseOrDotPerLine "Opening 'Special:Version' page"
+  open_special_version_page
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
