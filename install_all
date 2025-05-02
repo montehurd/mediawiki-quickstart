@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source "./install"
-
 install_all() {
     local items=()
     for dir in "$@"; do
@@ -19,7 +17,7 @@ install_all() {
     if [ ${#items[@]} -eq 0 ]; then
         echo "No component directories found to install"
     else
-        install "${items[@]}"
+        ./install "${items[@]}"
     fi
 }
 
