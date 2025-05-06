@@ -724,14 +724,19 @@ export MW_DBPORT=3306
 
 ## MySQL backup and restoration
 
-- When using Quickstart's built-in MySQL container, you can save a zipped backup of the "mysql-data" folder to the "mysql-backups" folder
+- When using Quickstart's built-in MySQL container, you can save a zipped backup of the "mysql-data" folder to the "mysql-backups" folder (the backup file will have the timestamp in its name, ie 'mysql-backups/mysql.2025-02-12_16-49-46-0600-CST.gz')
 ```bash
 ./mysql_backup
 ```
 
 - You can also restore a zipped backup from "mysql-backups" to "mysql-data"
 ```bash
-./mysql_restore_from_backup mysql-backups/database_2025-02-12_16-49-46-0600\(CST\).tar.gz
+./mysql_restore_from_backup mysql-backups/mysql.2025-02-12_16-49-46-0600-CST.gz
+```
+
+- If you want a backup restored when you run `./fresh_install` place the backup here naming it 'mysql.backup.gz':
+```bash
+./import-on-fresh-install/mysql.backup.gz
 ```
 
 # Bug Reporting

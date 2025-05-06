@@ -20,6 +20,13 @@ fresh_install() {
   remove
   prepare
   start
+  if [[ "${MW_DBTYPE:-}" == "mysql" ]]; then
+    if [[ -f "./import-on-fresh-install/mysql.backup.gz" ]]; then
+      ./mysql_restore_from_backup "./import-on-fresh-install/mysql.backup.gz"
+    elif [[ -f "./import-on-fresh-install/mysql.dump.gz" ]]; then
+      ./mysql_restore_from_dump "./import-on-fresh-install/mysql.dump.gz"
+    fi
+  fi
   if [[ "${SKIP_PAGE_IMPORT:-0}" != "1" ]]; then
     import_page_xml "/tmp/page-xml"
   fi

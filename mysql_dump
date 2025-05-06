@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source "./common/utility.sh"
+
+./shellto m php maintenance/run.php ./maintenance/runJobs.php 2>&1 | verboseOrDotPerLine "Finishing queued jobs"
+
+./shellto mysql bash -c "mysqldump --user=root --all-databases --triggers --routines --events --single-transaction --add-drop-table --add-drop-database | gzip > /var/lib/mysql-backups/mysql.dump.$(date '+%Y-%m-%d_%H-%M-%S%z-%Z').gz" 2>&1 | verboseOrDotPerLine "Creating MySQL dump"

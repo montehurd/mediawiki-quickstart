@@ -2,4 +2,6 @@
 
 source "./common/utility.sh"
 
-./shellto mysql tar cvfz /var/lib/mysql-backups/database_$(date '+%Y-%m-%d_%H-%M-%S%z(%Z)').tar.gz var/lib/mysql 2>&1 | verboseOrDotPerLine "Creating MySQL backup"
+./shellto m php maintenance/run.php ./maintenance/runJobs.php 2>&1 | verboseOrDotPerLine "Finishing queued jobs"
+
+./shellto mysql tar cvfz /var/lib/mysql-backups/mysql.backup.$(date '+%Y-%m-%d_%H-%M-%S%z-%Z').gz var/lib/mysql 2>&1 | verboseOrDotPerLine "Creating MySQL backup"
