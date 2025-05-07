@@ -33,6 +33,12 @@ prepare() {
 
   echo -e "" > "$SCRIPT_PATH/common/docker-compose.components.yml"
   echo "$MW_ENV" >.env
+
+  if [[ "${MW_DBTYPE:-}" == "mysql" ]]; then
+    if [[ -f "./import-on-fresh-install/mysql.backup.gz" ]]; then
+      ./mysql_restore_from_backup "./import-on-fresh-install/mysql.backup.gz"
+    fi
+  fi
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

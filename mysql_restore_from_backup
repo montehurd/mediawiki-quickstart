@@ -10,6 +10,12 @@ fi
 
 BACKUP_ZIP_PATH=$1
 
+MYSQL_WAS_RUNNING=1
+if is_service_running "mysql"; then
+    MYSQL_WAS_RUNNING=0
+    docker compose stop mysql 2>&1 | verboseOrDotPerLine "Stopping MySQL container"
+fi
+
 if [ -d "mysql-data" ]; then
     rm -rf mysql-data/*
 fi
@@ -18,4 +24,7 @@ mkdir -p mysql-data
 
 tar -C mysql-data --strip-components=3 -xzvf $BACKUP_ZIP_PATH 2>&1 | verboseOrDotPerLine "Restoring from MySQL backup"
 
-docker compose restart mysql  2>&1 | verboseOrDotPerLine "Restarting MySQL container"
+if [ $MYSQL_WAS_RUNNING -eq 0 ]; then
+    docker compose up --wait mysql 2>&1 | verboseOrDotPerLine "Starting MySQL container"
+    ./shellto mysql bash -c "mysql --user=root -e 'FLUSH PRIVILEGES'" 2>&1 | verboseOrDotPerLine "Flushing privileges"
+fi
