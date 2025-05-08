@@ -56,7 +56,15 @@ runcmd:
     Environment="SKIP_LOCALIZATION_CACHE_REBUILD=1"
     Environment="SKIP_PAGE_IMPORT=1"
     Environment="OUTPUT_PATH=/var/log/selenium-results"
-    ExecStart=/bin/bash -c 'sleep 30 && if ! git pull; then if df -h . | awk "NR==2 {print \$5}" | sed "s/%//" | awk "\$1 > 95"; then docker system prune -af && git pull; fi; fi && ./ci.components.selenium'
+    ExecStart=/bin/bash -c 'sleep 30 && \
+        LOW_DISK_SPACE=$(df -h . | awk "NR==2 {print \$5}" | sed "s/%//" | awk "\$1 > 90") && \
+        if [ -n "${LOW_DISK_SPACE}" ]; then \
+            find /tmp -path "*/mediawiki*" -type d -exec rm -rf {} \; 2>/dev/null || true; \
+            apt clean; \
+            docker system prune -af; \
+        fi && \
+        git pull && \
+        ./ci.components.selenium'
     Restart=always
 
     [Install]
