@@ -1,13 +1,25 @@
 #cloud-config
+
+apt:
+  sources:
+    docker.list:
+      source: deb [arch=amd64] https://download.docker.com/linux/debian bookworm stable
+      keyid: 7EA0A9C3F273FCD8
+
+packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+
 users:
   - name: quickstart
     groups: [sudo, docker]
     shell: /bin/bash
     sudo: ALL=(ALL) NOPASSWD:ALL
+
 runcmd:
-  - git clone https://gitlab.wikimedia.org/mhurd/vps-provisioning.git
-  - cd vps-provisioning
-  - ./docker.sh install
   - mkdir -p /var/log/selenium-results
   - chown -R quickstart:quickstart /var/log/selenium-results
   - su quickstart -c "git clone https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart.git /home/quickstart/mediawiki-quickstart"
@@ -44,7 +56,7 @@ runcmd:
     Environment="SKIP_LOCALIZATION_CACHE_REBUILD=1"
     Environment="SKIP_PAGE_IMPORT=1"
     Environment="OUTPUT_PATH=/var/log/selenium-results"
-    ExecStart=/bin/bash -c 'while true; do if ! git pull; then if df -h . | awk "NR==2 {print \$5}" | sed "s/%//" | awk "\$1 > 95"; then docker system prune -af && git pull; fi; fi && ./ci.components.selenium; done'
+    ExecStart=/bin/bash -c 'sleep 30 && if ! git pull; then if df -h . | awk "NR==2 {print \$5}" | sed "s/%//" | awk "\$1 > 95"; then docker system prune -af && git pull; fi; fi && ./ci.components.selenium'
     Restart=always
 
     [Install]
@@ -56,3 +68,8 @@ runcmd:
   - systemctl start results-server
   - systemctl enable selenium-test
   - systemctl start selenium-test
+
+package_update: true
+package_upgrade: true
+
+final_message: "The system is finally up, after $UPTIME seconds"
