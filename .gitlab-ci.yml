@@ -41,6 +41,7 @@ test:
     VERBOSE: 1
     SKIP_LOCALIZATION_CACHE_REBUILD: 1
     SKIP_PAGE_IMPORT: 1
+    RECLAIM_DISK_SPACE: 1
   script:
     - set -x
     - ./ci
