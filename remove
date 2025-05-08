@@ -54,6 +54,9 @@ remove() {
   fi
   docker compose -p mediawiki down --remove-orphans 2>&1 | verboseOrDotPerLine "Docker compose down"
   delete_mediawiki_folder
+  if [[ "${RECLAIM_DISK_SPACE:-0}" != "1" ]]; then
+    ./reclaim_disk_space_if_needed 2>&1 | verboseOrDotPerLine "Reclaim disk space if needed"
+  fi
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
