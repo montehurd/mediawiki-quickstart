@@ -97,6 +97,7 @@ services:
   #   COMPOSE_PROFILES="default,mysql" ./fresh_install
   mysql:
     image: ghcr.io/montehurd/mediawiki-docker-images/mysql:latest
+    user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
