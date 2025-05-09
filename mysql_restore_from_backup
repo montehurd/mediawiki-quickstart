@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source "./common/utility.sh"
+source "./docker.sh"
 
 if [ -z "$1" ]; then
     echo "Error: No backup file specified"
