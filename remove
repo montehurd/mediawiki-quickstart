@@ -26,12 +26,7 @@ delete_mediawiki_folder() {
       # Launch detached removal process with permissions
       # assertion fallback
       (
-        # Assuming fresh_install takes a couple minutes,
-        # wait a bit for it to finish so more resources
-        # are available for it to do so quickly
-        #
-        # Also perform rm -rf on low priority threads
-        sleep 240
+        # Use 'nice' to specify low priority
         if ! nice -n 19 rm -rf "$temp_dir"; then
           docker run --rm --cpus=0.5 \
             -v "$temp_dir:/data" \
