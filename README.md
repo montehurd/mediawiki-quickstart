@@ -696,8 +696,10 @@ After cloning Mediawiki core (via `fresh_install`) or extension or skin repos (v
 GERRIT_PATCHES="refs/changes/94/1146994/6" ./fresh_install
 ```
 
+You can also specify multiple patches separated by a space:
+
 ```bash
-GERRIT_PATCHES="refs/changes/94/1146994/6 refs/changes/67/987654/2" ./install skins/Timeless extensions/AdvancedSearch
+GERRIT_PATCHES="refs/changes/94/1146994/6 refs/changes/67/987654/2" ./install skins/Timeless extensions/AdvancedSearch extensions/Math
 ```
 
 Gerrit patch numbers ( like `1146994` above ) are repo-specific, so it's safe to assume your patches will only be found / applied to intended repos
