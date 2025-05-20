@@ -305,6 +305,21 @@ clone_git_repo() {
   if [ ! -d "$target_path/.git" ]; then
     return 1
   fi
+
+  # If GERRIT_PATCHES environment variable is set, try to fetch and checkout those changes
+  if [ -n "${GERRIT_PATCHES:-}" ]; then
+    (
+      cd "${target_path}" || return 1
+      for change_ref in ${GERRIT_PATCHES}; do
+        if git fetch origin "${change_ref}" ${clone_depth} 2>/dev/null; then
+          branch_name=${change_ref//[^a-zA-Z0-9]/-} # replace all non-alpha-numeric chars with dashes
+          git checkout -b "$branch_name" FETCH_HEAD
+          break # Stop after first successful fetch/checkout
+        fi
+      done
+    )
+  fi
+
   return 0
 }
 

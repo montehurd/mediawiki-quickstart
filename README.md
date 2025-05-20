@@ -688,6 +688,26 @@ SKIP_LOCALIZATION_CACHE_REBUILD=1 ./install extensions/IPInfo
 SKIP_PAGE_IMPORT=1 ./fresh_install
 ```
 
+- Apply Gerrit change refs during installation (for testing patches)
+
+After cloning Mediawiki core (via `fresh_install`) or extension or skin repos (via `install`), Quickstart checks if they have any of the GERRIT_PATCHES you've optionally specified. If they do, Quickstart fetches and checks them out
+
+```bash
+GERRIT_PATCHES="refs/changes/94/1146994/6" ./fresh_install
+```
+
+```bash
+GERRIT_PATCHES="refs/changes/94/1146994/6 refs/changes/67/987654/2" ./install skins/Timeless extensions/AdvancedSearch
+```
+
+Gerrit patch numbers ( like `1146994` above ) are repo-specific, so it's safe to assume your patches will only be found / applied to intended repos
+
+This approach is used because Quickstart's component installer also installs the dependencies of given components - ie you could do something like this, where `refs/changes/94/1234567/6` is a Mediawiki core patch, and `refs/changes/54/9876543/2` is a Elastica patch ( which gets installed implicitly when you install AdvancedSearch ):
+
+```bash
+GERRIT_PATCHES="refs/changes/94/1234567/6 refs/changes/54/9876543/2 ./install extensions/AdvancedSearch
+```
+
 # MySQL
 
 Quickstart uses SQLite by default

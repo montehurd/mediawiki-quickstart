@@ -52,7 +52,7 @@ install() {
   fi
 
   # Installation steps that need to happen before component docker-compose.yml services are brought up
-  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH m /var/local/installer/prepare $components
+  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH -e GERRIT_PATCHES m /var/local/installer/prepare $components
 
   local install_status=$?
 

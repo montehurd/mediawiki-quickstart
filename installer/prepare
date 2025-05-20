@@ -124,6 +124,7 @@ prepare() {
   export GIT_CLONE_BASE_URL
   export CLONE_DEPTH
   export BRANCH
+  export GERRIT_PATCHES
 
   # Build commands for parallel execution
   local clone_commands=""

@@ -16,6 +16,7 @@ prepare() {
     -w /mediawiki \
     -e GIT_CLONE_BASE_URL="$GIT_CLONE_BASE_URL" \
     -e CLONE_DEPTH="${CLONE_DEPTH:-}" \
+    -e GERRIT_PATCHES="${GERRIT_PATCHES:-}" \
     -e BRANCH="${BRANCH:-}" \
     -e VERBOSE \
     -e HOST_UID="$(id -u)" \
