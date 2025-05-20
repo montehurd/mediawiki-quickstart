@@ -617,19 +617,19 @@ javascript:(function(){document.cookie="XDEBUG_SESSION=VSCODE;path=/";})();
 
 # Miscellaneous
 
-- Skip installation of the `Vector` skin on a fresh install
+## Skip installation of the `Vector` skin on a fresh install
 
 ```bash
 SKIP_SKIN=1 ./fresh_install
 ```
 
-- Bypass all confirmations for removing and re-installing Mediawiki files and containers, but use with caution as this proceeds with these destructive actions without confirmation
+## Bypass all confirmations for removing and re-installing Mediawiki files and containers, but use with caution as this proceeds with these destructive actions without confirmation
 
 ```bash
 FORCE=1 ./fresh_install
 ```
 
-- Control the depth of git clones for MediaWiki and its components by setting the CLONE_DEPTH environment variable. If left off, a clone depth of 2 is performed by default, which is fast (and keeps Gerrit "git review" happy, which can complain if a repo's depth is 1)
+## Control the depth of git clones for MediaWiki and its components by setting the CLONE_DEPTH environment variable. If left off, a clone depth of 2 is performed by default, which is fast (and keeps Gerrit "git review" happy, which can complain if a repo's depth is 1)
 
 ```bash
 CLONE_DEPTH=100 ./fresh_install  # Clone with depth of 100 commits
@@ -639,56 +639,55 @@ CLONE_DEPTH=100 ./fresh_install  # Clone with depth of 100 commits
 CLONE_DEPTH=0 ./fresh_install    # Full clone - really slow!
 ```
 
-- See verbose console output when debugging installation issues
+## See verbose console output when debugging installation issues
 
 ```bash
 VERBOSE=1 ./fresh_install
 ```
 
-- Clone repositories via `ssh` instead of `https`. Change `GIT_CLONE_BASE_URL` in `config` file. (Replace `username` with your username.)
+## Clone repositories via `ssh` instead of `https`. Change `GIT_CLONE_BASE_URL` in `config` file. (Replace `username` with your username.)
 
 ```bash
 GIT_CLONE_BASE_URL="ssh://username@gerrit.wikimedia.org:29418/mediawiki"
 ```
 
-- Speed up installation by skipping any countdowns
+## Speed up installation by skipping any countdowns
 
 ```bash
 SKIP_COUNTDOWN=1 ./fresh_install
 ```
 
-- Skip opening `Special:Version` page after installation
-- Skip opening VNC viewer when running Selenium tests
+## Skip opening `Special:Version` page after installation and skip opening VNC viewer when running Selenium tests
 
 ```bash
 SILENT=1 ./fresh_install
 ```
 
-- Specify branch for Mediawiki core installation
+## Specify branch for Mediawiki core installation
 
 ```bash
 BRANCH="wmf/1.44.0-wmf.20" ./fresh_install
 ```
 
-- Specify branch for component(s) installation
+## Specify branch for component(s) installation
 
 ```bash
 BRANCH="wmf/1.44.0-wmf.20" ./install extension/IPInfo skin/Monobook
 ```
 
-- Skip rebuilding the localization cache after installing components (can save time but might cause UI issues). Can also be used with `fresh_install` since it uses the component installer to install the Vector skin
+## Skip rebuilding the localization cache after installing components (can save time but might cause UI issues). Can also be used with `fresh_install` since it uses the component installer to install the Vector skin
 
 ```bash
 SKIP_LOCALIZATION_CACHE_REBUILD=1 ./install extensions/IPInfo
 ```
 
-- Skip importing XML page dumps (can speed up installation when you don't need the page content)
+## Skip importing XML page dumps (can speed up installation when you don't need the page content)
 
 ```bash
 SKIP_PAGE_IMPORT=1 ./fresh_install
 ```
 
-- Apply Gerrit change refs during installation (for testing patches)
+## Apply Gerrit change refs during installation (for testing patches)
 
 After cloning Mediawiki core (via `fresh_install`) or extension or skin repos (via `install`), Quickstart checks if they have any of the GERRIT_PATCHES you've optionally specified. If they do, Quickstart fetches and checks them out
 
