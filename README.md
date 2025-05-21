@@ -707,17 +707,24 @@ SKIP_PAGE_IMPORT=1 ./fresh_install
 
 ## Gerrit patches
 
-After cloning Mediawiki core (via `fresh_install`) or extension or skin repos (via `install`), Quickstart checks if they have any of the GERRIT_PATCHES you've optionally specified. If they do, Quickstart fetches and checks them out
+### Specify Gerrit patch for Mediawiki core installation
+
+In this example, Mediawiki core is cloned and, if found, the specified Gerrit patch is fetched and applied to it
 
 ```bash
 GERRIT_PATCHES="refs/changes/94/1146994/6" ./fresh_install
 ```
+### Specify Gerrit patch(es) for component(s) installation
 
-You can also specify multiple patches separated by a space:
+You can also specify multiple space-separated patches:
 
 ```bash
 GERRIT_PATCHES="refs/changes/94/1146994/6 refs/changes/67/987654/2" ./install skins/Timeless extensions/AdvancedSearch extensions/Math
 ```
+
+### Gerrit patch details
+
+The order the patches are specified DOES NOT correspond to the order of the components passed to `install`
 
 Gerrit patch numbers ( like `1146994` above ) are repo-specific, so it's safe to assume your patches will only be found / applied to intended repos
 
