@@ -57,7 +57,7 @@ runcmd:
     Environment="SKIP_PAGE_IMPORT=1"
     Environment="RECLAIM_DISK_SPACE=1"
     Environment="OUTPUT_PATH=/var/log/selenium-results"
-    ExecStart=/bin/bash -c 'sleep 30 && git pull && ./ci.components.selenium'
+    ExecStart=/bin/bash -c 'sleep 30 && git pull && ./ci.components.selenium && docker compose down && sudo systemctl restart docker'
     Restart=always
 
     [Install]
@@ -69,6 +69,16 @@ runcmd:
   - systemctl start results-server
   - systemctl enable selenium-test
   - systemctl start selenium-test
+  - |
+    mkdir -p /etc/systemd/journald.conf.d
+    cat > /etc/systemd/journald.conf.d/size-limit.conf << 'EOL'
+    [Journal]
+    SystemMaxUse=200M
+    SystemMaxFileSize=20M
+    EOL
+  - systemctl restart systemd-journald
+  - journalctl --vacuum-size=200M
+  - apt-get clean
 
 package_update: true
 package_upgrade: true
