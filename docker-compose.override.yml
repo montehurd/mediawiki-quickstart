@@ -124,3 +124,9 @@ volumes:
   chromium_cache:
   composer_cache:
   npm_cache:
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: "1450"
