@@ -15,7 +15,7 @@ install_node_dependencies() {
     return 1
   fi
 
-  if ! npm install --legacy-peer-deps 2>&1 | verboseOrDotPerLine "Npm install"; then
+  if ! npm install --legacy-peer-deps --foreground-scripts 2>&1 | verboseOrDotPerLine "Npm install"; then
     echo "NPM install failed. Exiting"
     return 1
   fi
