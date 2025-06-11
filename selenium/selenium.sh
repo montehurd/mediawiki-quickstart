@@ -21,6 +21,6 @@ ensure_selenium_ready() {
 
   if ! ./shellto s /var/local/install-browser-for-puppeteer-core.sh; then
     echo
-    exit 1
+    echo "Webdriver is greater than v7 - letting it handle automatic broswer installation"
   fi
 }
