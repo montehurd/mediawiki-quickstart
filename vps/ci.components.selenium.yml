@@ -27,16 +27,15 @@ runcmd:
   - |
     cat > /etc/systemd/system/results-server.service << 'EOL'
     [Unit]
-    Description=Simple HTTP Server for Selenium Results
-    After=network.target
-
+    Description=Vue Server for Selenium Results
+    After=selenium-test.service
     [Service]
     Type=simple
     User=quickstart
-    WorkingDirectory=/var/log/selenium-results
-    ExecStart=/usr/bin/python3 -m http.server 8088
+    WorkingDirectory=/home/quickstart/mediawiki-quickstart/ci.components
+    Environment="RESULTS_PATH=/var/log/selenium-results"
+    ExecStart=docker compose up
     Restart=always
-
     [Install]
     WantedBy=multi-user.target
     EOL
@@ -56,8 +55,8 @@ runcmd:
     Environment="SKIP_LOCALIZATION_CACHE_REBUILD=1"
     Environment="SKIP_PAGE_IMPORT=1"
     Environment="RECLAIM_DISK_SPACE=1"
-    Environment="OUTPUT_PATH=/var/log/selenium-results"
-    ExecStart=/bin/bash -c 'sleep 30 && git pull && ./ci.components.selenium && docker compose down && sudo systemctl restart docker'
+    Environment="RESULTS_PATH=/var/log/selenium-results"
+    ExecStart=/bin/bash -c 'sleep 30 && git pull && ./ci.components/run_all && docker compose down && sudo systemctl restart docker && sudo systemctl restart results-server'
     Restart=always
 
     [Install]

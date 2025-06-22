@@ -1,0 +1,86 @@
+#!/bin/bash
+
+source "./common/utility.sh"
+
+get_status_string() {
+  local status_code=$1
+  if [ "$status_code" = "0" ]; then
+    echo "pass"
+  elif [ "$status_code" = "-1" ]; then # -1 indicates no tests exist
+    echo "none"
+  else
+    echo "fail"
+  fi
+}
+
+format_component_yaml() {
+  local component=$1
+  local fresh_install_status=$2
+  local component_install_status=$3
+  local selenium_tests_exist_status=$4
+  local run_component_selenium_status=$5
+  local run_selenium_tests_status=$6
+
+  cat <<EOF
+
+- name: $component
+  stages:
+    fresh_install: $fresh_install_status
+    component_install: $component_install_status
+    selenium_tests_exist: $selenium_tests_exist_status
+    run_component_selenium: $run_component_selenium_status
+    run_selenium_tests: $run_selenium_tests_status
+EOF
+}
+
+run_for_component() {
+  local component=$1
+  {
+    local fresh_install_status=1
+    local component_install_status=1
+    local selenium_tests_exist_status=-1
+    local run_component_selenium_tests_status=-1
+    local run_selenium_tests_status=-1
+    if [ "${FAKE_IT:-0}" = "1" ]; then
+      echo "Fake log text"
+      fresh_install_status=$(( (RANDOM % 3) - 1 ))
+      component_install_status=$(( (RANDOM % 3) - 1 ))
+      selenium_tests_exist_status=$(( (RANDOM % 3) - 1 ))
+      run_component_selenium_tests_status=$(( (RANDOM % 3) - 1 ))
+      run_selenium_tests_status=$(( (RANDOM % 3) - 1 ))
+    else
+      export VERBOSE=1
+      export FORCE=1
+      export SILENT=1
+      export SKIP_COUNTDOWN=1
+      export SKIP_SKIN=1
+      ./fresh_install 2>&1 | verboseOrDotPerLine "Fresh install of Mediawiki..."
+      fresh_install_status=${PIPESTATUS[0]}
+      if [ $fresh_install_status -eq 0 ]; then
+        ./install "$component" 2>&1 | verboseOrDotPerLine "Install '$component'..."
+        component_install_status=${PIPESTATUS[0]}
+        if [ $component_install_status -eq 0 ]; then
+          if ./shellto m bash -c "yq -e '.scripts | has(\"selenium-test\")' $component/package.json" > /dev/null 2>&1; then
+            selenium_tests_exist_status=0
+            ./run_component_selenium_tests "$component" 2>&1 | verboseOrDotPerLine "Running Selenium tests for '$component' via 'run_component_selenium_tests \"$component\"'..."
+            run_component_selenium_tests_status=${PIPESTATUS[0]}
+            ./run_selenium_tests "$component/tests/selenium/*specs/**/*.js" ".*" 2>&1 | verboseOrDotPerLine "Running Selenium tests for '$component' via 'run_selenium_tests \"$component/tests/selenium/*specs/**/*.js\" \".*\"'..."
+            run_selenium_tests_status=${PIPESTATUS[0]}
+          fi
+        fi
+      fi
+    fi
+  } >&3
+
+  # Return formatted YAML for this component
+  format_component_yaml "$component" \
+    "$(get_status_string $fresh_install_status)" \
+    "$(get_status_string $component_install_status)" \
+    "$(get_status_string $selenium_tests_exist_status)" \
+    "$(get_status_string $run_component_selenium_tests_status)" \
+    "$(get_status_string $run_selenium_tests_status)"
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  run_for_component "$@"
+fi
