@@ -1,3 +1,6 @@
 /mediawiki/
 /common/docker-compose.components.yml
 .env
+/ci.components/results/
+/ci.components/vue/package-lock.json
+/ci.components/vue/.vite/

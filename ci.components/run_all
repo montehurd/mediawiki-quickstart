@@ -1,0 +1,48 @@
+#!/bin/bash
+
+source "./ci.components/run_for_component"
+
+separator="-----------------------------------------------------------------"
+
+list_all_components() {
+  find extensions skins -mindepth 1 -maxdepth 1 -type d | sort
+}
+
+run_all() {
+  local results_path="${RESULTS_PATH:-./ci.components/results}"
+  mkdir -p "$results_path"
+
+  local timestamp=$(date -u +%s)
+  local yaml_file="$results_path/${timestamp}.yaml"
+  local log_file="$results_path/${timestamp}.log.ansi"
+
+  # Open log file
+  exec 3>"$log_file"
+
+  # Initialize YAML content
+  local yaml_content="timestamp: $timestamp
+commit:
+  hash: $(git rev-parse --short HEAD)
+  message: $(git log -1 --format='%s')
+components:"
+
+  # Process components
+  for component in $(list_all_components); do
+    yaml_content+=$(run_for_component "$component")
+  done
+
+  # Close log file
+  exec 3>&-
+
+  # Save YAML content
+  echo "$yaml_content" > "$yaml_file"
+
+  # Generate HTML log viewer if available
+  if command -v alpine_ansi2html &> /dev/null; then
+    alpine_ansi2html < "$log_file" > "${log_file}.html"
+  fi
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  run_all "$@"
+fi
