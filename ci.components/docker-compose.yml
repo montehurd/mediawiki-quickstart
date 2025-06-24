@@ -11,5 +11,5 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - RESULTS_PATH=${RESULTS_PATH:-/app/public/results}
+      - RESULTS_PATH=/app/public/results
     restart: unless-stopped
