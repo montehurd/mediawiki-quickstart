@@ -3,6 +3,20 @@ import vue from '@vitejs/plugin-vue'
 import fs from 'fs/promises'
 import path from 'path'
 
+const getHeadersForFile = (filename) => {
+  const ext = path.extname(filename).toLowerCase()
+  const extensionHeaders = {
+    '.html': { 'Content-Type': 'text/html' },
+    '.yaml': { 'Content-Type': 'text/yaml' },
+    '.yml': { 'Content-Type': 'text/yaml' },
+    '.ansi': {
+      'Content-Type': 'application/octet-stream',
+      'Content-Disposition': `attachment; filename="${filename}"`
+    }
+  }
+  return extensionHeaders[ext] || { 'Content-Type': 'text/plain' }
+}
+
 export default defineConfig({
   plugins: [
     vue(),
@@ -37,13 +51,12 @@ export default defineConfig({
               const filename = req.url.substring(1)
               const filepath = path.join(resultsDir, filename)
               const content = await fs.readFile(filepath, 'utf-8')
-              let contentType = 'text/plain'
-              if (filename.endsWith('.html')) {
-                contentType = 'text/html'
-              } else if (filename.endsWith('.yaml') || filename.endsWith('.yml')) {
-                contentType = 'text/yaml'
-              }
-              res.setHeader('Content-Type', contentType)
+
+              const headers = getHeadersForFile(filename)
+              Object.entries(headers).forEach(([key, value]) => {
+                res.setHeader(key, value)
+              })
+
               res.end(content)
             }
           } catch (err) {
