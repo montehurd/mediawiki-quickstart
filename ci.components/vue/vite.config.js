@@ -37,7 +37,13 @@ export default defineConfig({
               const filename = req.url.substring(1)
               const filepath = path.join(resultsDir, filename)
               const content = await fs.readFile(filepath, 'utf-8')
-              res.setHeader('Content-Type', 'text/plain')
+              let contentType = 'text/plain'
+              if (filename.endsWith('.html')) {
+                contentType = 'text/html'
+              } else if (filename.endsWith('.yaml') || filename.endsWith('.yml')) {
+                contentType = 'text/yaml'
+              }
+              res.setHeader('Content-Type', contentType)
               res.end(content)
             }
           } catch (err) {
