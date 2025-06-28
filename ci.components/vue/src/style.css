@@ -4,6 +4,19 @@
   font-family: monospace;
 }
 
+@media (max-width: 480px) {
+  :root {
+    font-size: 9px;
+  }
+}
+
+
+@media (max-width: 400px) {
+  :root {
+    font-size: 8px;
+  }
+}
+
 input, select, textarea, button {
   font-family: inherit;
   font-size: inherit;
