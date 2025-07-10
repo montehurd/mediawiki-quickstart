@@ -3,7 +3,7 @@
 source "./selenium/selenium.sh"
 source "./common/utility.sh"
 
-run_selenium_tests() {
+run_component_selenium_tests() {
   ensure_selenium_ready || exit 1
 
   local component_path=${1:-""}
@@ -20,5 +20,5 @@ run_selenium_tests() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-  run_selenium_tests "$@"
+  run_component_selenium_tests "$@"
 fi
