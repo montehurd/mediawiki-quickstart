@@ -6,37 +6,22 @@ source "./common/utility.sh"
 run_selenium_tests() {
   ensure_selenium_ready || exit 1
 
-  local file_path
-  file_path=${1:-"tests/selenium/**/specs/**/*.js"}
-  if [[ ! "$file_path" = /* ]]; then
-    file_path="/var/www/html/w/$file_path"
+  local component_path=""
+  # Only use first arg as component path if it doesn't start with --
+  if [[ $# -gt 0 && ! "$1" =~ ^-- ]]; then
+    component_path="$1"
   fi
-
-  if [ "$(./shellto s node -e "console.log(require('glob').sync('$file_path').length)")" = "0" ]; then
-    echo "No Selenium files found for pattern: '$file_path', skipping..."
-    exit 0
-  fi
-
-  local test_name
-  test_name=${2:-".*"}
-  local log_level
-  log_level=${3:-"error"}
-  # logLevel can be one of these: ( trace | debug | info | warn | error | silent ) https://webdriver.io/docs/configurationfile/
-
-  local retries
-  retries=${SELENIUM_RETRIES:-0}
-  local instances
-  instances=${SELENIUM_INSTANCES:-1}
 
   ./shellto \
     $([[ "${SILENT:-0}" == "1" ]] || echo "-it") \
-    -e DISPLAY=mediawiki-novnc-1:0 \
-    s npx wdio "/var/local/wdio.conf.override.js" \
-      --spec "$file_path" \
-      --logLevel "$log_level" \
-      --mochaOpts.grep "$test_name" \
-      --specFileRetries "$retries" \
-      --maxInstances "$instances"
+    -e NODE_OPTIONS="--require /var/local/wdio-arg-injector.js" \
+    -e WDIO_INJECTION_ARGS="$(printf '%s\0' "$@" | base64 -w0)" \
+    -w "/var/www/html/w/${component_path}" \
+    s bash -c '
+      source /var/www/html/w/.env
+      export CHROME_PATH
+      npm run selenium-test
+    '
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

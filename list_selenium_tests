@@ -6,35 +6,57 @@ source "./selenium/selenium.sh"
 list_selenium_tests() {
   ./shellto s sh -c "
     node -e \"
-      const Mocha = require('mocha');
-      const fs = require('fs');
-      const path = require('path');
+      (async () => {
+        const { default: Mocha } = await import('mocha')
+        const { default: fs } = await import('fs')
+        const { default: path } = await import('path')
+        const { pathToFileURL } = await import('url')
 
-      const listTests = (dir) => {
-        fs.readdirSync(dir)
-          .filter(file => file.endsWith('.js'))
-          .forEach(file => {
-            const fullPath = path.join(dir, file);
-            console.log(fullPath);
-            const mocha = new Mocha();
-            mocha.addFile(fullPath);
-            mocha.loadFiles();
-            mocha.suite.eachTest(test => console.log('\\t' + test.title));
-            mocha.suite.suites = [];
-          });
-      };
+        const listTests = async (dir) => {
+          const files = fs.readdirSync(dir)
+            .filter(file => file.endsWith('.js'))
 
-      const traverseAndListTests = dir => {
-        if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) {
-          if (path.basename(dir) === 'specs' && path.basename(path.dirname(dir)) === 'selenium') {
-            listTests(dir);
-          } else {
-            fs.readdirSync(dir).forEach(subdir => traverseAndListTests(path.join(dir, subdir)));
+          for (const file of files) {
+            const fullPath = path.join(dir, file)
+            console.log(fullPath)
+
+            const mocha = new Mocha()
+
+            try {
+              // Try CommonJS approach first
+              mocha.addFile(fullPath)
+              mocha.loadFiles()
+            } catch (err) {
+              if (err.code === 'ERR_REQUIRE_ESM') {
+                // It's an ES module - import it to register tests
+                await import(pathToFileURL(path.resolve(fullPath)).href)
+              } else {
+                throw err
+              }
+            }
+
+            // Either way, tests should now be registered
+            mocha.suite.eachTest(test => console.log('\\t' + test.title))
+            mocha.suite.suites = []
           }
         }
-      };
 
-      ['tests/', 'extensions/', 'skins/'].forEach(dir => traverseAndListTests(dir));
+        const traverseAndListTests = async dir => {
+          if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) {
+            if (path.basename(dir) === 'specs' && path.basename(path.dirname(dir)) === 'selenium') {
+              await listTests(dir)
+            } else {
+              for (const subdir of fs.readdirSync(dir)) {
+                await traverseAndListTests(path.join(dir, subdir))
+              }
+            }
+          }
+        }
+
+        for (const dir of ['tests/', 'extensions/', 'skins/']) {
+          await traverseAndListTests(dir)
+        }
+      })()
     \"
   "
 }

@@ -284,51 +284,34 @@ Run a variety of tests using the commands below
 ./run_jest
 ````
 
-## Selenium (basic)
+## Selenium
 
-The `run_component_selenium_tests` script kicks off Selenium tests for your component via its `package.json` `selenium-test` script
+Mediawiki CI triggers core and component Selenium tests via their respective `package.json` `selenium-test` scripts
 
 This (`npm run selenium-test`) is the normal ingress point CI uses to trigger Selenium tests
 
-- Run all tests in a specific extension
+Quickstart provides a flexible `run_selenium_tests` script which can be used to run Selenium tests locally, preconfigured with wiring that lets you watch the tests as they execute 
 
-```bash
-./install extensions/Echo
-./run_component_selenium_tests extensions/Echo
-```
+`Usage: ./run_selenium_tests [component_path] [wdio_flags...]`
 
-- Run all tests in a specific skin
+If invoked with a component path (such as `skins/MinervaNeue` or `extensions/Echo`) it runs the component's Selenium tests
 
-```bash
-./install skins/MinervaNeue
-./run_component_selenium_tests skins/MinervaNeue
-```
+If invoked without a component path it runs Mediawiki core's Selenium tests
 
-## Selenium (advanced)
+It also accepts [wdio flags](#wdio-flags), such as:
 
-The `run_selenium_tests` script kicks off Selenium tests for your extension or skin via direct invocation of `wdio`
+- `--spec` lets you specify exactly which tests files you want to run
+- `--mochaOpts.grep` lets you specify exactly what tests you want to run
 
-This ingress point allows for more fine-grain control of what tests gets run, also allowing for other `wdio` flags to be set, but it can occasionally have issues if a component depends on code in its `wdio.conf.js`, which this bypasses
+### List all Selenium tests
 
-### Mediawiki core
-
-- List all core and extension test files and tests, can be used to customize the file and test parameters in the `run_selenium_tests` examples below
+- List all core and installed component test files and tests. Can be used to customize `run_selenium_tests` wdio flags in the examples below
 
 ```bash
 ./list_selenium_tests
 ```
 
-- Run a MediaWiki core test
-
-```bash
-./run_selenium_tests "tests/selenium/specs/page.js" "should be creatable"
-```
-
-- Run all tests in a specific MediaWiki core test file
-
-```bash
-./run_selenium_tests "tests/selenium/specs/page.js" ".*"
-```
+### Mediawiki core
 
 - Run all MediaWiki core tests
 
@@ -339,67 +322,85 @@ This ingress point allows for more fine-grain control of what tests gets run, al
 or
 
 ```bash
-./run_selenium_tests "tests/selenium/**/specs/**/*.js" ".*"
+./run_selenium_tests --spec "tests/selenium/**/specs/**/*.js"
 ```
 
-### Mediawiki extensions
+Note: When running Mediawiki core Selenium tests, `--spec` paths are relative Mediawiki's directory
+
+- Run a specific MediaWiki core test
+
+```bash
+./run_selenium_tests --spec "tests/selenium/specs/page.js" --mochaOpts.grep "should be creatable"
+```
+
+- Run all tests in a specific MediaWiki core test file
+
+```bash
+./run_selenium_tests --spec "tests/selenium/specs/page.js"
+```
+
+### Mediawiki components
+
+Note: When passing a component path, as in the Extensions and Skins examples below, `--spec` paths are relative to that component's directory
+
+#### Extensions
+
+- Run all tests in a specific extension
+
+```bash
+./install extensions/Echo
+./run_selenium_tests extensions/Echo
+```
 
 - Run a test in a specific extension
 
 ```bash
 ./install extensions/Echo
-./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" "alerts and notices are visible"
+./run_selenium_tests extensions/Echo --spec "tests/selenium/specs/echo.js" --mochaOpts.grep "alerts and notices are visible"
 ```
 
 - Run all tests in specific extension file
 
 ```bash
 ./install extensions/Echo
-./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" ".*"
-```
-
-- Run all tests in a specific extension
-
-```bash
-./install extensions/Echo
-./run_selenium_tests "extensions/Echo/tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests extensions/Echo --spec "tests/selenium/specs/echo.js"
 ```
 
 - Run all tests in all extensions
 
 ```bash
 ./install_all extensions
-./run_selenium_tests "extensions/*/tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests --spec "extensions/*/tests/selenium/*specs/**/*.js"
 ```
 
-### Mediawiki skins
+#### Skins
+
+- Run all tests in a specific skin
+
+```bash
+./install skins/MinervaNeue
+./run_selenium_tests skins/MinervaNeue
+```
 
 - Run a test in a specific skin
 
 ```bash
 ./install skins/MinervaNeue
-./run_selenium_tests "skins/MinervaNeue/tests/selenium/specs/references.js" "Opening a reference"
+./run_selenium_tests skins/MinervaNeue --spec "tests/selenium/specs/references.js" --mochaOpts.grep "Opening a reference"
 ```
 
 - Run all tests in specific skin file
 
 ```bash
 ./install skins/MinervaNeue
-./run_selenium_tests "skins/MinervaNeue/tests/selenium/specs/references.js" ".*"
-```
-
-- Run all tests in specific skin
-
-```bash
-./install skins/MinervaNeue
-./run_selenium_tests "skins/MinervaNeue/tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests skins/MinervaNeue --spec "tests/selenium/specs/references.js"
 ```
 
 - Run all tests in all skins
 
 ```bash
 ./install_all skins
-./run_selenium_tests "skins/*/tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests --spec "skins/*/tests/selenium/*specs/**/*.js"
 ```
 
 ### Advanced GLOB patterns
@@ -410,49 +411,45 @@ For example, you could use `+` and `|` to run all skin and extension tests with 
 
 ```bash
 ./install_all skins extensions
-./run_selenium_tests "+(skins|extensions)/*/tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests --spec "+(skins|extensions)/*/tests/selenium/*specs/**/*.js"
 ```
 
 You can also run all core, skin and extension tests with one command:
 
 ```bash
 ./install_all skins extensions
-./run_selenium_tests "{+(skins|extensions)/*/,}tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests --spec "{+(skins|extensions)/*/,}tests/selenium/*specs/**/*.js"
 ```
 
-### Overriding Selenium run log level
+### WDIO Flags
 
-`./run_selenium_tests` supports an optional third parameter for setting the `logLevel`
+You can pass any wdio CLI flags to customize `run_selenium_tests` execution:
 
-Its default value is `error`, but can be changed to one of these:
+- `--spec` - Specify which test files to run
+- `--mochaOpts.grep` - Filter tests by name
+- `--logLevel` - Set logging verbosity (trace|debug|info|warn|error|silent)
+- `--specFileRetries` - Number of times to retry failed tests
+- `--maxInstances` - Number of parallel test instances
 
-( `trace` | `debug` | `info` | `warn` | `error` | `silent` ) see https://webdriver.io/docs/configurationfile/
-
-For example, to use `debug` log level:
+Examples
 
 ```bash
-./run_selenium_tests "tests/selenium/specs/**/*.js" ".*" "debug"
+./run_selenium_tests --logLevel "debug"
 ```
-
-### Overriding Selenium retries
-
-You can use the `SELENIUM_RETRIES` env var to have Selenium retry failed tests:
 
 ```bash
-SELENIUM_RETRIES=2 ./run_selenium_tests
+./run_selenium_tests --specFileRetries 2
 ```
-
-Retries defaults to 0 if the env var is not used
-
-### Overriding Selenium max instances
-
-You can use the `SELENIUM_INSTANCES` env var to have Selenium run more than a single instance at once:
 
 ```bash
-SELENIUM_INSTANCES=4 ./run_selenium_tests
+./run_selenium_tests --maxInstances 4
 ```
 
-Instances defaults to 1 if the env var is not used
+To see a complete list of wdio flags
+
+```bash
+./shellto s npx wdio run --help
+```
 
 ## Quickstart
 
