@@ -8,6 +8,16 @@
     />
 
     <div v-if="currentResult" class="results-container">
+      <h1>
+        MediaWiki Selenium Tests
+      </h1>
+      <h2>
+        Core
+      </h2>
+      <CoreResults :core="currentResult.core" />
+      <h2>
+        Components (skins/extensions)
+      </h2>
       <StagesHeader />
       <div class="components-list">
         <ComponentRow
@@ -32,6 +42,7 @@
 import { ref, onMounted, computed } from 'vue'
 import yaml from 'js-yaml'
 import RunSelector from './components/RunSelector.vue'
+import CoreResults from './components/CoreResults.vue'
 import StagesHeader from './components/StagesHeader.vue'
 import ComponentRow from './components/ComponentRow.vue'
 import ResultsFooter from './components/ResultsFooter.vue'
@@ -103,5 +114,9 @@ onMounted(async () => {
   padding: 2rem;
   text-align: center;
   color: #666;
+}
+
+h1 {
+  margin-top: 0;
 }
 </style>

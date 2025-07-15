@@ -27,3 +27,7 @@ body {
   padding: 0;
   background: white;
 }
+
+.pass {color: green;}
+.fail {color: red;}
+.none {color: green;}

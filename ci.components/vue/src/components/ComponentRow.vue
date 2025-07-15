@@ -10,6 +10,8 @@
 </template>
 
 <script setup>
+import { getStatusSymbol } from '../utils/status'
+
 const props = defineProps({
   component: {
     type: Object,
@@ -20,15 +22,6 @@ const props = defineProps({
     required: true
   }
 })
-
-const getStatusSymbol = (status) => {
-  switch (status) {
-    case 'pass': return '✓'
-    case 'fail': return 'x'
-    case 'none': return '-'
-    default: return '?'
-  }
-}
 
 const getStatusClass = (status) => {
   return status || 'unknown'
@@ -61,9 +54,5 @@ const getStatusClass = (status) => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.pass {color: green;}
-.fail {color: red;}
-.none {color: green;}
 
 </style>

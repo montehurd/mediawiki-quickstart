@@ -2,10 +2,10 @@
   <div class="stages-container">
     <div class="stages-legend">
       <span class="stages">Stages</span>
-      <div><span class="stage">1</span> - Fresh install of Mediawiki</div>
-      <div><span class="stage">2</span> - Component installation</div>
-      <div><span class="stage">3</span> - Component Selenium tests exist</div>
-      <div><span class="stage">4</span> - Component Selenium tests (via 'run_selenium_tests')</div>
+      <div><span class="stage">1</span> - ./fresh_install</div>
+      <div><span class="stage">2</span> - ./install #COMPONENT#</div>
+      <div><span class="stage">3</span> - ./selenium_tests_exist</div>
+      <div><span class="stage">4</span> - ./run_selenium_tests</div>
     </div>
 
     <div class="stages-header-title">

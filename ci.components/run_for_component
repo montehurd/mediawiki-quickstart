@@ -2,17 +2,6 @@
 
 source "./common/utility.sh"
 
-get_status_string() {
-  local status_code=$1
-  if [ "$status_code" = "0" ]; then
-    echo "pass"
-  elif [ "$status_code" = "-1" ]; then # -1 indicates no tests exist
-    echo "none"
-  else
-    echo "fail"
-  fi
-}
-
 format_component_yaml() {
   local component=$1
   local fresh_install_status=$2
@@ -56,7 +45,7 @@ run_for_component() {
         ./install "$component" 2>&1 | verboseOrDotPerLine "Install '$component'..."
         component_install_status=${PIPESTATUS[0]}
         if [ $component_install_status -eq 0 ]; then
-          if ./shellto m bash -c "yq -e '.scripts | has(\"selenium-test\")' $component/package.json" > /dev/null 2>&1; then
+          if ./selenium_tests_exist "$component"; then
             selenium_tests_exist_status=0
             ./run_selenium_tests "$component" 2>&1 | verboseOrDotPerLine "Running Selenium tests for '$component' via 'run_selenium_tests \"$component\"'..."
             run_selenium_tests_status=${PIPESTATUS[0]}
@@ -68,10 +57,10 @@ run_for_component() {
 
   # Return formatted YAML for this component
   format_component_yaml "$component" \
-    "$(get_status_string $fresh_install_status)" \
-    "$(get_status_string $component_install_status)" \
-    "$(get_status_string $selenium_tests_exist_status)" \
-    "$(get_status_string $run_selenium_tests_status)"
+    "$(./ci.components/get_status_string $fresh_install_status)" \
+    "$(./ci.components/get_status_string $component_install_status)" \
+    "$(./ci.components/get_status_string $selenium_tests_exist_status)" \
+    "$(./ci.components/get_status_string $run_selenium_tests_status)"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

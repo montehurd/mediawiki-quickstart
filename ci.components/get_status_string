@@ -1,0 +1,16 @@
+#!/bin/bash
+
+get_status_string() {
+  local status_code=$1
+  if [ "$status_code" = "0" ]; then
+    echo "pass"
+  elif [ "$status_code" = "-1" ]; then # -1 indicates no tests exist
+    echo "none"
+  else
+    echo "fail"
+  fi
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  get_status_string "$@"
+fi

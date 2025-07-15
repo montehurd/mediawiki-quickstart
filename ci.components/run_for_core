@@ -1,0 +1,43 @@
+#!/bin/bash
+
+source "./common/utility.sh"
+
+run_for_core() {
+  {
+    local fresh_install_status=1
+    local selenium_tests_exist_status=-1
+    local run_selenium_tests_status=-1
+    if [ "${FAKE_IT:-0}" = "1" ]; then
+      echo "Fake log text"
+      fresh_install_status=$(( (RANDOM % 3) - 1 ))
+      selenium_tests_exist_status=$(( (RANDOM % 3) - 1 ))
+      run_selenium_tests_status=$(( (RANDOM % 3) - 1 ))
+    else
+      export VERBOSE=1
+      export FORCE=1
+      export SILENT=1
+      export SKIP_COUNTDOWN=1
+      export SKIP_SKIN=1
+      ./fresh_install 2>&1 | verboseOrDotPerLine "Fresh install of MediaWiki..."
+      fresh_install_status=${PIPESTATUS[0]}
+      if [ $fresh_install_status -eq 0 ]; then
+        if ./selenium_tests_exist; then
+          selenium_tests_exist_status=0
+          ./run_selenium_tests 2>&1 | verboseOrDotPerLine "Running Selenium tests for MediaWiki core..."
+          run_selenium_tests_status=${PIPESTATUS[0]}
+        fi
+      fi
+    fi
+  } >&3
+
+  # Return core test results
+  echo "
+  stages:
+    fresh_install: $(./ci.components/get_status_string $fresh_install_status)
+    selenium_tests_exist: $(./ci.components/get_status_string $selenium_tests_exist_status)
+    run_selenium_tests: $(./ci.components/get_status_string $run_selenium_tests_status)"
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  run_for_core "$@"
+fi

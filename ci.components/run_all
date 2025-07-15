@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source "./ci.components/run_for_component"
+source "./ci.components/run_for_core"
 
 separator="-----------------------------------------------------------------"
 
@@ -23,7 +24,14 @@ run_all() {
   local yaml_content="timestamp: $timestamp
 commit:
   hash: $(git rev-parse --short HEAD)
-  message: $(git log -1 --format='%s')
+  message: $(git log -1 --format='%s')"
+
+  # Run MediaWiki core tests
+  local core_results=$(run_for_core)
+  yaml_content+="
+core:${core_results}"
+
+  yaml_content+="
 components:"
 
   # Process components
