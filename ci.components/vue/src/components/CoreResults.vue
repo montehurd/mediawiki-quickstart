@@ -13,6 +13,9 @@
       <span :class="core.stages.run_selenium_tests">{{ getStatusSymbol(core.stages.run_selenium_tests) }}</span>
     </div>
   </div>
+  <div v-else class="core-results no-core-data">
+    <p>This run pre-dates the addition of core runs</p>
+  </div>
 </template>
 
 <script setup>
