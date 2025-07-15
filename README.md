@@ -49,7 +49,7 @@ docker system prune -af
 ./fresh_install
 ```
 
-Also, ensure you are running the latest Docker (or Docker Desktop) version - some older versions had bugs which prevented Mediawiki containers from running on some architectures
+Also, ensure you are running the latest Docker (or Docker Desktop) version - some older versions had bugs which prevented MediaWiki containers from running on some architectures
 
 # Component management (installing skins/extensions)
 
@@ -119,7 +119,7 @@ or
 wfLoadSkin( 'Vector' );
 ```
 
-QuickStart's component installer links your component's `LocalSettings.php` to Mediawiki's `LocalSettings.php` by adding an include to the latter. This allows you to more cleanly manage and reason about your component's settings
+QuickStart's component installer links your component's `LocalSettings.php` to MediaWiki's `LocalSettings.php` by adding an include to the latter. This allows you to more cleanly manage and reason about your component's settings
 
 The installer automatically clones your components repo so you don't have to
 
@@ -129,7 +129,7 @@ The installer automatically clones your components repo so you don't have to
 
 This is where you can put any shell scripting that needs to execute to set up your component
 
-It is executed relative to mediawiki's directory in the mediawiki container - i.e. `pwd` placed in your `setup.sh` will output `/var/www/html/w`
+It is executed relative to MediaWiki's directory in the `mediawiki` container - i.e. `pwd` placed in your `setup.sh` will output `/var/www/html/w`
 
 ### dependencies.yml (optional)
 
@@ -158,7 +158,7 @@ See the Elastica [docker-compose.yml](extensions/Elastica/docker-compose.yml) fo
 
 Notice how the Elastica `docker-compose.yml` also specifies a couple values for the `mediawiki-web` container
 
-This is allowed, of course, but try to keep such changes to core Mediawiki containers to a minimum - your component's `docker-compose.yml` should be mostly concerned with your component
+This is allowed, of course, but try to keep such changes to core MediaWiki containers to a minimum - your component's `docker-compose.yml` should be mostly concerned with your component
 
 ### setup.SERVICE_NAME.sh (optional)
 
@@ -240,7 +240,7 @@ Or you can use the convenience script `install_all` to install every skin, every
 
 Run a variety of tests using the commands below
 
-## Mediawiki parser
+## MediaWiki parser
 
 - Run parser tests
 
@@ -248,7 +248,7 @@ Run a variety of tests using the commands below
 ./run_parser_tests
 ```
 
-## Mediawiki PHP
+## MediaWiki PHP
 
 - Run PHP unit tests
 
@@ -284,51 +284,34 @@ Run a variety of tests using the commands below
 ./run_jest
 ````
 
-## Selenium (basic)
+## Selenium
 
-The `run_component_selenium_tests` script kicks off Selenium tests for your component via its `package.json` `selenium-test` script
+MediaWiki CI triggers core and component Selenium tests via their respective `package.json` `selenium-test` scripts
 
 This (`npm run selenium-test`) is the normal ingress point CI uses to trigger Selenium tests
 
-- Run all tests in a specific extension
+Quickstart provides a flexible `run_selenium_tests` script which can be used to run Selenium tests locally, preconfigured with wiring that lets you watch the tests as they execute 
 
-```bash
-./install extensions/Echo
-./run_component_selenium_tests extensions/Echo
-```
+`Usage: ./run_selenium_tests [component_path] [wdio_flags...]`
 
-- Run all tests in a specific skin
+If invoked with a component path (such as `skins/MinervaNeue` or `extensions/Echo`) it runs the component's Selenium tests
 
-```bash
-./install skins/MinervaNeue
-./run_component_selenium_tests skins/MinervaNeue
-```
+If invoked without a component path it runs MediaWiki core's Selenium tests
 
-## Selenium (advanced)
+It also accepts [wdio flags](#wdio-flags), such as:
 
-The `run_selenium_tests` script kicks off Selenium tests for your extension or skin via direct invocation of `wdio`
+- `--spec` lets you specify exactly which tests files you want to run
+- `--mochaOpts.grep` lets you specify exactly what tests you want to run
 
-This ingress point allows for more fine-grain control of what tests gets run, also allowing for other `wdio` flags to be set, but it can occasionally have issues if a component depends on code in its `wdio.conf.js`, which this bypasses
+### List all Selenium tests
 
-### Mediawiki core
-
-- List all core and extension test files and tests, can be used to customize the file and test parameters in the `run_selenium_tests` examples below
+- List all core and installed component test files and tests. Can be used to customize `run_selenium_tests` wdio flags in the examples below
 
 ```bash
 ./list_selenium_tests
 ```
 
-- Run a MediaWiki core test
-
-```bash
-./run_selenium_tests "tests/selenium/specs/page.js" "should be creatable"
-```
-
-- Run all tests in a specific MediaWiki core test file
-
-```bash
-./run_selenium_tests "tests/selenium/specs/page.js" ".*"
-```
+### MediaWiki core
 
 - Run all MediaWiki core tests
 
@@ -339,67 +322,85 @@ This ingress point allows for more fine-grain control of what tests gets run, al
 or
 
 ```bash
-./run_selenium_tests "tests/selenium/**/specs/**/*.js" ".*"
+./run_selenium_tests --spec "tests/selenium/**/specs/**/*.js"
 ```
 
-### Mediawiki extensions
+Note: When running MediaWiki core Selenium tests, `--spec` paths are relative to MediaWiki's directory
+
+- Run a specific MediaWiki core test
+
+```bash
+./run_selenium_tests --spec "tests/selenium/specs/page.js" --mochaOpts.grep "should be creatable"
+```
+
+- Run all tests in a specific MediaWiki core test file
+
+```bash
+./run_selenium_tests --spec "tests/selenium/specs/page.js"
+```
+
+### MediaWiki components
+
+Note: When passing a component path, as in the Extensions and Skins examples below, `--spec` paths are relative to that component's directory
+
+#### Extensions
+
+- Run all tests in a specific extension
+
+```bash
+./install extensions/Echo
+./run_selenium_tests extensions/Echo
+```
 
 - Run a test in a specific extension
 
 ```bash
 ./install extensions/Echo
-./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" "alerts and notices are visible"
+./run_selenium_tests extensions/Echo --spec "tests/selenium/specs/echo.js" --mochaOpts.grep "alerts and notices are visible"
 ```
 
 - Run all tests in specific extension file
 
 ```bash
 ./install extensions/Echo
-./run_selenium_tests "extensions/Echo/tests/selenium/specs/echo.js" ".*"
-```
-
-- Run all tests in a specific extension
-
-```bash
-./install extensions/Echo
-./run_selenium_tests "extensions/Echo/tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests extensions/Echo --spec "tests/selenium/specs/echo.js"
 ```
 
 - Run all tests in all extensions
 
 ```bash
 ./install_all extensions
-./run_selenium_tests "extensions/*/tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests --spec "extensions/*/tests/selenium/*specs/**/*.js"
 ```
 
-### Mediawiki skins
+#### Skins
+
+- Run all tests in a specific skin
+
+```bash
+./install skins/MinervaNeue
+./run_selenium_tests skins/MinervaNeue
+```
 
 - Run a test in a specific skin
 
 ```bash
 ./install skins/MinervaNeue
-./run_selenium_tests "skins/MinervaNeue/tests/selenium/specs/references.js" "Opening a reference"
+./run_selenium_tests skins/MinervaNeue --spec "tests/selenium/specs/references.js" --mochaOpts.grep "Opening a reference"
 ```
 
 - Run all tests in specific skin file
 
 ```bash
 ./install skins/MinervaNeue
-./run_selenium_tests "skins/MinervaNeue/tests/selenium/specs/references.js" ".*"
-```
-
-- Run all tests in specific skin
-
-```bash
-./install skins/MinervaNeue
-./run_selenium_tests "skins/MinervaNeue/tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests skins/MinervaNeue --spec "tests/selenium/specs/references.js"
 ```
 
 - Run all tests in all skins
 
 ```bash
 ./install_all skins
-./run_selenium_tests "skins/*/tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests --spec "skins/*/tests/selenium/*specs/**/*.js"
 ```
 
 ### Advanced GLOB patterns
@@ -410,49 +411,45 @@ For example, you could use `+` and `|` to run all skin and extension tests with 
 
 ```bash
 ./install_all skins extensions
-./run_selenium_tests "+(skins|extensions)/*/tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests --spec "+(skins|extensions)/*/tests/selenium/*specs/**/*.js"
 ```
 
 You can also run all core, skin and extension tests with one command:
 
 ```bash
 ./install_all skins extensions
-./run_selenium_tests "{+(skins|extensions)/*/,}tests/selenium/*specs/**/*.js" ".*"
+./run_selenium_tests --spec "{+(skins|extensions)/*/,}tests/selenium/*specs/**/*.js"
 ```
 
-### Overriding Selenium run log level
+### WDIO Flags
 
-`./run_selenium_tests` supports an optional third parameter for setting the `logLevel`
+You can pass any wdio CLI flags to customize `run_selenium_tests` execution:
 
-Its default value is `error`, but can be changed to one of these:
+- `--spec` - Specify which test files to run
+- `--mochaOpts.grep` - Filter tests by name
+- `--logLevel` - Set logging verbosity (trace|debug|info|warn|error|silent)
+- `--specFileRetries` - Number of times to retry failed tests
+- `--maxInstances` - Number of parallel test instances
 
-( `trace` | `debug` | `info` | `warn` | `error` | `silent` ) see https://webdriver.io/docs/configurationfile/
-
-For example, to use `debug` log level:
+Examples
 
 ```bash
-./run_selenium_tests "tests/selenium/specs/**/*.js" ".*" "debug"
+./run_selenium_tests --logLevel "debug"
 ```
-
-### Overriding Selenium retries
-
-You can use the `SELENIUM_RETRIES` env var to have Selenium retry failed tests:
 
 ```bash
-SELENIUM_RETRIES=2 ./run_selenium_tests
+./run_selenium_tests --specFileRetries 2
 ```
-
-Retries defaults to 0 if the env var is not used
-
-### Overriding Selenium max instances
-
-You can use the `SELENIUM_INSTANCES` env var to have Selenium run more than a single instance at once:
 
 ```bash
-SELENIUM_INSTANCES=4 ./run_selenium_tests
+./run_selenium_tests --maxInstances 4
 ```
 
-Instances defaults to 1 if the env var is not used
+To see a complete list of wdio flags
+
+```bash
+./shellto s npx wdio run --help
+```
 
 ## Quickstart
 
@@ -486,9 +483,9 @@ The `ci` script is run for each commit / merge request:
 
 It runs all Quickstart tests (via `test_all`) and reports the results
 
-## Mediawiki components (skins/extensions) Selenium  
+## MediaWiki components (skins/extensions) Selenium  
 
-For each component manifest, do a `fresh_install` of Mediawiki, install the component, then run its Selenium tests:
+For each component manifest, do a `fresh_install` of MediaWiki, install the component, then run its Selenium tests:
 
 ```bash
 ./ci.components.selenium
@@ -527,7 +524,7 @@ You can also override default component settings if needed
 
 But keep in mind this is NOT the place to add default settings for extensions or skins - your component's [LocalSettings.php](#localsettingsphp-required) is the place for this
 
-# Importing Mediawiki XML page dumps
+# Importing MediaWiki XML page dumps
 
 When you run `./fresh_install`, page dump XML files found in [`import-on-fresh-install/pages/`](import-on-fresh-install/pages/) will be imported into the fresh MediaWiki instance
 
@@ -592,7 +589,7 @@ Note: after shelling into a container you can use the "bash" command so you can 
 If a command is specified, it is run in the specified container, `shellto` then returns to your host shell:
 
 ```bash
-./shellto m ps aux                 # List processes in mediawiki container
+./shellto m ps aux                 # List processes in `mediawiki` container
 ./shellto w cat /etc/os-release    # Show OS info for web container
 ./shellto j pwd                    # Show working directory in jobrunner container
 ```
@@ -607,7 +604,7 @@ If a command is specified, it is run in the specified container, `shellto` then 
 
 - Start the debugger in VS Code (F5 or the "Start Debugging" button)
 
-- Browse to the Mediawiki page executing your breakpoint code
+- Browse to the MediaWiki page executing your breakpoint code
 
 - Execute this once in the browser's console:
 
@@ -623,7 +620,7 @@ javascript:(function(){document.cookie="XDEBUG_SESSION=VSCODE;path=/";})();
 SKIP_SKIN=1 ./fresh_install
 ```
 
-## Bypass all confirmations for removing and re-installing Mediawiki files and containers
+## Bypass all confirmations for removing and re-installing MediaWiki files and containers
 
 Use with caution as this proceeds with these destructive actions without confirmation
 
@@ -675,7 +672,7 @@ Also skips opening VNC viewer when running Selenium tests
 SILENT=1 ./fresh_install
 ```
 
-## Specify branch for Mediawiki core installation
+## Specify branch for MediaWiki core installation
 
 ```bash
 BRANCH="wmf/1.44.0-wmf.20" ./fresh_install
@@ -707,9 +704,9 @@ SKIP_PAGE_IMPORT=1 ./fresh_install
 
 ## Gerrit patches
 
-### Specify Gerrit patch for Mediawiki core installation
+### Specify Gerrit patch for MediaWiki core installation
 
-In this example, Mediawiki core is cloned and, if found, the specified Gerrit patch is fetched and applied to it
+In this example, MediaWiki core is cloned and, if found, the specified Gerrit patch is fetched and applied to it
 
 ```bash
 GERRIT_PATCHES="refs/changes/94/1146994/6" ./fresh_install
@@ -728,7 +725,7 @@ The order the patches are specified DOES NOT correspond to the order of the comp
 
 Gerrit patch numbers ( like `1146994` above ) are repo-specific, so it's safe to assume your patches will only be found / applied to intended repos
 
-This approach is used because Quickstart's component installer also installs the dependencies of given components - ie you could do something like this, where `refs/changes/94/1234567/6` is a Mediawiki core patch, and `refs/changes/54/9876543/2` is a Elastica patch ( which gets installed implicitly when you install AdvancedSearch ):
+This approach is used because Quickstart's component installer also installs the dependencies of given components - ie you could do something like this, where `refs/changes/94/1234567/6` is a MediaWiki core patch, and `refs/changes/54/9876543/2` is a Elastica patch ( which gets installed implicitly when you install AdvancedSearch ):
 
 ```bash
 GERRIT_PATCHES="refs/changes/94/1234567/6 refs/changes/54/9876543/2 ./install extensions/AdvancedSearch

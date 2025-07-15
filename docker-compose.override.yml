@@ -58,13 +58,15 @@ services:
       <<: *default-environment
       MW_SERVER: http://localhost:8080
       MW_SCRIPT_PATH: /w
+      DISPLAY: mediawiki-novnc-1:0
     # 'service:mediawiki-web' network_mode makes the selenium container share the network namespace
     # with the web container - meaning they share the same IP address and localhost refers to the same place
     # This vastly simplifies isolating/running selenium in a separate container
     network_mode: "service:mediawiki-web"
     volumes:
       - ./mediawiki:/var/www/html/w:cached
-      - ./selenium/wdio.conf.override.js:/var/local/wdio.conf.override.js
+      - ./selenium/wdio-arg-injector.js:/var/local/wdio-arg-injector.js
+      - ./tests/selenium_tests.js:/var/local/selenium_tests.js
       - chromium_cache:/var/local/chromium
       - npm_cache:/var/local/npm
     depends_on:

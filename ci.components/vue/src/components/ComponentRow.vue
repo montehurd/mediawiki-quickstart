@@ -5,7 +5,6 @@
     <span :class="getStatusClass(component.stages.fresh_install)">{{ getStatusSymbol(component.stages.fresh_install) }}</span>
     <span :class="getStatusClass(component.stages.component_install)">{{ getStatusSymbol(component.stages.component_install) }}</span>
     <span :class="getStatusClass(component.stages.selenium_tests_exist)">{{ getStatusSymbol(component.stages.selenium_tests_exist) }}</span>
-    <span :class="getStatusClass(component.stages.run_component_selenium)">{{ getStatusSymbol(component.stages.run_component_selenium) }}</span>
     <span :class="getStatusClass(component.stages.run_selenium_tests)">{{ getStatusSymbol(component.stages.run_selenium_tests) }}</span>
   </div>
 </template>
@@ -39,7 +38,7 @@ const getStatusClass = (status) => {
 <style scoped>
 .grid-row {
   display: grid;
-  grid-template-columns: 4ch 44ch 3ch 3ch 3ch 3ch 3ch;
+  grid-template-columns: 4ch 44ch 3ch 3ch 3ch 3ch;
   gap: 1ch;
   align-items: center;
 }

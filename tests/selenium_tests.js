@@ -14,22 +14,23 @@ describe('Quickstart Selenium', () => {
         const passwordInput = await $('#wpPassword1');
         await usernameInput.setValue('Admin');
         await passwordInput.setValue('dockerpass');
-        await passwordInput.keys('Enter');
-        const userLink = await $('#pt-userpage');
-        await expect(userLink).toHaveTextContaining('Admin');
+        const loginButton = await $('#wpLoginAttempt');
+        await loginButton.click();
+        const userLink = await $('a[href="/wiki/User:Admin"]');
+        await expect(userLink).toExist();
     });
 
     it('appearance settings should have selected vector radio button', async () => {
         await browser.url('http://localhost:8080/wiki/Special:Preferences#mw-prefsection-rendering');
         const radioBtn = await $('input[type="radio"][value="vector-2022"]');
-        await expect(radioBtn).toBeExisting();
+        await expect(radioBtn).toExist();
         await expect(radioBtn).toBeSelected();
     });
 
     it('appearance settings should have selected monobook radio button', async () => {
         await browser.url('http://localhost:8080/wiki/Special:Preferences#mw-prefsection-rendering');
         const radioBtn = await $('input[type="radio"][value="monobook"]');
-        await expect(radioBtn).toBeExisting();
+        await expect(radioBtn).toExist();
         await expect(radioBtn).toBeSelected();
     });
 });

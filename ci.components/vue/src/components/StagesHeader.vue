@@ -5,8 +5,7 @@
       <div><span class="stage">1</span> - Fresh install of Mediawiki</div>
       <div><span class="stage">2</span> - Component installation</div>
       <div><span class="stage">3</span> - Component Selenium tests exist</div>
-      <div><span class="stage">4</span> - Component Selenium tests (via 'run_component_selenium_tests')</div>
-      <div><span class="stage">5</span> - Component Selenium tests (via 'run_selenium_tests')</div>
+      <div><span class="stage">4</span> - Component Selenium tests (via 'run_selenium_tests')</div>
     </div>
 
     <div class="stages-header-title">
@@ -22,7 +21,6 @@
       <span class="stage">2</span>
       <span class="stage">3</span>
       <span class="stage">4</span>
-      <span class="stage">5</span>
     </div>
 
   </div>
@@ -43,19 +41,19 @@
 
 .stages-header-title {
   display: grid;
-  grid-template-columns: 4ch 44ch 3ch 3ch 3ch 3ch 3ch;
+  grid-template-columns: 4ch 44ch 3ch 3ch 3ch 3ch;
   gap: 1ch;
   margin-bottom: 0.25em;
 }
 
 .stages-header-title .stages {
-  grid-column: 3 / 8;
+  grid-column: 3 / 7;
   text-align: center;
 }
 
 .grid-header {
   display: grid;
-  grid-template-columns: 4ch 44ch 3ch 3ch 3ch 3ch 3ch;
+  grid-template-columns: 4ch 44ch 3ch 3ch 3ch 3ch;
   gap: 1ch;
   align-items: center;
   font-weight: normal;
