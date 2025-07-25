@@ -40,7 +40,16 @@ if (process.env.WDIO_INJECTION_ARGS) {
     return
   }
 
-  const extraArgs = args.slice(firstFlagIndex)
+  let extraArgs = args.slice(firstFlagIndex)
+
+  const waitIndex = extraArgs.indexOf('--wait-for-debugger');
+  if (waitIndex !== -1) {
+    process.env.NODE_OPTIONS = (process.env.NODE_OPTIONS || '') + ' --inspect-brk=0.0.0.0:9229'
+    extraArgs.splice(waitIndex, 1)
+    const maxIndex = extraArgs.indexOf('--maxInstances')
+    if (maxIndex !== -1) extraArgs.splice(maxIndex, 2)
+    extraArgs.push('--maxInstances', '1')
+  }
 
   if (extraArgs.includes('--spec')) {
     const specIndex = extraArgs.indexOf('--spec')
@@ -53,5 +62,21 @@ if (process.env.WDIO_INJECTION_ARGS) {
   }
 
   console.error('Injecting wdio args:', extraArgs)
+
+  if (waitIndex !== -1) {
+    setTimeout(() => console.error('\x1b[33m\n\nWaiting for debugger attachment ("--wait-for-debugger" detected)...\n\n- 1: Open the mediawiki-quickstart folder in VSCode\n- 2: Set needed breakpoints in your Selenium files\n- 3: In the VSCode debugger section select \x1b[32m\u25B6\uFE0F Attach to Selenium WDIO Worker\x1b[0m\n\n\x1b[0m'), 5000)
+  }
+
   process.argv.push(...extraArgs)
 }
+
+
+// maxInstances should be moved into capabilities entry upstream - can it accept env var override?
+// edit the file directly next to test, then open a PR if works
+
+
+// (async () => {
+//   const module = await import('/var/www/html/w/tests/selenium/wdio.conf.js')
+//   const config = module.config
+//   console.log('Effective WDIO Config:', JSON.stringify(config, null, 2))
+// })()

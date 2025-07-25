@@ -451,6 +451,14 @@ To see a complete list of wdio flags
 ./shellto s npx wdio run --help
 ```
 
+### Debugging
+
+The `--wait-for-debugger` flag gives you an opportunity to attach VSCode's debugger to the Selenium process started by `./run_selenium_tests` 
+
+```bash
+./run_selenium_tests --wait-for-debugger
+```
+
 ## Quickstart
 
 Quickstart's functionality is verified by a variety of tests found in `tests/`
