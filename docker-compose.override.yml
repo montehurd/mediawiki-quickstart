@@ -42,6 +42,8 @@ services:
       - ./common:/var/local/common
       - composer_cache:/var/local/composer
       - npm_cache:/var/local/npm
+    ports:
+      - 9229:9229  # Expose Node inspector port for WDIO worker debugging
 
   mediawiki-jobrunner:
     environment:

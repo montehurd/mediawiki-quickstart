@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "configurations": [
     {
       "name": "Listen for MediaWiki XDebug",
@@ -9,6 +9,21 @@
       "pathMappings": {
         "/var/www/html/w": "${workspaceFolder}/mediawiki"
       }
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Selenium WDIO Worker",
+      "port": 9229,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}/mediawiki",
+      "remoteRoot": "/var/www/html/w",
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "smartStep": true,
+      "sourceMaps": false,
+      "protocol": "inspector",
+      "timeout": 30000,
+      "autoAttachChildProcesses": true
     }
   ]
 }

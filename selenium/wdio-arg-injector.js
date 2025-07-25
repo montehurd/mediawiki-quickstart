@@ -40,7 +40,16 @@ if (process.env.WDIO_INJECTION_ARGS) {
     return
   }
 
-  const extraArgs = args.slice(firstFlagIndex)
+  let extraArgs = args.slice(firstFlagIndex)
+
+  const waitIndex = extraArgs.indexOf('--wait-for-debugger');
+  if (waitIndex !== -1) {
+    process.env.NODE_OPTIONS = (process.env.NODE_OPTIONS || '') + ' --inspect-brk=0.0.0.0:9229'
+    extraArgs.splice(waitIndex, 1)
+    const maxIndex = extraArgs.indexOf('--maxInstances')
+    if (maxIndex !== -1) extraArgs.splice(maxIndex, 2)
+    extraArgs.push('--maxInstances', '1')
+  }
 
   if (extraArgs.includes('--spec')) {
     const specIndex = extraArgs.indexOf('--spec')
@@ -53,5 +62,23 @@ if (process.env.WDIO_INJECTION_ARGS) {
   }
 
   console.error('Injecting wdio args:', extraArgs)
+
+  if (waitIndex !== -1) {
+    setTimeout(() => console.error(`
+\x1b[32mWaiting for debugger attachment ("--wait-for-debugger" flag detected)...\x1b[0m
+\x1b[33m
+- 1: In VSCode, open the 'mediawiki-quickstart' folder
+- 2: In VSCode, find your Selenium test file within 'mediawiki-quickstart/mediawiki' and set needed breakpoint(s)
+- 3: Use Ctrl+Shift+D (Shift+Command+D on MacOS) to show VSCode debug panel
+- 4: Click \x1b[32m\u25B6\uFE0F\x1b[0m Attach to Selenium WDIO Worker \x1b[33mnear the top of the VSCode debug panel to continue execution with debugging\x1b[0m
+    `), 5000)
+  }
+
   process.argv.push(...extraArgs)
 }
+
+// (async () => {
+//   const module = await import('/var/www/html/w/tests/selenium/wdio.conf.js')
+//   const config = module.config
+//   console.log('Effective WDIO Config:', JSON.stringify(config, null, 2))
+// })()

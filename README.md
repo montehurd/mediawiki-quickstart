@@ -451,6 +451,26 @@ To see a complete list of wdio flags
 ./shellto s npx wdio run --help
 ```
 
+### Debugging
+
+The `--wait-for-debugger` flag gives you an opportunity to attach VSCode's debugger to a Selenium process started by `./run_selenium_tests`
+
+This is useful for setting breakpoints and variable inspection
+
+You should use this with the `--spec` flag targeting a single file ( due to how wdio spawns processes )
+
+Debug a MediaWiki core test file:
+
+```bash
+./run_selenium_tests --wait-for-debugger --spec tests/selenium/specs/page.js
+```
+
+Debug a Component test file:
+
+```bash
+./run_selenium_tests extensions/Echo --wait-for-debugger --spec "tests/selenium/specs/echo.js"
+```
+
 ## Quickstart
 
 Quickstart's functionality is verified by a variety of tests found in `tests/`
