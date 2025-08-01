@@ -451,7 +451,7 @@ To see a complete list of wdio flags
 ./shellto s npx wdio run --help
 ```
 
-### Debugging
+### Selenium Debugging
 
 The `--wait-for-debugger` flag gives you an opportunity to attach VSCode's debugger to a Selenium process started by `./run_selenium_tests`
 
@@ -614,7 +614,7 @@ If a command is specified, it is run in the specified container, `shellto` then 
 ./shellto j pwd                    # Show working directory in jobrunner container
 ```
 
-# Debugging
+# PHP Debugging
 
 ## VSCode
 
