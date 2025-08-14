@@ -14,11 +14,11 @@ terraform {
 
 resource "openstack_compute_instance_v2" "quickstart_ci_instance" {
   name            = "quickstart-ci-components"
-  image_id        = "7514dbca-d075-4ddf-86b2-b07edfaba20f"
+  image_name      = "debian-12.0-bookworm"
   flavor_name     = "g4.cores2.ram4.disk20"
   security_groups = ["default"]
   network {
-    uuid = "7425e328-560c-4f00-8e99-706f3fb90bb4"
+    name = "VLAN/legacy"
   }
   user_data = file("${path.module}/vps.cloudconfig.yml")
   lifecycle {
