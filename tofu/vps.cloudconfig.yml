@@ -21,6 +21,8 @@ users:
 runcmd:
   - echo 'quickstart ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/quickstart
   - chmod 440 /etc/sudoers.d/quickstart
+  - mkdir -p /var/log/selenium-results
+  - chown -R quickstart:quickstart /var/log/selenium-results
   # Format and mount the attached volume FIRST, before Docker starts
   - |
     # Wait for the attached volume with retries
