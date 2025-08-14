@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# docker rmi -f quickstart-tofu-cloudvps 2>/dev/null || true
-
-docker build --platform linux/amd64 -t quickstart-tofu-cloudvps .
-
 docker run -it --rm \
   --platform linux/amd64 \
   --env-file .env \
-  quickstart-tofu-cloudvps
+  -v "$(pwd)/main.tf:/workspace/main.tf" \
+  -v "$(pwd)/vps.cloudconfig.yml:/workspace/vps.cloudconfig.yml" \
+  -v "$(pwd)/generate_imports_file:/workspace/generate_imports_file" \
+  ghcr.io/montehurd/mediawiki-docker-images/tofu:latest
