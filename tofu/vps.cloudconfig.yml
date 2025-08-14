@@ -17,10 +17,9 @@ users:
   - name: quickstart
     groups: [sudo, docker]
     shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
 
 runcmd:
-  - echo 'quickstart ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/quickstart
-  - chmod 440 /etc/sudoers.d/quickstart
   - mkdir -p /var/log/selenium-results
   - chown -R quickstart:quickstart /var/log/selenium-results
   # Format and mount the attached volume FIRST, before Docker starts
@@ -91,7 +90,6 @@ runcmd:
     [Install]
     WantedBy=multi-user.target
     EOL
-  - sleep 5
   - |
     cat > /etc/systemd/system/selenium-test.service << 'EOL'
     [Unit]
@@ -109,7 +107,7 @@ runcmd:
     Environment="SKIP_PAGE_IMPORT=1"
     Environment="RECLAIM_DISK_SPACE=1"
     Environment="RESULTS_PATH=/var/log/selenium-results"
-    ExecStart=/bin/bash -c 'sleep 30 && git checkout main && git pull && ./ci.components/run_all && docker compose down && sudo systemctl restart docker && sudo systemctl restart results-server'
+    ExecStart=/bin/bash -c 'sleep 30 && git pull && ./ci.components/run_all && docker compose down && sudo systemctl restart docker && sudo systemctl restart results-server'
     Restart=always
 
     [Install]
