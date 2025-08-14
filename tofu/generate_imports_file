@@ -1,0 +1,85 @@
+#!/bin/bash
+
+get_instance_id() {
+  local name="$1"
+  openstack server show "$name" -f value -c id 2>/dev/null
+}
+
+get_volume_id() {
+  local name="$1"
+  openstack volume show "$name" -f value -c id 2>/dev/null
+}
+
+get_attachment_id() {
+  local instance_id="$1"
+  local volume_id="$2"
+  [[ -z "$instance_id" || -z "$volume_id" ]] && return
+  openstack server show "$instance_id" -f value -c volumes_attached | grep -q "$volume_id" && echo "${instance_id}/${volume_id}"
+}
+
+get_web_proxy_id() {
+  local hostname="$1"
+  local fqdn="${hostname}.wmcloud.org"
+  # Query Wikimedia's nameserver
+  if dig +short "$fqdn" @ns0.openstack.eqiad1.wikimediacloud.org. | grep -q .; then
+    echo "$fqdn"
+  fi
+}
+
+generate_file() {
+  local instance_id=$(get_instance_id "quickstart-ci-components")
+  local volume_id=$(get_volume_id "quickstart-ci-storage")
+  local attachment_id=$(get_attachment_id "$instance_id" "$volume_id")
+  local proxy_id=$(get_web_proxy_id "quickstart-ci-components")
+
+  > imports.tf
+
+  [[ -n "$instance_id" ]] && cat >> imports.tf << EOF
+import {
+  to = openstack_compute_instance_v2.quickstart_ci_instance
+  id = "$instance_id"
+}
+
+EOF
+
+  [[ -n "$volume_id" ]] && cat >> imports.tf << EOF
+import {
+  to = openstack_blockstorage_volume_v3.quickstart_storage
+  id = "$volume_id"
+}
+
+EOF
+
+  [[ -n "$attachment_id" ]] && cat >> imports.tf << EOF
+import {
+  to = openstack_compute_volume_attach_v2.quickstart_storage_attachment
+  id = "$attachment_id"
+}
+
+EOF
+
+  [[ -n "$proxy_id" ]] && cat >> imports.tf << EOF
+import {
+  to = cloudvps_web_proxy.quickstart_ci
+  id = "$proxy_id"
+}
+
+EOF
+}
+
+generate_imports_file() {
+  generate_file
+  tofu plan
+  echo
+  echo "-----------------------"
+  echo "Generated 'imports.tf':"
+  echo -e "\033[32m$(cat imports.tf)\033[0m"
+  echo "-----------------------"
+  echo
+  echo "Run 'tofu plan' to preview, then 'tofu apply' to import"
+  echo -e "\033[33mAfter importing resources with 'tofu apply', manually remove the imports file via 'rm imports.tf'\033[0m"
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  generate_imports_file "$@"
+fi

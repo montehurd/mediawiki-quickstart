@@ -1,0 +1,136 @@
+#cloud-config
+
+apt:
+  sources:
+    docker.list:
+      source: deb [arch=amd64] https://download.docker.com/linux/debian bookworm stable
+      keyid: 7EA0A9C3F273FCD8
+
+packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+
+users:
+  - name: quickstart
+    groups: [sudo, docker]
+    shell: /bin/bash
+
+runcmd:
+  - echo 'quickstart ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/quickstart
+  - chmod 440 /etc/sudoers.d/quickstart
+  # Format and mount the attached volume FIRST, before Docker starts
+  - |
+    # Wait for the attached volume with retries
+    DEVICE="/dev/sdb"
+    RETRIES=30
+    while [ $RETRIES -gt 0 ]; do
+      if [ -b "$DEVICE" ]; then
+        echo "Found attached volume: $DEVICE"
+        break
+      fi
+      echo "Waiting for volume $DEVICE to appear... ($RETRIES retries left)"
+      sleep 2
+      RETRIES=$((RETRIES - 1))
+    done
+
+    if [ -b "$DEVICE" ]; then
+      # Format with ext4
+      mkfs.ext4 $DEVICE
+      # Create mount point
+      mkdir -p /mnt/data
+      # Mount it
+      mount $DEVICE /mnt/data
+      # Add to fstab for persistence
+      echo "$DEVICE /mnt/data ext4 defaults,nofail 0 2" >> /etc/fstab
+      # Create directories for Docker and quickstart project
+      mkdir -p /mnt/data/docker
+      mkdir -p /mnt/data/quickstart
+      # Set ownership for quickstart directory
+      chown -R quickstart:quickstart /mnt/data/quickstart
+    else
+      echo "ERROR: Volume $DEVICE did not appear after 60 seconds! Cannot continue."
+      exit 1
+    fi
+  # Configure Docker MTU to match host interface to prevent SSL/TLS handshake failures
+  # Cloud providers (AWS, GCP, Azure) often use MTU values <1500 (e.g., 1450) to accommodate
+  # overlay network headers (VXLAN, GRE). Docker defaults to 1500, causing packet fragmentation
+  # when containers send large packets. This breaks HTTPS connections, causing timeouts when
+  # downloading packages from npm, GitHub, etc. The fix detects the host's MTU and configures
+  # Docker to match, ensuring containers can successfully complete SSL handshakes
+  - |
+    HOST_MTU=$(ip route | grep default | head -n1 | awk '{print $5}' | xargs -I {} ip link show {} | awk -F'mtu ' '{print $2}' | awk '{print $1}')
+    mkdir -p /etc/docker
+    # Configure Docker with both MTU and data directory
+    cat > /etc/docker/daemon.json << EOF
+    {
+      "mtu": $HOST_MTU,
+      "data-root": "/mnt/data/docker"
+    }
+    EOF
+    systemctl restart docker
+  # Clone to the data volume
+  - su quickstart -c "git clone https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart.git /mnt/data/quickstart/mediawiki-quickstart"
+  - sleep 5
+  - |
+    cat > /etc/systemd/system/results-server.service << 'EOL'
+    [Unit]
+    Description=Vue Server for Selenium Results
+    After=selenium-test.service
+    [Service]
+    Type=simple
+    User=quickstart
+    WorkingDirectory=/mnt/data/quickstart/mediawiki-quickstart/ci.components
+    Environment="RESULTS_PATH=/var/log/selenium-results"
+    ExecStart=docker compose up
+    Restart=always
+    [Install]
+    WantedBy=multi-user.target
+    EOL
+  - sleep 5
+  - |
+    cat > /etc/systemd/system/selenium-test.service << 'EOL'
+    [Unit]
+    Description=Continuous Selenium Test Runner
+    After=network.target
+
+    [Service]
+    Type=simple
+    User=quickstart
+    WorkingDirectory=/mnt/data/quickstart/mediawiki-quickstart
+    Environment="FORCE=1"
+    Environment="SKIP_COUNTDOWN=1"
+    Environment="SILENT=1"
+    Environment="SKIP_LOCALIZATION_CACHE_REBUILD=1"
+    Environment="SKIP_PAGE_IMPORT=1"
+    Environment="RECLAIM_DISK_SPACE=1"
+    Environment="RESULTS_PATH=/var/log/selenium-results"
+    ExecStart=/bin/bash -c 'sleep 30 && git checkout main && git pull && ./ci.components/run_all && docker compose down && sudo systemctl restart docker && sudo systemctl restart results-server'
+    Restart=always
+
+    [Install]
+    WantedBy=multi-user.target
+    EOL
+  - sleep 5
+  - systemctl daemon-reload
+  - systemctl enable results-server
+  - systemctl start results-server
+  - systemctl enable selenium-test
+  - systemctl start selenium-test
+  - |
+    mkdir -p /etc/systemd/journald.conf.d
+    cat > /etc/systemd/journald.conf.d/size-limit.conf << 'EOL'
+    [Journal]
+    SystemMaxUse=200M
+    SystemMaxFileSize=20M
+    EOL
+  - systemctl restart systemd-journald
+  - journalctl --vacuum-size=200M
+  - apt-get clean
+
+package_update: true
+package_upgrade: true
+
+final_message: "The system is finally up, after $UPTIME seconds"

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# docker rmi -f quickstart-tofu-cloudvps 2>/dev/null || true
+
+docker build --platform linux/amd64 -t quickstart-tofu-cloudvps .
+
+docker run -it --rm \
+  --platform linux/amd64 \
+  --env-file .env \
+  quickstart-tofu-cloudvps

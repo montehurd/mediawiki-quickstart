@@ -1,0 +1,43 @@
+#!/bin/bash
+
+remove_items() {
+  local items=("$@")
+  rm -rf "${items[@]}" 2>/dev/null || true
+}
+
+reset() {
+  local items=(
+    ".terraform.lock.hcl"
+    ".tofu-data"
+    "terraform.tfstate"
+    "terraform.tfstate.backup"
+    "imports.tf"
+  )
+  local found=()
+  for item in "${items[@]}"; do
+    [[ -e "$item" ]] && found+=("$item")
+  done
+  if [[ ${#found[@]} -eq 0 ]]; then
+    echo "Nothing to reset"
+    return 0
+  fi
+  echo "Existing Tofu state found. Are you sure you want to reset it? This will delete:"
+  for item in "${found[@]}"; do
+    echo "  - $item"
+  done
+  read -p "Delete it? [y/N] " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Operation cancelled"
+    return 1
+  fi
+  remove_items "${found[@]}"
+
+  tofu init
+
+  echo "Reset complete"
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  reset "$@"
+fi

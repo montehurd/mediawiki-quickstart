@@ -74,7 +74,7 @@ export default defineConfig({
     allowedHosts: [
       'localhost',
       '127.0.0.1',
-      'components-mediawiki-quickstart.wmcloud.org'
+      'quickstart-ci-components.wmcloud.org'
     ]
   }
 })
