@@ -27,8 +27,8 @@ get_web_proxy_id() {
 }
 
 generate_file() {
-  local instance_id=$(get_instance_id "quickstart-ci-components")
-  local volume_id=$(get_volume_id "quickstart-ci-storage")
+  local instance_id=$(get_instance_id "ci-components")
+  local volume_id=$(get_volume_id "ci-storage")
   local attachment_id=$(get_attachment_id "$instance_id" "$volume_id")
   local proxy_id=$(get_web_proxy_id "quickstart-ci-components")
 

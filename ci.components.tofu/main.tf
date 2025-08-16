@@ -13,9 +13,9 @@ terraform {
 }
 
 resource "openstack_compute_instance_v2" "quickstart_ci_instance" {
-  name            = "quickstart-ci-components"
+  name            = "ci-components"
   image_name      = "debian-12.0-bookworm"
-  flavor_name     = "g4.cores2.ram4.disk20"
+  flavor_name     = "g4.cores4.ram8.disk20"
   security_groups = ["default"]
   network {
     name = "VLAN/legacy"
@@ -28,7 +28,7 @@ resource "openstack_compute_instance_v2" "quickstart_ci_instance" {
 
 # Create volume
 resource "openstack_blockstorage_volume_v3" "quickstart_storage" {
-  name        = "quickstart-ci-storage"
+  name        = "ci-storage"
   description = "Additional storage for CI components instance"
   size        = 80  # GB
 }
