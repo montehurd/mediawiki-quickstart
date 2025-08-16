@@ -503,33 +503,6 @@ The `ci` script is run for each commit / merge request:
 
 It runs all Quickstart tests (via `test_all`) and reports the results
 
-## MediaWiki components (skins/extensions) Selenium  
-
-For each component manifest, do a `fresh_install` of MediaWiki, install the component, then run its Selenium tests:
-
-```bash
-./ci.components.selenium
-```
-
-This runs in a loop on a Horizon VPS configured with these cloud config [settings](vps/ci.components.selenium.md)
-
-The results of these runs are available on [https://quickstart-ci-components.wmcloud.org](https://quickstart-ci-components.wmcloud.org)
-
-If you want to run it locally, it takes a couple hours
-
-By default it places its 3 output files in the `mediawiki-quickstart` folder:
-
-- index.html      ( results chart )
-- index.log       ( raw asci logs ) 
-- index.log.html  ( html version of logs )
-
-You can invoke it with an optional path override:
-```bash
-OUTPUT_PATH=/some/path ./ci.components.selenium
-```
-
-Once started, you can `tail -f index.log` in a separate terminal window to follow along live 
-
 # Adding/overriding MediaWiki 'LocalSettings.php' values
 
 To apply custom MediaWiki settings during `./fresh_install`, add a file to the `import-on-fresh-install/` folder such as:
