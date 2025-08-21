@@ -20,8 +20,6 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
 
 runcmd:
-  - mkdir -p /var/log/selenium-results
-  - chown -R quickstart:quickstart /var/log/selenium-results
   # Format and mount the attached volume FIRST, before Docker starts
   - |
     # Wait for the attached volume with retries
@@ -55,6 +53,8 @@ runcmd:
       echo "ERROR: Volume $DEVICE did not appear after 60 seconds! Cannot continue."
       exit 1
     fi
+  - mkdir -p /mnt/data/selenium-results
+  - chown -R quickstart:quickstart /mnt/data/selenium-results
   # Configure Docker MTU to match host interface to prevent SSL/TLS handshake failures
   # Cloud providers (AWS, GCP, Azure) often use MTU values <1500 (e.g., 1450) to accommodate
   # overlay network headers (VXLAN, GRE). Docker defaults to 1500, causing packet fragmentation
@@ -84,7 +84,7 @@ runcmd:
     Type=simple
     User=quickstart
     WorkingDirectory=/mnt/data/quickstart/mediawiki-quickstart/ci.components
-    Environment="RESULTS_PATH=/var/log/selenium-results"
+    Environment="RESULTS_PATH=/mnt/data/selenium-results"
     ExecStart=docker compose up
     Restart=always
     [Install]
@@ -106,7 +106,7 @@ runcmd:
     Environment="SKIP_LOCALIZATION_CACHE_REBUILD=1"
     Environment="SKIP_PAGE_IMPORT=1"
     Environment="RECLAIM_DISK_SPACE=1"
-    Environment="RESULTS_PATH=/var/log/selenium-results"
+    Environment="RESULTS_PATH=/mnt/data/selenium-results"
     ExecStart=/bin/bash -c 'sleep 30 && git pull && ./ci.components/run_all && docker compose down && sudo systemctl restart docker && sudo systemctl restart results-server'
     Restart=always
 
