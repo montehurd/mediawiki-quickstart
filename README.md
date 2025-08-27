@@ -758,6 +758,12 @@ export MW_DBPORT=3306
 ./install extensions/IPInfo
 ```
 
+For example, here's a `fresh_install` using the built-in MySQL container (presumes MySQL data has been placed in `~/mediawiki-quickstart/import-on-fresh-install/mysql.backup.gz`)
+
+```bash
+MW_DBTYPE=mysql MW_DBSERVER=mediawiki-mysql-1 COMPOSE_PROFILES="default,mysql" MW_DBNAME=my_wiki MW_DBUSER=root MW_DBPASS="" MW_DBPORT=3306 VERBOSE=1 FORCE=1 ./fresh_install
+```
+
 ## MySQL backup and restoration
 
 - When using Quickstart's built-in MySQL container, you can save a zipped backup of the "mysql-data" folder to the "mysql-backups" folder (the backup file will have the timestamp in its name, ie 'mysql-backups/mysql.2025-02-12_16-49-46-0600-CST.gz')
