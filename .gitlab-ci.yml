@@ -10,6 +10,11 @@
 # https://gitlab.wikimedia.org/mhurd/vps-provisioning
 #
 
+include:
+  - project: repos/test-platform/sonarqube
+    ref: main
+    file: templates/sonar-ci.yml
+
 stages:
   - cleanup
   - test
