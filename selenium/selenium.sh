@@ -12,10 +12,11 @@ ensure_selenium_ready() {
     ./shellto -u root s chown -R $(id -u):$(id -g) /var/local # Ensure Chrome binary can be created
   fi
 
+  if ! is_service_running "novnc"; then
+    docker compose up -d novnc 2>&1 | verboseOrDotPerLine "Starting NoVNC container"
+  fi
+
   if [ "${SILENT:-0}" -ne 1 ]; then
-    if ! is_service_running "novnc"; then
-      docker compose up -d novnc 2>&1 | verboseOrDotPerLine "Starting NoVNC container"
-    fi
     open_url_when_available "http://localhost:8086/vnc_lite.html?autoconnect=true" 2>&1 | verboseOrDotPerLine "Waiting for NoVNC page availability"
   fi
 
