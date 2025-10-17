@@ -3,7 +3,7 @@
     <div v-if="files.length > 0">
       Artifacts
       <span v-for="(file, index) in files" :key="file">
-        <a class="footer-link" :href="`/api/results/${file}`">{{ getExtension(file) }}</a>
+        <a :href="`/api/results/${file}`" class="footer-link">{{ getExtension(file) }}</a>
       </span>
       <div class="footer-note">
         <ul>
@@ -35,11 +35,13 @@ const getExtension = (filename) => {
   margin-top: 2.5em;
   color: green;
 }
+
 .footer-link {
   display: block;
   padding-top: 0.5em;
   color: #000;
 }
+
 .footer-note {
   margin: 1em;
   margin-left: 0;

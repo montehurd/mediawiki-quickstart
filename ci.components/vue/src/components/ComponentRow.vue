@@ -2,36 +2,44 @@
   <div class="grid-row">
     <span class="row-number">{{ index }}</span>
     <span class="component-name">{{ component.name }}</span>
-    <span :class="getStatusClass(component.stages.fresh_install)">{{ getStatusSymbol(component.stages.fresh_install) }}</span>
-    <span :class="getStatusClass(component.stages.component_install)">{{ getStatusSymbol(component.stages.component_install) }}</span>
-    <span :class="getStatusClass(component.stages.selenium_tests_exist)">{{ getStatusSymbol(component.stages.selenium_tests_exist) }}</span>
-    <span :class="getStatusClass(component.stages.run_selenium_tests)">{{ getStatusSymbol(component.stages.run_selenium_tests) }}</span>
+    <span :class="getStatusClass(component.stages.fresh_install)">{{
+        getStatusSymbol(component.stages.fresh_install)
+      }}</span>
+    <span :class="getStatusClass(component.stages.component_install)">{{
+        getStatusSymbol(component.stages.component_install)
+      }}</span>
+    <span :class="getStatusClass(component.stages.selenium_tests_exist)">{{
+        getStatusSymbol(component.stages.selenium_tests_exist)
+      }}</span>
+    <span :class="getStatusClass(component.stages.run_selenium_tests)">{{
+        getStatusSymbol(component.stages.run_selenium_tests)
+      }}</span>
+
+    <!-- per-row links -->
+    <span class="links-cell">
+      <a v-if="component.links?.html" :href="component.links.html + '#log-end'" rel="noopener" target="_blank">html</a>
+      <span v-if="component.links?.html && component.links?.ansi"> · </span>
+      <a v-if="component.links?.ansi" :href="component.links.ansi" rel="noopener" target="_blank">ansi</a>
+    </span>
   </div>
 </template>
 
 <script setup>
-import { getStatusSymbol } from '../utils/status'
+import {getStatusSymbol} from '../utils/status'
 
-const props = defineProps({
-  component: {
-    type: Object,
-    required: true
-  },
-  index: {
-    type: Number,
-    required: true
-  }
+defineProps({
+  component: {type: Object, required: true},
+  index: {type: Number, required: true}
 })
 
-const getStatusClass = (status) => {
-  return status || 'unknown'
-}
+const getStatusClass = (status) => status || 'unknown'
 </script>
 
 <style scoped>
 .grid-row {
   display: grid;
-  grid-template-columns: 4ch 44ch 3ch 3ch 3ch 3ch;
+  /* shrink the links column a bit */
+  grid-template-columns: 4ch 44ch 3ch 3ch 3ch 3ch minmax(10ch, auto);
   gap: 1ch;
   align-items: center;
 }
@@ -55,4 +63,29 @@ const getStatusClass = (status) => {
   white-space: nowrap;
 }
 
+/* Make HTML/ANSI small & subtle */
+.links-cell {
+  text-align: left;
+  white-space: nowrap;
+  font-size: 0.78em; /* smaller text specifically for the links cell */
+  line-height: 1; /* tighter vertical rhythm */
+}
+
+.links-cell a {
+  text-decoration: none;
+  opacity: 0.8; /* slightly subdued */
+  padding: 0 0.2ch; /* small breathing room */
+}
+
+.links-cell a:hover {
+  text-decoration: underline;
+  opacity: 1;
+}
+
+/* style the middle dot separator */
+.links-cell > span {
+  opacity: 0.6;
+  padding: 0 0.1ch;
+  font-size: 0.9em;
+}
 </style>

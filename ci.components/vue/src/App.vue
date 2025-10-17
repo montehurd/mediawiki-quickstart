@@ -1,35 +1,30 @@
 <template>
   <div class="app">
     <RunSelector
-      :available-files="availableFiles"
-      v-model:selected-file="selectedFile"
-      :commit="currentResult?.commit"
-      @load-result="loadResult"
+        v-model:selected-file="selectedFile"
+        :available-files="availableFiles"
+        :commit="currentResult?.commit"
+        @load-result="loadResult"
     />
 
     <div v-if="currentResult" class="results-container">
-      <h1>
-        MediaWiki Selenium Tests
-      </h1>
-      <h2>
-        Core
-      </h2>
-      <CoreResults :core="currentResult.core" />
-      <h2>
-        Components (skins/extensions)
-      </h2>
-      <StagesHeader />
+      <h1>MediaWiki Selenium Tests</h1>
+
+      <h2>Core</h2>
+      <CoreResults :core="currentResult.core"/>
+
+      <h2>Components (skins/extensions)</h2>
+      <StagesHeader/>
       <div class="components-list">
         <ComponentRow
-          v-for="(component, index) in currentResult.components"
-          :key="component.name"
-          :component="component"
-          :index="index + 1"
+            v-for="(component, index) in currentResult.components"
+            :key="component.name"
+            :component="component"
+            :index="index + 1"
         />
       </div>
-      <ResultsFooter
-        :files="selectedFileData?.files || []"
-      />
+
+      <ResultsFooter :files="selectedFileData?.files || []"/>
     </div>
 
     <div v-else class="no-data">
@@ -39,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import yaml from 'js-yaml'
 import RunSelector from './components/RunSelector.vue'
 import CoreResults from './components/CoreResults.vue'
@@ -66,6 +61,15 @@ const loadAvailableFiles = async () => {
   }
 }
 
+// Mirror bash slug logic: "extensions/Foo Bar" -> "extensions-Foo-Bar"
+const slugFromName = (name) => {
+  return String(name)
+      .replace(/^\.\//, '')
+      .replace(/\/$/, '')
+      .replace(/\s+/g, '-')
+      .replace(/\//g, '-')
+}
+
 const loadResult = async () => {
   if (!selectedFile.value) {
     currentResult.value = null
@@ -73,17 +77,45 @@ const loadResult = async () => {
   }
 
   try {
-    const response = await fetch(`/api/results/${selectedFile.value}`)
-    if (!response.ok) {
-      throw new Error('Failed to fetch file')
-    }
+    // Fetch raw YAML and lightweight links metadata for this run
+    const [yamlResp, linksResp] = await Promise.all([
+      fetch(`/api/results/${selectedFile.value}`),
+      fetch(`/api/results/${selectedFile.value}?links=1`)
+    ])
 
-    const yamlText = await response.text()
+    if (!yamlResp.ok) throw new Error('Failed to fetch YAML')
+
+    const yamlText = await yamlResp.text()
     const parsed = yaml.load(yamlText)
 
-    if (!parsed || !parsed.components || !Array.isArray(parsed.components)) {
+    if (!parsed || !Array.isArray(parsed?.components)) {
       throw new Error('Invalid YAML structure')
     }
+
+    // Build slug
+    const compLinks = new Map()
+    if (linksResp.ok) {
+      const meta = await linksResp.json()
+      if (Array.isArray(meta?.components)) {
+        for (const c of meta.components) {
+          compLinks.set(c.slug, {
+            html: c.html ? `/api/results/${c.html}` : null,
+            ansi: c.ansi ? `/api/results/${c.ansi}` : null
+          })
+        }
+      }
+    }
+
+    // Attach links to each component
+    const ts = selectedFile.value.split('/')[0]
+    parsed.components = parsed.components.map((c) => {
+      const slug = slugFromName(c.name)
+      const links = compLinks.get(slug) || {
+        html: `/api/results/${ts}/results/${slug}/logs.ansi.html`,
+        ansi: `/api/results/${ts}/results/${slug}/logs.ansi`
+      }
+      return {...c, links}
+    })
 
     currentResult.value = parsed
   } catch (error) {
