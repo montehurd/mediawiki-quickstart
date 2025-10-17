@@ -1,9 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+RUSULTS_DIR="${RUSULTS_DIR:-./ci.components/results}"
 source "./ci.components/run_for_component"
 source "./ci.components/run_for_core"
-RUSULTS_DIR="${RUSULTS_DIR:-./ci.components/results}"
 
 separator="-----------------------------------------------------------------"
 
