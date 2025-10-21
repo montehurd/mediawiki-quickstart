@@ -47,7 +47,7 @@ commit:
   local core_results
   core_results="$(run_for_core 3> >(tee -a "${aggregate_log}" >"${core_log}"))"
 
-  yaml_content+="core:${core_results}components:"
+  yaml_content+=$'\ncore:'"${core_results}"$'\ncomponents:'
 
   # HTML for core
   if command -v alpine_ansi2html &>/dev/null; then
