@@ -24,7 +24,7 @@ export default defineConfig({
             name: 'serve-results',
             configureServer(server) {
                 server.middlewares.use('/api/results', async (req, res) => {
-                    const resultsDir = process.env.RESULTS_PATH || path.join(process.cwd(), 'ci.components', 'results')
+                    const resultsDir = process.env.RESULTS_PATH || path.join(process.cwd(), 'ci.components', 'runs')
 
                     const exists = async (p) => {
                         try {
