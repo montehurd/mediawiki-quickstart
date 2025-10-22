@@ -69,7 +69,7 @@ export default defineConfig({
                         if (req.url && req.url.startsWith('/')) {
                             const u = new URL(req.url, 'http://localhost')
                             const rel = u.pathname.slice(1)
-                            const wantLinksOnly = u.searchParams.has('links') // <<<<<< NEW
+                            const wantLinksOnly = u.searchParams.has('links')
 
                             const candidate = path.normalize(path.join(resultsDir, rel))
                             const base = path.normalize(resultsDir + path.sep)
