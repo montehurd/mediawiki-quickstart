@@ -16,7 +16,7 @@
       }}</span>
 
     <span class="links-cell">
-      <a v-if="component.links?.html" :href="component.links.html + '#log-end'" rel="noopener" target="_blank">html</a>
+      <a v-if="component.links?.html" :href="component.links.html" rel="noopener" target="_blank">html</a>
       <span v-if="component.links?.html && component.links?.ansi"> · </span>
       <a v-if="component.links?.ansi" :href="component.links.ansi" rel="noopener" target="_blank">ansi</a>
     </span>
