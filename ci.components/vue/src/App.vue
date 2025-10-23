@@ -46,9 +46,9 @@ const availableFiles = ref([])
 const selectedFile = ref('')
 const currentResult = ref(null)
 
-const selectedFileData = computed(() => {
-  return availableFiles.value.find(f => f.filename === selectedFile.value)
-})
+const selectedFileData = computed(() =>
+    availableFiles.value.find(f => f.filename === selectedFile.value)
+)
 
 const loadAvailableFiles = async () => {
   try {
@@ -76,11 +76,8 @@ const loadResult = async () => {
   }
 
   try {
-    const [yamlResp, linksResp] = await Promise.all([
-      fetch(`/api/results/${selectedFile.value}`),
-      fetch(`/api/results/${selectedFile.value}?links=1`)
-    ])
-
+    //fetch YAML
+    const yamlResp = await fetch(`/api/results/${selectedFile.value}`)
     if (!yamlResp.ok) throw new Error('Failed to fetch YAML')
 
     const yamlText = await yamlResp.text()
@@ -90,29 +87,16 @@ const loadResult = async () => {
       throw new Error('Invalid YAML structure')
     }
 
-    // Build slug
-    const compLinks = new Map()
-    if (linksResp.ok) {
-      const meta = await linksResp.json()
-      if (Array.isArray(meta?.components)) {
-        for (const c of meta.components) {
-          compLinks.set(c.slug, {
-            html: c.html ? `/api/results/${c.html}` : null,
-            ansi: c.ansi ? `/api/results/${c.ansi}` : null
-          })
-        }
-      }
-    }
-
-    // Attach links to each component
     const ts = selectedFile.value.split('/')[0]
     parsed.components = parsed.components.map((c) => {
       const slug = slugFromName(c.name)
-      const links = compLinks.get(slug) || {
-        html: `/api/results/${ts}/results/${slug}/logs.ansi.html`,
-        ansi: `/api/results/${ts}/results/${slug}/logs.ansi`
+      return {
+        ...c,
+        links: {
+          html: `/api/results/${ts}/results/${slug}/logs.ansi.html`,
+          ansi: `/api/results/${ts}/results/${slug}/logs.ansi`
+        }
       }
-      return {...c, links}
     })
 
     currentResult.value = parsed

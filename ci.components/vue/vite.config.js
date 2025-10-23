@@ -2,6 +2,7 @@ import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import fs from 'fs/promises'
 import path from 'path'
+import fss from 'fs'
 
 const getHeadersForFile = (filename) => {
     const ext = path.extname(filename).toLowerCase()
@@ -23,18 +24,19 @@ export default defineConfig({
         {
             name: 'serve-results',
             configureServer(server) {
-                server.middlewares.use('/api/results', async (req, res) => {
-                    const resultsDir = process.env.RESULTS_PATH || path.join(process.cwd(), 'ci.components', 'runs')
+                const resultsDir = process.env.RESULTS_PATH || path.join(process.cwd(), 'ci.components', 'runs')
+                const base = path.normalize(resultsDir + path.sep)
 
-                    const exists = async (p) => {
-                        try {
-                            await fs.access(p);
-                            return true
-                        } catch {
-                            return false
-                        }
+                const exists = async (p) => {
+                    try {
+                        await fs.access(p);
+                        return true
+                    } catch {
+                        return false
                     }
+                }
 
+                server.middlewares.use('/api/results', async (req, res) => {
                     try {
                         if (req.url === '/available') {
                             const dirents = await fs.readdir(resultsDir, {withFileTypes: true})
@@ -49,9 +51,15 @@ export default defineConfig({
                                 const ansiRel = `${ts}/${ts}.logs.ansi`
                                 const htmlRel = `${ts}/${ts}.logs.ansi.html`
 
+                                // parallel file checks
+                                const [ansiOk, htmlOk] = await Promise.all([
+                                    exists(path.join(resultsDir, ansiRel)),
+                                    exists(path.join(resultsDir, htmlRel)),
+                                ])
+
                                 const files = []
-                                if (await exists(path.join(resultsDir, ansiRel))) files.push(ansiRel)
-                                if (await exists(path.join(resultsDir, htmlRel))) files.push(htmlRel)
+                                if (ansiOk) files.push(ansiRel)
+                                if (htmlOk) files.push(htmlRel)
 
                                 results.push({
                                     filename: yamlRel,
@@ -62,71 +70,31 @@ export default defineConfig({
                             }
 
                             res.setHeader('Content-Type', 'application/json')
-                            res.end(JSON.stringify(results))
-                            return
+                            res.setHeader('Cache-Control', 'public, max-age=15, stale-while-revalidate=60')
+                            return res.end(JSON.stringify(results))
                         }
 
                         if (req.url && req.url.startsWith('/')) {
-                            const u = new URL(req.url, 'http://localhost')
-                            const rel = u.pathname.slice(1)
-                            const wantLinksOnly = u.searchParams.has('links')
+                            const rel = req.url.slice(1).split('?')[0]
+                            const candidate = path.join(resultsDir, rel)
 
-                            const candidate = path.normalize(path.join(resultsDir, rel))
-                            const base = path.normalize(resultsDir + path.sep)
                             if (!candidate.startsWith(base)) {
                                 res.statusCode = 403
                                 res.setHeader('Content-Type', 'application/json')
-                                res.end(JSON.stringify({error: 'Forbidden'}))
-                                return
+                                return res.end('{"error":"Forbidden"}')
                             }
 
-                            if ((rel.endsWith('.yaml') || rel.endsWith('.yml')) && wantLinksOnly) {
-                                const ts = rel.split('/')[0]
-                                const runRoot = path.join(resultsDir, ts)
-
-                                //aggregate files
-                                const files = []
-                                const ansiRel = `${ts}/${ts}.logs.ansi`
-                                const htmlRel = `${ts}/${ts}.logs.ansi.html`
-                                if (await exists(path.join(resultsDir, ansiRel))) files.push(ansiRel)
-                                if (await exists(path.join(resultsDir, htmlRel))) files.push(htmlRel)
-
-                                // Per-component links
-                                const components = []
-                                const componentsRoot = path.join(runRoot, 'results')
-                                if (await exists(componentsRoot)) {
-                                    const compDirents = await fs.readdir(componentsRoot, {withFileTypes: true})
-                                    const compNames = compDirents
-                                        .filter(d => d.isDirectory())
-                                        .map(d => d.name)
-                                        .sort((a, b) => a.localeCompare(b))
-
-                                    for (const slug of compNames) {
-                                        const compBase = `${ts}/results/${slug}`
-                                        const compAnsi = `${compBase}/logs.ansi`
-                                        const compHtml = `${compBase}/logs.ansi.html`
-                                        const item = {slug}
-                                        if (await exists(path.join(resultsDir, compAnsi))) item.ansi = compAnsi
-                                        if (await exists(path.join(resultsDir, compHtml))) item.html = compHtml
-                                        components.push(item)
-                                    }
-                                }
-
-                                res.setHeader('Content-Type', 'application/json')
-                                res.end(JSON.stringify({
-                                    filename: rel,
-                                    timestamp: ts,
-                                    displayName: new Date(parseInt(ts, 10) * 1000).toUTCString(),
-                                    files,
-                                    components
-                                }))
-                                return
-                            }
-
-                            const content = await fs.readFile(candidate, 'utf-8')
                             const headers = getHeadersForFile(rel)
-                            Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v))
-                            res.end(content)
+                            for (const [k, v] of Object.entries(headers)) res.setHeader(k, v)
+                            res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=86400')
+
+                            const stream = fss.createReadStream(candidate)
+                            stream.on('error', (err) => {
+                                res.statusCode = err.code === 'ENOENT' ? 404 : 500
+                                res.setHeader('Content-Type', 'application/json')
+                                res.end('{"error":"' + err.message.replace(/"/g, '\\"') + '"}')
+                            })
+                            stream.pipe(res)
                             return
                         }
 
