@@ -7,9 +7,9 @@
       </span>
       <div class="footer-note">
         <ul>
-          <li>"log.ansi" - console output of the run, click to download then use "cat" in your terminal to view</li>
+          <li>"log.ansi" - cumulative console output of the run, click to download then use "cat" in your terminal to view</li>
           <li>"log.ansi.html" - html version of run console output, click to view</li>
-          <li>"yaml" - data file containing results of run</li>
+          <li>"yaml" - data file containing cumulative results of run</li>
         </ul>
       </div>
     </div>
@@ -25,8 +25,9 @@ const props = defineProps({
 })
 
 const getExtension = (filename) => {
-  const match = filename.match(/^\d+\.(.+)$/)
-  return match ? match[1] : filename
+  return filename
+      .replace(/^.*[\\/]/, '')
+      .replace(/^\d+\./, '');
 }
 </script>
 

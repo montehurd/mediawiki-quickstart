@@ -52,14 +52,16 @@ export default defineConfig({
                                 const htmlRel = `${ts}/${ts}.logs.ansi.html`
 
                                 // parallel file checks
-                                const [ansiOk, htmlOk] = await Promise.all([
+                                const [ansiOk, htmlOk, yamlOk] = await Promise.all([
                                     exists(path.join(resultsDir, ansiRel)),
                                     exists(path.join(resultsDir, htmlRel)),
+                                    exists(path.join(resultsDir, yamlRel)),
                                 ])
 
                                 const files = []
                                 if (ansiOk) files.push(ansiRel)
                                 if (htmlOk) files.push(htmlRel)
+                                if (yamlOk) files.push(yamlRel)
 
                                 results.push({
                                     filename: yamlRel,
