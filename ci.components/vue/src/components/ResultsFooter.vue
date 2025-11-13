@@ -1,34 +1,38 @@
 <template>
-  <div class="footer-container">
-    <div v-if="files.length > 0">
-      Artifacts
-      <span v-for="(file, index) in files" :key="file">
-        <a :href="`/api/results/${file}`" class="footer-link">{{ getExtension(file) }}</a>
-      </span>
-      <div class="footer-note">
-        <ul>
-          <li>"log.ansi" - cumulative console output of the run, click to download then use "cat" in your terminal to view</li>
-          <li>"log.ansi.html" - html version of run console output, click to view</li>
-          <li>"yaml" - data file containing cumulative results of run</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+	<div class="footer-container">
+		<div v-if="files.length > 0">
+			Artifacts
+			<span
+				v-for="( file, index ) in files"
+				:key="file"
+			>
+				<a
+					:href="`/api/results/${file}`"
+					class="footer-link"
+				>{{ getExtension( file ) }}</a>
+			</span>
+			<div class="footer-note">
+				<ul>
+					<li>"log.ansi" - cumulative console output of the run, click to download then use "cat" in your terminal to view</li>
+					<li>"log.ansi.html" - html version of run console output, click to view</li>
+					<li>"yaml" - data file containing cumulative results of run</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup>
-const props = defineProps({
-  files: {
-    type: Array,
-    default: () => []
-  }
-})
+const props = defineProps( {
+	files: {
+		type: Array,
+		default: () => []
+	}
+} );
 
-const getExtension = (filename) => {
-  return filename
-      .replace(/^.*[\\/]/, '')
-      .replace(/^\d+\./, '');
-}
+const getExtension = ( filename ) => filename
+	.replace( /^.*[\\/]/, '' )
+	.replace( /^\d+\./, '' );
 </script>
 
 <style scoped>

@@ -1,29 +1,28 @@
 <template>
-  <div class="stages-container">
-    <div class="stages-legend">
-      <span class="stages">Stages</span>
-      <div><span class="stage">1</span> - ./fresh_install</div>
-      <div><span class="stage">2</span> - ./install #COMPONENT#</div>
-      <div><span class="stage">3</span> - ./selenium_tests_exist</div>
-      <div><span class="stage">4</span> - ./run_selenium_tests</div>
-    </div>
+	<div class="stages-container">
+		<div class="stages-legend">
+			<span class="stages">Stages</span>
+			<div><span class="stage">1</span> - ./fresh_install</div>
+			<div><span class="stage">2</span> - ./install #COMPONENT#</div>
+			<div><span class="stage">3</span> - ./selenium_tests_exist</div>
+			<div><span class="stage">4</span> - ./run_selenium_tests</div>
+		</div>
 
-    <div class="stages-header-title">
-      <span></span>
-      <span></span>
-      <span class="stages">Stages</span>
-    </div>
+		<div class="stages-header-title">
+			<span />
+			<span />
+			<span class="stages">Stages</span>
+		</div>
 
-    <div class="grid-header">
-      <span></span>
-      <span>Component</span>
-      <span class="stage">1</span>
-      <span class="stage">2</span>
-      <span class="stage">3</span>
-      <span class="stage">4</span>
-    </div>
-
-  </div>
+		<div class="grid-header">
+			<span />
+			<span>Component</span>
+			<span class="stage">1</span>
+			<span class="stage">2</span>
+			<span class="stage">3</span>
+			<span class="stage">4</span>
+		</div>
+	</div>
 </template>
 
 <style scoped>
