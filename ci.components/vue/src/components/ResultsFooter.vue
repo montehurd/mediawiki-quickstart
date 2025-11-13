@@ -14,7 +14,6 @@
 			<div class="footer-note">
 				<ul>
 					<li>"log.ansi" - cumulative console output of the run, click to download then use "cat" in your terminal to view</li>
-					<li>"log.ansi.html" - html version of run console output, click to view</li>
 					<li>"yaml" - data file containing cumulative results of run</li>
 				</ul>
 			</div>
