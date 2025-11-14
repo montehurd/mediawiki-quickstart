@@ -51,6 +51,28 @@ docker system prune -af
 
 Also, ensure you are running the latest Docker (or Docker Desktop) version - some older versions had bugs which prevented MediaWiki containers from running on some architectures
 
+# ARM CPUs on MacOS
+
+If you are using an ARM Mac and have Rosetta enabled, and Docker configured to use it, performance is quite good, as seen in the recording below showing how fast page loads are on a properly configured 16GB M1 Macbook Pro:
+
+![M1 Mac Rosetta performance](mac-arm-rosetta.gif)
+
+To install Rosetta on an ARM Mac:
+
+```bash
+softwareupdate --install-rosetta --agree-to-license
+```
+
+To confirm MacOS Rosetta is installed:
+
+```bash
+arch -x86_64 echo "Rosetta is installed and working."
+```
+
+These are the settings to instruct Docker to use Rosetta:
+
+![M1 Mac Docker Rosetta settings](mac-arm-rosetta.png)
+
 # Component management (installing skins/extensions)
 
 Quickstart considers skins and extensions to be "components"
