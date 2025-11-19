@@ -60,10 +60,9 @@ commit:
   local core_results
   core_results="$(run_for_core 3> >(tee -a "${aggregate_log}" >"${core_log}"))"
 
-  yaml_content+=$'\ncore:'"${core_results}"$'\ncomponents:'
+  convert_to_html "${core_log}"
 
-  # Collect all log files for HTML conversion (core + components only)
-  local -a log_files=("${core_log}")
+  yaml_content+=$'\ncore:'"${core_results}"$'\ncomponents:'
 
   # Components
   local component
@@ -75,33 +74,17 @@ commit:
     comp_log="${comp_dir}/logs.ansi"
 
     comp_yaml="$(run_for_component "${component}" 3> >(tee -a "${aggregate_log}" >"${comp_log}"))"
-    yaml_content+="${comp_yaml}"
 
-    log_files+=("${comp_log}")
+    convert_to_html "${comp_log}"
+
+    yaml_content+="${comp_yaml}"
   done
 
   # Close aggregate
   exec 3>&-
 
-  # keep the aggregate .logs.ansi file but do NOT generate HTML for it
-
   # Save YAML
   printf '%s\n' "${yaml_content}" >"${yaml_file}"
-
-  # Convert logs to HTML (core + components only) in parallel
-  # Limit concurrency so we don't spawn too many processes.
-  local max_procs="${MAX_HTML_PROCS:-4}"
-  local i=0
-
-  for f in "${log_files[@]}"; do
-    # Throttle number of concurrent jobs
-    (( i = i % max_procs ))
-    (( i++ == 0 )) && wait
-
-    convert_to_html "$f" &
-  done
-  # Wait for any remaining conversions to finish
-  wait
 
   printf 'Run complete: %s\n' "${run_dir}"
 }
