@@ -107,6 +107,14 @@ const loadResult = async () => {
 			};
 		} );
 
+		// core links
+		if ( parsed.core ) {
+			parsed.core.links = {
+				html: `/api/results/${ ts }/results/core/logs.ansi.html`,
+				ansi: `/api/results/${ ts }/results/core/logs.ansi`
+			};
+		}
+
 		currentResult.value = parsed;
 	} catch ( error ) {
 		console.error( 'Error loading result:', error );

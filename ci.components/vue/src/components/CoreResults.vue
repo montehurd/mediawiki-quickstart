@@ -15,6 +15,20 @@
 			<span>./run_selenium_tests</span>
 			<span :class="core.stages.run_selenium_tests">{{ getStatusSymbol( core.stages.run_selenium_tests ) }}</span>
 		</div>
+    <div>
+      <div class="core-row">
+        			<span v-if="core.links" class="links-cell">
+				<span class="logs-trigger">
+					./<a href="#" @click.prevent.stop="onLogsClick">logs</a>
+					<div v-if="isOpen" class="logs-popover">
+						<a :href="core.links.html" rel="noopener" target="_blank">html</a>
+						<span> · </span>
+						<a :href="core.links.ansi" rel="noopener" target="_blank">ansi</a>
+					</div>
+				</span>
+			</span>
+      </div>
+    </div>
 	</div>
 	<div
 		v-else
@@ -25,6 +39,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { getStatusSymbol } from '../utils/status';
 
 const props = defineProps( {
@@ -33,6 +48,12 @@ const props = defineProps( {
 		required: false
 	}
 } );
+
+const isOpen = ref(false);
+
+const onLogsClick = () => {
+	isOpen.value = !isOpen.value;
+};
 
 </script>
 
@@ -49,6 +70,43 @@ const props = defineProps( {
 
 .core-row span:first-child {
   width: 300px;
+}
+
+.logs-trigger {
+  position: relative;
+  display: inline-block;
+}
+
+.links-cell a {
+  text-decoration: none;
+  opacity: 0.8;
+  padding: 0 0.2ch;
+  cursor: pointer;
+}
+
+.links-cell a:hover {
+  text-decoration: underline;
+  opacity: 1;
+}
+
+.links-cell > span {
+  opacity: 0.6;
+  padding: 0 0.1ch;
+  font-size: 0.9em;
+}
+
+.logs-popover {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: calc(25% + 0.5ch);
+  padding: 0.25rem 0.4rem;
+  border-radius: 3px;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba( 0, 0, 0, 0.1 );
+  z-index: 10;
+  white-space: nowrap;
 }
 
 </style>
