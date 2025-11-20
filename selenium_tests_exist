@@ -2,7 +2,7 @@
 
 selenium_tests_exist() {
   local package_json_path="${1:+$1/}package.json"
-  ./shellto m bash -c "yq -e '.scripts | has(\"selenium-test\")' $package_json_path" > /dev/null 2>&1
+  ./shellto m bash -c "yq -e '.scripts | has(\"selenium-test\")' $package_json_path" >/dev/null 2>&1
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then

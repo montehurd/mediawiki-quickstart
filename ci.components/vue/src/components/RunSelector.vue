@@ -2,10 +2,12 @@
   <div class="app-controls">
     <select
       :value="selectedFile"
-      @change="handleChange"
       class="file-selector"
+      @change="handleChange"
     >
-      <option value="">Select Run...</option>
+      <option value="">
+        Select Run...
+      </option>
       <option v-for="file in availableFiles" :key="file.filename" :value="file.filename">
         {{ file.displayName }}
       </option>

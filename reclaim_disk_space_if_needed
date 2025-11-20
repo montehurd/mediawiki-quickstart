@@ -4,36 +4,36 @@
 FREE_SPACE_THRESHOLD=10
 
 disk_free_space_percent() {
-	local usage_percent=$(df -h . | awk "NR==2 {print \$5}" | sed "s/%//")
-	echo $((100 - usage_percent))
+  local usage_percent=$(df -h . | awk "NR==2 {print \$5}" | sed "s/%//")
+  echo $((100 - usage_percent))
 }
 
 reclaim_disk_space_if_needed() {
-	local free_percent=$(disk_free_space_percent)
+  local free_percent=$(disk_free_space_percent)
 
-	if [ "${free_percent}" -ge "${FREE_SPACE_THRESHOLD}" ]; then
-		echo "Free disk space (${free_percent}%) is above or equal to the threshold (${FREE_SPACE_THRESHOLD}%), no cleanup needed"
-		return 0
-	fi
+  if [ "${free_percent}" -ge "${FREE_SPACE_THRESHOLD}" ]; then
+    echo "Free disk space (${free_percent}%) is above or equal to the threshold (${FREE_SPACE_THRESHOLD}%), no cleanup needed"
+    return 0
+  fi
 
-	echo "Free disk space (${free_percent}%) is below the threshold (${FREE_SPACE_THRESHOLD}%), attempting cleanup..."
+  echo "Free disk space (${free_percent}%) is below the threshold (${FREE_SPACE_THRESHOLD}%), attempting cleanup..."
 
-	# On Debian, ensure any dangling deleted mediawiki folders are pruned
-	# On MacOS the 'mktemp -d' dir we move mediawiki dirs to before nuking
-	# them (in the 'remove' script) is not in '/tmp', and MacOS seems to
-	# more aggressively prune folders made via 'mktemp -d'
-	find /tmp -path "*/mediawiki*" -type d -exec rm -rf {} \; 2>/dev/null || true
+  # On Debian, ensure any dangling deleted mediawiki folders are pruned
+  # On MacOS the 'mktemp -d' dir we move mediawiki dirs to before nuking
+  # them (in the 'remove' script) is not in '/tmp', and MacOS seems to
+  # more aggressively prune folders made via 'mktemp -d'
+  find /tmp -path "*/mediawiki*" -type d -exec rm -rf {} \; 2>/dev/null || true
 
-	# On Debian, clear apt cache
-	apt clean 2>/dev/null || true
+  # On Debian, clear apt cache
+  apt clean 2>/dev/null || true
 
-	# Nuke dangling docker bits
-	docker system prune -af
+  # Nuke dangling docker bits
+  docker system prune -af
 
-	free_percent=$(disk_free_space_percent)
-	echo "Disk space after cleanup attempt: ${free_percent}% free"
+  free_percent=$(disk_free_space_percent)
+  echo "Disk space after cleanup attempt: ${free_percent}% free"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-	reclaim_disk_space_if_needed "$@"
+  reclaim_disk_space_if_needed "$@"
 fi

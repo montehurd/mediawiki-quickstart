@@ -39,7 +39,7 @@ _get_component_local_settings_path() {
 
 _clone_component() {
   local component_path="$1"
- 
+
   local clone_depth="--depth=${CLONE_DEPTH:-2}"
   if [ "${CLONE_DEPTH:-1}" -eq 0 ]; then
     local clone_depth=""
@@ -82,23 +82,23 @@ _update_component_docker_compose_includes() {
   local contents
   for component in $components; do
     contents=$(cat "$components_file")
-    _yq '.include[0].path = (.include[0].path // []) + ["../'$component'/docker-compose.yml"] | .include[0].path |= unique' "$contents" > "$components_file"
+    _yq '.include[0].path = (.include[0].path // []) + ["../'$component'/docker-compose.yml"] | .include[0].path |= unique' "$contents" >"$components_file"
   done
   return 0
 }
 
 _link_components() {
   for component_path in "$@"; do
-    echo "" >> Components.php
-    echo "# Local settings for '$(_get_component_name "$component_path")' $(_get_component_type "$component_path")" >> Components.php
+    echo "" >>Components.php
+    echo "# Local settings for '$(_get_component_name "$component_path")' $(_get_component_type "$component_path")" >>Components.php
     local local_settings_path="$(_get_component_local_settings_path "$component_path")"
-    echo "require_once \"$local_settings_path\";" >> Components.php
+    echo "require_once \"$local_settings_path\";" >>Components.php
   done
 }
 
 prepare() {
   # Return special exit code 2 to indicate no components needed installation
-  (( $# )) || return 2
+  (($#)) || return 2
 
   for component_path in "$@"; do
     local local_settings_path="$(_get_component_local_settings_path "$component_path")"

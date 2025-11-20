@@ -37,12 +37,12 @@ run_tests() {
     $test_func
     test_status=$?
     handle_test_exit
-    ((failures+=test_status))
+    ((failures += test_status))
     echo
   done
   current_test=""
   echo "Tests completed: $total_tests"
   echo "Total failures: $failures"
-  [ $failures -gt 255 ] && failures=255  # Cap at max exit code
+  [ $failures -gt 255 ] && failures=255 # Cap at max exit code
   return $failures
 }

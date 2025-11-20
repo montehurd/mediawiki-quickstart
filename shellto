@@ -17,13 +17,13 @@ args=()
 # Replace container shorthand character with full container name
 for arg in "$@"; do
   case "$arg" in
-    w) args+=("mediawiki-web") ;;
-    m) args+=("mediawiki") ;;
-    j) args+=("mediawiki-jobrunner") ;;
-    n) args+=("novnc") ;;
-    e) args+=("elasticsearch") ;;
-    s) args+=("selenium") ;;
-    *) args+=("$arg") ;;  # Preserve all other arguments as-is
+  w) args+=("mediawiki-web") ;;
+  m) args+=("mediawiki") ;;
+  j) args+=("mediawiki-jobrunner") ;;
+  n) args+=("novnc") ;;
+  e) args+=("elasticsearch") ;;
+  s) args+=("selenium") ;;
+  *) args+=("$arg") ;; # Preserve all other arguments as-is
   esac
 done
 
@@ -33,7 +33,7 @@ if [ "${#args[@]}" -eq 1 ]; then
 fi
 
 if [ "${SHELLTO_TEST:-0}" -ne 1 ]; then
-    docker compose exec -u "$HOST_UID:$HOST_GID" "${args[@]}"
+  docker compose exec -u "$HOST_UID:$HOST_GID" "${args[@]}"
 else
-    echo "docker compose exec -u \"$HOST_UID:$HOST_GID\" ${args[@]}"
+  echo "docker compose exec -u \"$HOST_UID:$HOST_GID\" ${args[@]}"
 fi

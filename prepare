@@ -32,7 +32,7 @@ prepare() {
     exit 1
   fi
 
-  echo -e "" > "$SCRIPT_PATH/common/docker-compose.components.yml"
+  echo -e "" >"$SCRIPT_PATH/common/docker-compose.components.yml"
   echo "$MW_ENV" >.env
 
   if [[ "${MW_DBTYPE:-}" == "mysql" ]]; then

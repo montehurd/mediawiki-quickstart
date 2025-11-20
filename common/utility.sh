@@ -73,15 +73,15 @@ get_response_code() {
 open_url_with_linux_browser() {
   local url
   url="$1"
-  if command -v google-chrome &> /dev/null; then
-    google-chrome "$url" &> /dev/null &
+  if command -v google-chrome &>/dev/null; then
+    google-chrome "$url" &>/dev/null &
     return 0
-  elif command -v chromium &> /dev/null; then
-    chromium "$url" &> /dev/null &
+  elif command -v chromium &>/dev/null; then
+    chromium "$url" &>/dev/null &
     return 0
   fi
-  if command -v xdg-open &> /dev/null; then
-    xdg-open "$url" &> /dev/null
+  if command -v xdg-open &>/dev/null; then
+    xdg-open "$url" &>/dev/null
     return 0
   fi
   return 1
@@ -245,9 +245,9 @@ alpine_ansi2html() {
 # Output order is not guaranteed due to parallel execution.
 #
 parallel_process() {
-  awk '{printf "\033[32m:\033[34m%d\033[32m:\033[0m %s\n", NR-1, $0}' <<< "$1"
+  awk '{printf "\033[32m:\033[34m%d\033[32m:\033[0m %s\n", NR-1, $0}' <<<"$1"
   local num_procs=$(getconf _NPROCESSORS_ONLN)
-  awk '{printf "%d:%s%c", NR-1, $0, 0}' <<< "$1" | \
+  awk '{printf "%d:%s%c", NR-1, $0, 0}' <<<"$1" |
     xargs -0 -P "$num_procs" -n1 bash -c '
       IFS=: read -r index cmd <<< "$1"
       eval "$cmd" 2>&1 | awk "{print \"\033[32m|${index}|\033[0m \" \$0}"
@@ -297,7 +297,7 @@ clone_git_repo() {
     clone_depth=""
   fi
 
-  if ! git clone --progress --single-branch ${branch_arg} ${recurse_flag} ${clone_depth} "${repo_url}" "${target_path}" 2>&1 | \
+  if ! git clone --progress --single-branch ${branch_arg} ${recurse_flag} ${clone_depth} "${repo_url}" "${target_path}" 2>&1 |
     verboseOrDotPerLine "Git clone ${branch_arg}${recurse_flag}${clone_depth:-full depth}${repo_url} to '${target_path}'" "use CLONE_DEPTH=0 for full depth"; then
     echo "Failed to clone repository '$repo_url'"
     return 1

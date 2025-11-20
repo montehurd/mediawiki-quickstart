@@ -22,7 +22,6 @@
       <span class="stage">3</span>
       <span class="stage">4</span>
     </div>
-
   </div>
 </template>
 

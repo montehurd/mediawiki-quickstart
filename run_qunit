@@ -2,7 +2,7 @@
 
 source "./common/container-readiness.sh"
 
-run_qunit(){
+run_qunit() {
   fresh_install_if_containers_not_running
   docker compose up --no-deps qunit
 }

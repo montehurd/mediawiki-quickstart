@@ -4,21 +4,21 @@ source "./common/utility.sh"
 source "./docker.sh"
 
 if [ -z "$1" ]; then
-    echo "Error: No backup file specified"
-    echo "Usage: $0 <path-to-backup-file>"
-    exit 1
+  echo "Error: No backup file specified"
+  echo "Usage: $0 <path-to-backup-file>"
+  exit 1
 fi
 
 BACKUP_ZIP_PATH=$1
 
 MYSQL_WAS_RUNNING=1
 if is_service_running "mysql"; then
-    MYSQL_WAS_RUNNING=0
-    docker compose stop mysql 2>&1 | verboseOrDotPerLine "Stopping MySQL container"
+  MYSQL_WAS_RUNNING=0
+  docker compose stop mysql 2>&1 | verboseOrDotPerLine "Stopping MySQL container"
 fi
 
 if [ -d "mysql-data" ]; then
-    rm -rf mysql-data/*
+  rm -rf mysql-data/*
 fi
 
 mkdir -p mysql-data
@@ -26,6 +26,6 @@ mkdir -p mysql-data
 tar -C mysql-data --strip-components=3 -xzvf $BACKUP_ZIP_PATH 2>&1 | verboseOrDotPerLine "Restoring from MySQL backup"
 
 if [ $MYSQL_WAS_RUNNING -eq 0 ]; then
-    docker compose up --wait mysql 2>&1 | verboseOrDotPerLine "Starting MySQL container"
-    ./shellto mysql bash -c "mysql --user=root -e 'FLUSH PRIVILEGES'" 2>&1 | verboseOrDotPerLine "Flushing privileges"
+  docker compose up --wait mysql 2>&1 | verboseOrDotPerLine "Starting MySQL container"
+  ./shellto mysql bash -c "mysql --user=root -e 'FLUSH PRIVILEGES'" 2>&1 | verboseOrDotPerLine "Flushing privileges"
 fi

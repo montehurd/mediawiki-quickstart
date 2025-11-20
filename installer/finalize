@@ -10,16 +10,16 @@ _get_manifest_path() {
 }
 
 _import_page_dumps_for_installed_components() {
-    local folders=()
-    for component_path in "$@"; do
-        local pages_folder="$(_get_manifest_path "$component_path")/pages"
-        if [ -d "$pages_folder" ]; then
-            folders+=("$pages_folder")
-        fi
-    done
-    if [ ${#folders[@]} -gt 0 ]; then
-        bash /import_page_xml.sh "${folders[@]}"
+  local folders=()
+  for component_path in "$@"; do
+    local pages_folder="$(_get_manifest_path "$component_path")/pages"
+    if [ -d "$pages_folder" ]; then
+      folders+=("$pages_folder")
     fi
+  done
+  if [ ${#folders[@]} -gt 0 ]; then
+    bash /import_page_xml.sh "${folders[@]}"
+  fi
 }
 
 _run_bash_for_installed_components() {

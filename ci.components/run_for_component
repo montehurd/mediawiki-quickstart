@@ -29,10 +29,10 @@ run_for_component() {
     local run_selenium_tests_status=-1
     if [ "${FAKE_IT:-0}" = "1" ]; then
       echo "Fake log text"
-      fresh_install_status=$(( (RANDOM % 3) - 1 ))
-      component_install_status=$(( (RANDOM % 3) - 1 ))
-      selenium_tests_exist_status=$(( (RANDOM % 3) - 1 ))
-      run_selenium_tests_status=$(( (RANDOM % 3) - 1 ))
+      fresh_install_status=$(((RANDOM % 3) - 1))
+      component_install_status=$(((RANDOM % 3) - 1))
+      selenium_tests_exist_status=$(((RANDOM % 3) - 1))
+      run_selenium_tests_status=$(((RANDOM % 3) - 1))
     else
       export VERBOSE=1
       export FORCE=1

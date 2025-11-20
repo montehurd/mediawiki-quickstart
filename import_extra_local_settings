@@ -3,24 +3,24 @@
 source "./config"
 
 import_extra_local_settings() {
-    local import_dir="$SCRIPT_PATH/import-on-fresh-install"
-    local host_localsettings_file="$MEDIAWIKI_PATH/LocalSettings.php"
+  local import_dir="$SCRIPT_PATH/import-on-fresh-install"
+  local host_localsettings_file="$MEDIAWIKI_PATH/LocalSettings.php"
 
-    # Copy LocalSettings.extra.php and other PHP files from import directory into mediawiki dir
-    for file in "$import_dir"/*.php; do
-        echo "Copying '$file' to '$MEDIAWIKI_PATH/$(basename "$file")'"
-        cp "$file" "$MEDIAWIKI_PATH/$(basename "$file")"
-    done
+  # Copy LocalSettings.extra.php and other PHP files from import directory into mediawiki dir
+  for file in "$import_dir"/*.php; do
+    echo "Copying '$file' to '$MEDIAWIKI_PATH/$(basename "$file")'"
+    cp "$file" "$MEDIAWIKI_PATH/$(basename "$file")"
+  done
 
-    # Add LocalSettings.extra.php include to LocalSettings.php
-    if ! grep -q "require.*LocalSettings\.extra\.php" "$host_localsettings_file"; then
-        echo -e "\nAdding LocalSettings.extra.php include to LocalSettings.php..."
-        echo "" >> "$host_localsettings_file"
-        echo "# Include additional local settings from LocalSettings.extra.php" >> "$host_localsettings_file"
-        echo "require_once \"\$IP/LocalSettings.extra.php\";" >> "$host_localsettings_file"
-    fi
+  # Add LocalSettings.extra.php include to LocalSettings.php
+  if ! grep -q "require.*LocalSettings\.extra\.php" "$host_localsettings_file"; then
+    echo -e "\nAdding LocalSettings.extra.php include to LocalSettings.php..."
+    echo "" >>"$host_localsettings_file"
+    echo "# Include additional local settings from LocalSettings.extra.php" >>"$host_localsettings_file"
+    echo "require_once \"\$IP/LocalSettings.extra.php\";" >>"$host_localsettings_file"
+  fi
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-    import_extra_local_settings
+  import_extra_local_settings
 fi

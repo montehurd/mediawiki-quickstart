@@ -32,9 +32,9 @@ generate_file() {
   local attachment_id=$(get_attachment_id "$instance_id" "$volume_id")
   local proxy_id=$(get_web_proxy_id "quickstart-ci-components")
 
-  > imports.tf
+  >imports.tf
 
-  [[ -n "$instance_id" ]] && cat >> imports.tf << EOF
+  [[ -n "$instance_id" ]] && cat >>imports.tf <<EOF
 import {
   to = openstack_compute_instance_v2.quickstart_ci_instance
   id = "$instance_id"
@@ -42,7 +42,7 @@ import {
 
 EOF
 
-  [[ -n "$volume_id" ]] && cat >> imports.tf << EOF
+  [[ -n "$volume_id" ]] && cat >>imports.tf <<EOF
 import {
   to = openstack_blockstorage_volume_v3.quickstart_storage
   id = "$volume_id"
@@ -50,7 +50,7 @@ import {
 
 EOF
 
-  [[ -n "$attachment_id" ]] && cat >> imports.tf << EOF
+  [[ -n "$attachment_id" ]] && cat >>imports.tf <<EOF
 import {
   to = openstack_compute_volume_attach_v2.quickstart_storage_attachment
   id = "$attachment_id"
@@ -58,7 +58,7 @@ import {
 
 EOF
 
-  [[ -n "$proxy_id" ]] && cat >> imports.tf << EOF
+  [[ -n "$proxy_id" ]] && cat >>imports.tf <<EOF
 import {
   to = cloudvps_web_proxy.quickstart_ci
   id = "$proxy_id"

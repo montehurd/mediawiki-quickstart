@@ -1,31 +1,31 @@
 #!/bin/bash
 
 install_all() {
-    local items=()
-    for dir in "$@"; do
-        if [ -d "$dir" ]; then
-            for subdir in "$dir"/*; do
-                if [ -d "$subdir" ]; then
-                    items+=("$dir/$(basename "$subdir")")
-                fi
-            done
-        else
-            echo "Warning: $dir is not a directory. Skipping."
+  local items=()
+  for dir in "$@"; do
+    if [ -d "$dir" ]; then
+      for subdir in "$dir"/*; do
+        if [ -d "$subdir" ]; then
+          items+=("$dir/$(basename "$subdir")")
         fi
-    done
-
-    if [ ${#items[@]} -eq 0 ]; then
-        echo "No component directories found to install"
+      done
     else
-        ./install "${items[@]}"
+      echo "Warning: $dir is not a directory. Skipping."
     fi
+  done
+
+  if [ ${#items[@]} -eq 0 ]; then
+    echo "No component directories found to install"
+  else
+    ./install "${items[@]}"
+  fi
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-    if [ $# -eq 0 ]; then
-        echo -e "Usage:\n\t$0 <directory1> [<directory2> ...]"
-        echo -e "Examples:\n\t$0 skins\n\t$0 skins extensions"
-        exit 1
-    fi
-    install_all "$@"
+  if [ $# -eq 0 ]; then
+    echo -e "Usage:\n\t$0 <directory1> [<directory2> ...]"
+    echo -e "Examples:\n\t$0 skins\n\t$0 skins extensions"
+    exit 1
+  fi
+  install_all "$@"
 fi

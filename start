@@ -45,13 +45,13 @@ start() {
     if [[ "${SKIP_SKIN:-0}" != "1" ]]; then
       use_skin "Vector"
     else
-    	open_special_version_page
+      open_special_version_page
     fi
     return 0
   fi
 
   if ! is_service_running "mediawiki"; then
-    docker compose up -d  2>&1 | verboseOrDotPerLine "Docker compose up -d"
+    docker compose up -d 2>&1 | verboseOrDotPerLine "Docker compose up -d"
     sleep 1
   fi
   wait_until_url_available $SPECIAL_VERSION_URL 60 2>&1 | verboseOrDotPerLine "Waiting for Mediawiki page availability"

@@ -32,7 +32,7 @@ delete_mediawiki_folder() {
             -v "$temp_dir:/data" \
             -u root \
             alpine sh -c "find /data -print0 | xargs -0 -P \$(nproc) chown -h -f $(id -u):$(id -g)" \
-          >/dev/null 2>&1
+            >/dev/null 2>&1
           nice -n 19 rm -rf "$temp_dir"
         fi
       ) &>/dev/null &

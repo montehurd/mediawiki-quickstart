@@ -24,7 +24,7 @@ make_skin_default() {
 
   (
     cd "$MEDIAWIKI_PATH" || exit 1
-    echo -e "<?php\n\$wgDefaultSkin = \"$skin_key\";\n" > Skin.default.php
+    echo -e "<?php\n\$wgDefaultSkin = \"$skin_key\";\n" >Skin.default.php
     sleep 1
     open_special_version_page
   ) && return 0 || return 1

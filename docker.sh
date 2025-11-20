@@ -60,9 +60,9 @@ verify_compose_version() {
   local minor_version=$(echo "$compose_version" | cut -d '.' -f 2 | tr -cd '0-9')
   local patch_version=$(echo "$compose_version" | cut -d '.' -f 3 | tr -cd '0-9')
 
-  if [ "$major_version" -gt "$required_major_version" ] \
-    || { [ "$major_version" -eq "$required_major_version" ] && [ "$minor_version" -gt "$required_minor_version" ]; } \
-    || { [ "$major_version" -eq "$required_major_version" ] && [ "$minor_version" -eq "$required_minor_version" ] && [ "$patch_version" -ge "$required_patch_version" ]; }; then
+  if [ "$major_version" -gt "$required_major_version" ] ||
+    { [ "$major_version" -eq "$required_major_version" ] && [ "$minor_version" -gt "$required_minor_version" ]; } ||
+    { [ "$major_version" -eq "$required_major_version" ] && [ "$minor_version" -eq "$required_minor_version" ] && [ "$patch_version" -ge "$required_patch_version" ]; }; then
     echo -e "Success! 'docker compose version' is at least '${required_major_version}.${required_minor_version}.${required_patch_version}'\n"
     return 0
   fi

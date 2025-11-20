@@ -23,7 +23,7 @@ export default defineConfig({
     {
       name: 'serve-results',
       configureServer(server) {
-        server.middlewares.use('/api/results', async (req, res) => {
+        server.middlewares.use('/api/results', async(req, res) => {
           const resultsDir = process.env.RESULTS_PATH || path.join(process.cwd(), 'public', 'results')
           try {
             if (req.url === '/available') {
@@ -59,7 +59,7 @@ export default defineConfig({
 
               res.end(content)
             }
-          } catch (err) {
+          } catch(err) {
             res.statusCode = err.code === 'ENOENT' ? 404 : 500
             res.end(JSON.stringify({ error: err.message }))
           }

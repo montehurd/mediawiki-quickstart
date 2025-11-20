@@ -6,8 +6,8 @@ set -eu
 
 run_mediawiki_maintenance_update() {
   if ! php maintenance/run.php update --quick 2>&1 | verboseOrDotPerLine "Mediawiki maintenance update"; then
-      echo "PHP maintenance update failed. Exiting"
-      return 1
+    echo "PHP maintenance update failed. Exiting"
+    return 1
   fi
   return 0
 }

@@ -1,8 +1,8 @@
 <template>
   <div class="app">
     <RunSelector
-      :available-files="availableFiles"
       v-model:selected-file="selectedFile"
+      :available-files="availableFiles"
       :commit="currentResult?.commit"
       @load-result="loadResult"
     />
@@ -55,18 +55,18 @@ const selectedFileData = computed(() => {
   return availableFiles.value.find(f => f.filename === selectedFile.value)
 })
 
-const loadAvailableFiles = async () => {
+const loadAvailableFiles = async() => {
   try {
     const response = await fetch('/api/results/available')
     const files = await response.json()
     availableFiles.value = files
-  } catch (error) {
+  } catch(error) {
     console.error('Failed to load files:', error)
     availableFiles.value = []
   }
 }
 
-const loadResult = async () => {
+const loadResult = async() => {
   if (!selectedFile.value) {
     currentResult.value = null
     return
@@ -86,20 +86,20 @@ const loadResult = async () => {
     }
 
     currentResult.value = parsed
-  } catch (error) {
+  } catch(error) {
     console.error('Error loading result:', error)
     currentResult.value = null
   }
 }
 
-const loadLatest = async () => {
+const loadLatest = async() => {
   if (availableFiles.value.length > 0) {
     selectedFile.value = availableFiles.value[0].filename
     await loadResult()
   }
 }
 
-onMounted(async () => {
+onMounted(async() => {
   await loadAvailableFiles()
   await loadLatest()
 })

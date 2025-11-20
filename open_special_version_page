@@ -11,5 +11,5 @@ open_special_version_page() {
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
-  open_special_version_page "$@"  
+  open_special_version_page "$@"
 fi
