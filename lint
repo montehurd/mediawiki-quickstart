@@ -1,0 +1,9 @@
+#!/bin/bash
+
+lint() {
+  docker run --platform linux/amd64 --rm -v "$PWD:/scripts" ghcr.io/montehurd/mediawiki-docker-images/lint sh -c "shell-fix && eslint-fix"
+}
+
+if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  lint "$@"
+fi
