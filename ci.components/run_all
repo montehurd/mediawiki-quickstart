@@ -1,5 +1,7 @@
 #!/bin/bash
+set -euo pipefail
 
+RESULTS_DIR="${RESULTS_DIR:-./ci.components/runs}"
 source "./ci.components/run_for_component"
 source "./ci.components/run_for_core"
 
@@ -9,46 +11,82 @@ list_all_components() {
   find extensions skins -mindepth 1 -maxdepth 1 -type d | sort
 }
 
+component_slug() {
+  local s="${1#./}"
+  s="${s%/}"
+  s="${s// /-}"
+  s="${s//\//-}"
+  printf '%s' "$s"
+}
+
+# convert ANSI to HTML
+convert_to_html() {
+  local ansi_file="$1"
+
+  if command -v alpine_ansi2html &>/dev/null; then
+    alpine_ansi2html <"${ansi_file}" >"${ansi_file}.html"
+  else
+    if [[ "${VERBOSE:-0}" != "0" ]]; then
+      echo "alpine_ansi2html not found; skipping HTML conversion for ${ansi_file}" >&2
+    fi
+    return 0
+  fi
+}
+
 run_all() {
-  local results_path="${RESULTS_PATH:-./ci.components/results}"
-  mkdir -p "$results_path"
+  local ts
+  ts="$(date -u +%s)"
 
-  local timestamp=$(date -u +%s)
-  local yaml_file="$results_path/${timestamp}.yaml"
-  local log_file="$results_path/${timestamp}.log.ansi"
+  local run_dir="${RESULTS_DIR}/${ts}"
+  local results_dir="${run_dir}/results"
+  mkdir -p "${results_dir}"
 
-  # Open log file
-  exec 3>"$log_file"
+  local aggregate_log="${run_dir}/${ts}.logs.ansi"
+  local yaml_file="${run_dir}/${ts}.yaml"
+  # Open aggregate log
+  exec 3>"${aggregate_log}"
 
-  # Initialize YAML content
-  local yaml_content="timestamp: $timestamp
+  local yaml_content="timestamp: ${ts}
 commit:
   hash: $(git rev-parse --short HEAD)
   message: $(git log -1 --format='%s')"
 
-  # Run MediaWiki core tests
-  local core_results=$(run_for_core)
-  yaml_content+="
-core:${core_results}"
+  # ----- Core -----
+  local core_dir="${results_dir}/core"
+  mkdir -p "${core_dir}"
+  local core_log="${core_dir}/logs.ansi"
 
-  yaml_content+="
-components:"
+  # Run duplicated to both aggregate and core logs
+  local core_results
+  core_results="$(run_for_core 3> >(tee -a "${aggregate_log}" >"${core_log}"))"
 
-  # Process components
+  convert_to_html "${core_log}"
+
+  yaml_content+=$'\ncore:'"${core_results}"$'\ncomponents:'
+
+  # Components
+  local component
   for component in $(list_all_components); do
-    yaml_content+=$(run_for_component "$component")
+    local slug comp_dir comp_log comp_yaml
+    slug="$(component_slug "${component}")"
+    comp_dir="${results_dir}/${slug}"
+    mkdir -p "${comp_dir}"
+    comp_log="${comp_dir}/logs.ansi"
+
+    comp_yaml="$(run_for_component "${component}" 3> >(tee -a "${aggregate_log}" >"${comp_log}"))"
+
+    convert_to_html "${comp_log}"
+
+    yaml_content+="${comp_yaml}"
   done
 
-  # Close log file
+  # Close aggregate
   exec 3>&-
 
-  # Save YAML content
-  echo "$yaml_content" >"$yaml_file"
+  # Save YAML
+  printf '%s\n' "${yaml_content}" >"${yaml_file}"
 
-  # Generate HTML log viewer if available
-  if command -v alpine_ansi2html &>/dev/null; then
-    alpine_ansi2html <"$log_file" >"${log_file}.html"
-  fi
+  printf 'Run complete: %s\n' "${run_dir}"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
