@@ -7,9 +7,9 @@ services:
       - 8088:8088
     volumes:
       - ./vue:/app
-      - ${RESULTS_PATH:-./results}:/app/public/results:ro
+      - ${RESULTS_PATH:-./runs}:/app/public/runs:ro
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - RESULTS_PATH=/app/public/results
+      - RESULTS_PATH=/app/public/runs
     restart: unless-stopped

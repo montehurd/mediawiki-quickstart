@@ -1,5 +1,5 @@
-export const getStatusSymbol = (status) => {
-  switch (status) {
+export const getStatusSymbol = ( status ) => {
+  switch ( status ) {
     case 'pass': return '✓'
     case 'fail': return 'x'
     case 'none': return '-'
