@@ -252,7 +252,7 @@ Or you can use the convenience script `install_all` to install every skin, every
 
 - Do not use `composer install`, `npm install` or `npm ci` in your components' `setup.sh` files
 
-  The installer takes care of this automatically if it sees your component contains `composer.json` / `package.json` / `package-lock.json`
+  The installer takes care of this automatically if it sees your component contains `composer.json` / `package.json` / `package-lock.json`. See [Node Dependency Handling](NODE_DEPENDENCIES.md) for details on how this works
 
   It also rebuilds localization caches after installations complete so no need to run `php maintenance/rebuildLocalisationCache.php`
 
@@ -802,6 +802,10 @@ MW_DBTYPE=mysql MW_DBSERVER=mediawiki-mysql-1 COMPOSE_PROFILES="default,mysql" M
 ```bash
 ./import-on-fresh-install/mysql.backup.gz
 ```
+
+# Technical Documentation
+
+- [Node Dependency Handling](NODE_DEPENDENCIES.md) - How Quickstart manages Node.js dependencies using npm workspaces
 
 # Bug Reporting
 
