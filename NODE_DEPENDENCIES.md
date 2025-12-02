@@ -11,7 +11,7 @@ MediaWiki's ecosystem consists of a core application plus many skins and extensi
 
 ## The Solution: NPM Workspaces
 
-Quickstart leverages [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces) to hoist all skin and extension dependencies up to MediaWiki core's root `node_modules`. A single `npm install` at the root satisfies dependencies for core and all installed components
+Quickstart leverages [npm workspaces](https://docs.npmjs.com/cli/v11/using-npm/workspaces) to hoist all skin and extension dependencies up to MediaWiki core's root `node_modules`. A single `npm install` at the root satisfies dependencies for core and all installed components
 
 ### How It Works
 
@@ -151,5 +151,5 @@ Or check a specific package:
 
 ## Further Reading
 
-- [npm Workspaces Documentation](https://docs.npmjs.com/cli/v7/using-npm/workspaces)
+- [npm Workspaces Documentation](https://docs.npmjs.com/cli/v11/using-npm/workspaces)
 - [MediaWiki Extension Development](https://www.mediawiki.org/wiki/Manual:Developing_extensions)
