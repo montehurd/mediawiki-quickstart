@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-RESULTS_DIR="${RESULTS_DIR:-./ci.components/runs}"
+RESULTS_DIR="${RESULTS_DIR:-./ci.components/results}"
 source "./ci.components/run_for_component"
 source "./ci.components/run_for_core"
 
@@ -19,7 +19,7 @@ component_slug() {
   printf '%s' "$s"
 }
 
-# convert ANSI to HTML
+# Convert ANSI to HTML
 convert_to_html() {
   local ansi_file="$1"
 
@@ -38,13 +38,9 @@ run_all() {
   ts="$(date -u +%s)"
 
   local run_dir="${RESULTS_DIR}/${ts}"
-  local results_dir="${run_dir}/results"
-  mkdir -p "${results_dir}"
+  mkdir -p "${run_dir}"
 
-  local aggregate_log="${run_dir}/${ts}.logs.ansi"
-  local yaml_file="${run_dir}/${ts}.yaml"
-  # Open aggregate log
-  exec 3>"${aggregate_log}"
+  local yaml_file="${run_dir}/run.yaml"
 
   local yaml_content="timestamp: ${ts}
 commit:
@@ -52,40 +48,39 @@ commit:
   message: $(git log -1 --format='%s')"
 
   # ----- Core -----
-  local core_dir="${results_dir}/core"
+  local core_dir="${run_dir}/core"
   mkdir -p "${core_dir}"
-  local core_log="${core_dir}/logs.ansi"
+  local core_log="${core_dir}/log.ansi"
 
-  # Run duplicated to both aggregate and core logs
   local core_results
-  core_results="$(run_for_core 3> >(tee -a "${aggregate_log}" >"${core_log}"))"
+  core_results="$(run_for_core 3>"${core_log}")"
 
   convert_to_html "${core_log}"
 
   yaml_content+=$'\ncore:'"${core_results}"$'\ncomponents:'
 
-  # Components
+  # ----- Components -----
   local component
   for component in $(list_all_components); do
-    local slug comp_dir comp_log comp_yaml
-    slug="$(component_slug "${component}")"
-    comp_dir="${results_dir}/${slug}"
-    mkdir -p "${comp_dir}"
-    comp_log="${comp_dir}/logs.ansi"
+    local comp_type comp_name comp_dir comp_log comp_yaml
 
-    comp_yaml="$(run_for_component "${component}" 3> >(tee -a "${aggregate_log}" >"${comp_log}"))"
+    # Extract type (extensions/skins) and name
+    comp_type="$(dirname "${component}")"
+    comp_name="$(basename "${component}")"
+
+    comp_dir="${run_dir}/${comp_type}/${comp_name}"
+    mkdir -p "${comp_dir}"
+    comp_log="${comp_dir}/log.ansi"
+
+    comp_yaml="$(run_for_component "${component}" 3>"${comp_log}")"
 
     convert_to_html "${comp_log}"
 
     yaml_content+="${comp_yaml}"
   done
 
-  # Close aggregate
-  exec 3>&-
-
   # Save YAML
   printf '%s\n' "${yaml_content}" >"${yaml_file}"
-
   printf 'Run complete: %s\n' "${run_dir}"
 }
 
