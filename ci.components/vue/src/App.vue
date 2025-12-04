@@ -1,15 +1,15 @@
 <template>
   <div class="app">
     <RunSelector
-      v-model:selected-file="selectedFile"
-      :available-files="availableFiles"
-      :commit="currentResult?.commit"
-      @load-result="loadResult"
+        v-model:selected-file="selectedFile"
+        :available-files="availableFiles"
+        :commit="currentResult?.commit"
+        @load-result="loadResult"
     />
 
     <div
-      v-if="currentResult"
-      class="results-container"
+        v-if="currentResult"
+        class="results-container"
     >
       <h1>MediaWiki Selenium Tests</h1>
 
@@ -20,11 +20,11 @@
       <StagesHeader />
       <div class="components-list">
         <ComponentRow
-          v-for="( component, index ) in currentResult.components"
-          :key="component.name"
-          v-model:open-logs-index="openLogsIndex"
-          :component="component"
-          :index="index + 1"
+            v-for="( component, index ) in currentResult.components"
+            :key="component.name"
+            v-model:open-logs-index="openLogsIndex"
+            :component="component"
+            :index="index + 1"
         />
       </div>
 
@@ -32,8 +32,8 @@
     </div>
 
     <div
-      v-else
-      class="no-data"
+        v-else
+        class="no-data"
     >
       <p>No run selected</p>
     </div>
@@ -55,7 +55,7 @@ const currentResult = ref( null )
 const openLogsIndex = ref( null )
 
 const selectedFileData = computed(
-  () => availableFiles.value.find( ( f ) => f.filename === selectedFile.value )
+    () => availableFiles.value.find( ( f ) => f.filename === selectedFile.value )
 )
 
 const loadAvailableFiles = async() => {
@@ -68,12 +68,6 @@ const loadAvailableFiles = async() => {
     availableFiles.value = []
   }
 }
-
-const slugFromName = ( name ) => String( name )
-  .replace( /^\.\//, '' )
-  .replace( /\/$/, '' )
-  .replace( /\s+/g, '-' )
-  .replace( /\//g, '-' )
 
 const loadResult = async() => {
   if ( !selectedFile.value ) {
@@ -96,13 +90,17 @@ const loadResult = async() => {
     }
 
     const ts = selectedFile.value.split( '/' )[ 0 ]
+
     parsed.components = parsed.components.map( ( c ) => {
-      const slug = slugFromName( c.name )
+      const parts = c.name.replace( /^\.\//, '' ).replace( /\/$/, '' ).split( '/' )
+      const type = parts[ 0 ]
+      const name = parts[ 1 ]
+
       return {
         ...c,
         links: {
-          html: `/api/results/${ ts }/results/${ slug }/logs.ansi.html`,
-          ansi: `/api/results/${ ts }/results/${ slug }/logs.ansi`
+          html: `/api/results/${ ts }/${ type }/${ name }/log.ansi.html`,
+          ansi: `/api/results/${ ts }/${ type }/${ name }/log.ansi`
         }
       }
     } )
@@ -110,8 +108,8 @@ const loadResult = async() => {
     // core links
     if ( parsed.core ) {
       parsed.core.links = {
-        html: `/api/results/${ ts }/results/core/logs.ansi.html`,
-        ansi: `/api/results/${ ts }/results/core/logs.ansi`
+        html: `/api/results/${ ts }/core/log.ansi.html`,
+        ansi: `/api/results/${ ts }/core/log.ansi`
       }
     }
 
