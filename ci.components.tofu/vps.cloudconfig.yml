@@ -22,37 +22,55 @@ users:
 runcmd:
   # Format and mount the attached volume FIRST, before Docker starts
   - |
-    # Wait for the attached volume with retries
-    DEVICE="/dev/sdb"
+    # Find the data volume by its OpenStack volume ID (works with any by-id prefix)
+    DATA_VOLUME_ID="${data_volume_id}"
+
+    # Wait for the volume to appear
     RETRIES=30
+    DEVICE=""
     while [ $RETRIES -gt 0 ]; do
-      if [ -b "$DEVICE" ]; then
-        echo "Found attached volume: $DEVICE"
+      DEVICE=$(ls /dev/disk/by-id/*"$DATA_VOLUME_ID"* 2>/dev/null | head -n1)
+      if [ -n "$DEVICE" ] && [ -b "$DEVICE" ]; then
+        echo "Found data volume: $DEVICE"
         break
       fi
-      echo "Waiting for volume $DEVICE to appear... ($RETRIES retries left)"
+      echo "Waiting for volume with ID $DATA_VOLUME_ID... ($RETRIES retries left)"
       sleep 2
       RETRIES=$((RETRIES - 1))
     done
 
-    if [ -b "$DEVICE" ]; then
-      # Format with ext4
-      mkfs.ext4 $DEVICE
-      # Create mount point
-      mkdir -p /mnt/data
-      # Mount it
-      mount $DEVICE /mnt/data
-      # Add to fstab for persistence
-      echo "$DEVICE /mnt/data ext4 defaults,nofail 0 2" >> /etc/fstab
-      # Create directories for Docker and quickstart project
-      mkdir -p /mnt/data/docker
-      mkdir -p /mnt/data/quickstart
-      # Set ownership for quickstart directory
-      chown -R quickstart:quickstart /mnt/data/quickstart
-    else
-      echo "ERROR: Volume $DEVICE did not appear after 60 seconds! Cannot continue."
+    if [ -z "$DEVICE" ] || [ ! -b "$DEVICE" ]; then
+      echo "ERROR: Volume with ID $DATA_VOLUME_ID not found"
+      ls -l /dev/disk/by-id/
       exit 1
     fi
+
+    # Format only if no filesystem exists
+    if ! blkid "$DEVICE" >/dev/null 2>&1; then
+      echo "No filesystem on $DEVICE, creating ext4..."
+      mkfs.ext4 "$DEVICE"
+    else
+      echo "Filesystem already present on $DEVICE, not reformatting."
+    fi
+
+    mkdir -p /mnt/data
+
+    # Mount using the stable path
+    if ! mountpoint -q /mnt/data; then
+      echo "Mounting $DEVICE on /mnt/data"
+      mount "$DEVICE" /mnt/data
+    else
+      echo "/mnt/data already mounted"
+    fi
+
+    # Add to fstab for persistence using the volume ID
+    if ! grep -q "$DATA_VOLUME_ID" /etc/fstab; then
+      echo "$DEVICE /mnt/data ext4 defaults,nofail 0 2" >> /etc/fstab
+    fi
+
+    # Create directories for Docker and quickstart project
+    mkdir -p /mnt/data/docker /mnt/data/quickstart
+    chown -R quickstart:quickstart /mnt/data/quickstart
   - mkdir -p /mnt/data/selenium-results
   - chown -R quickstart:quickstart /mnt/data/selenium-results
   # Configure Docker MTU to match host interface to prevent SSL/TLS handshake failures
@@ -65,12 +83,12 @@ runcmd:
     HOST_MTU=$(ip route | grep default | head -n1 | awk '{print $5}' | xargs -I {} ip link show {} | awk -F'mtu ' '{print $2}' | awk '{print $1}')
     mkdir -p /etc/docker
     # Configure Docker with both MTU and data directory
-    cat > /etc/docker/daemon.json << EOF
+    cat > /etc/docker/daemon.json << DOCKEREOF
     {
       "mtu": $HOST_MTU,
       "data-root": "/mnt/data/docker"
     }
-    EOF
+    DOCKEREOF
     systemctl restart docker
   # Clone to the data volume
   - su quickstart -c "git clone https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart.git /mnt/data/quickstart/mediawiki-quickstart"

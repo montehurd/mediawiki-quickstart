@@ -20,7 +20,10 @@ resource "openstack_compute_instance_v2" "quickstart_ci_instance" {
   network {
     name = "VLAN/legacy"
   }
-  user_data = file("${path.module}/vps.cloudconfig.yml")
+  # Use templatefile so we can pass the volume ID for stable disk identification
+  user_data = templatefile("${path.module}/vps.cloudconfig.yml", {
+    data_volume_id = openstack_blockstorage_volume_v3.quickstart_storage.id
+  })
   lifecycle {
     ignore_changes = [user_data]
   }
