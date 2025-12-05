@@ -68,8 +68,8 @@ runcmd:
       echo "$DEVICE /mnt/data ext4 defaults,nofail 0 2" >> /etc/fstab
     fi
 
-    # Create directories for Docker and quickstart project
-    mkdir -p /mnt/data/docker /mnt/data/quickstart
+    # Create directories for Docker, containerd, and quickstart project
+    mkdir -p /mnt/data/docker /mnt/data/containerd /mnt/data/quickstart
     chown -R quickstart:quickstart /mnt/data/quickstart
   - mkdir -p /mnt/data/selenium-results
   - chown -R quickstart:quickstart /mnt/data/selenium-results
@@ -89,6 +89,12 @@ runcmd:
       "data-root": "/mnt/data/docker"
     }
     DOCKEREOF
+    # Configure containerd to use data volume
+    mkdir -p /etc/containerd
+    containerd config default > /etc/containerd/config.toml
+    sed -i 's|root = "/var/lib/containerd"|root = "/mnt/data/containerd"|' /etc/containerd/config.toml
+    # Restart services to pick up new config
+    systemctl restart containerd
     systemctl restart docker
   # Clone to the data volume
   - su quickstart -c "git clone https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart.git /mnt/data/quickstart/mediawiki-quickstart"
