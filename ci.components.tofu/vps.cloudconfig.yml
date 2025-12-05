@@ -91,8 +91,13 @@ runcmd:
     DOCKEREOF
     # Configure containerd to use data volume
     mkdir -p /etc/containerd
-    containerd config default > /etc/containerd/config.toml
-    sed -i "s|root = '/var/lib/containerd'|root = '/mnt/data/containerd'|" /etc/containerd/config.toml
+    cat > /etc/containerd/config.toml << 'CTRDEOF'
+    version = 2
+    root = "/mnt/data/containerd"
+
+    [grpc]
+      address = "/run/containerd/containerd.sock"
+    CTRDEOF
     # Restart services to pick up new config
     systemctl restart containerd
     systemctl restart docker
