@@ -92,7 +92,7 @@ runcmd:
     # Configure containerd to use data volume
     mkdir -p /etc/containerd
     containerd config default > /etc/containerd/config.toml
-    sed -i 's|root = "/var/lib/containerd"|root = "/mnt/data/containerd"|' /etc/containerd/config.toml
+    sed -i "s|root = '/var/lib/containerd'|root = '/mnt/data/containerd'|" /etc/containerd/config.toml
     # Restart services to pick up new config
     systemctl restart containerd
     systemctl restart docker
