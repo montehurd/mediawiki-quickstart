@@ -220,9 +220,7 @@ _yq() {
 
 alpine_ansi2html() {
   docker run --rm -i python:alpine sh -c "
-    echo '@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories &&
-    apk update >/dev/null 2>&1 &&
-    apk add --no-cache py3-ansi2html@testing >/dev/null 2>&1 &&
+    pip3 install ansi2html >/dev/null 2>&1 &&
     cat | ansi2html
   "
 }
