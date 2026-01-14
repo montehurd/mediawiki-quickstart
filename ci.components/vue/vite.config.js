@@ -45,6 +45,7 @@ export default defineConfig({
                 })
                 .sort((a, b) => b.filename.localeCompare(a.filename)) // Sort newest first
               res.setHeader('Content-Type', 'application/json')
+              res.setHeader('Cache-Control', 'no-store')
               res.end(JSON.stringify(results))
             } else if (req.url.startsWith('/')) {
               // Serve individual files
@@ -56,6 +57,7 @@ export default defineConfig({
               Object.entries(headers).forEach(([key, value]) => {
                 res.setHeader(key, value)
               })
+              res.setHeader('Cache-Control', 'no-store')
 
               res.end(content)
             }
