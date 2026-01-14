@@ -67,25 +67,31 @@ const loadAvailableFiles = async() => {
 }
 
 const loadResult = async() => {
+  console.log('loadResult called, selectedFile:', selectedFile.value)
   if (!selectedFile.value) {
     currentResult.value = null
     return
   }
 
   try {
+    console.log('Fetching:', `/api/results/${selectedFile.value}`)
     const response = await fetch(`/api/results/${selectedFile.value}`)
     if (!response.ok) {
       throw new Error('Failed to fetch file')
     }
 
     const yamlText = await response.text()
+    console.log('YAML text length:', yamlText.length)
     const parsed = yaml.load(yamlText)
+    console.log('Parsed result:', parsed ? 'valid' : 'null', parsed?.components?.length, 'components')
 
     if (!parsed || !parsed.components || !Array.isArray(parsed.components)) {
       throw new Error('Invalid YAML structure')
     }
 
+    console.log('Setting currentResult')
     currentResult.value = parsed
+    console.log('currentResult set')
   } catch(error) {
     console.error('Error loading result:', error)
     currentResult.value = null
