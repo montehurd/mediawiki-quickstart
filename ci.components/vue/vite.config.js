@@ -70,7 +70,7 @@ export default defineConfig({
   server: {
     watch: {
       usePolling: true,
-      ignored: ['**/results/**']
+      ignored: ['**/results/**', '**/node_modules/**']
     },
     allowedHosts: [
       'localhost',
