@@ -12,4 +12,5 @@ services:
     environment:
       - NODE_ENV=development
       - RESULTS_PATH=/app/results
+      - NODE_OPTIONS=--max-old-space-size=4096
     restart: unless-stopped
