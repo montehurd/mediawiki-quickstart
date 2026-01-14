@@ -24,7 +24,7 @@ export default defineConfig({
       name: 'serve-results',
       configureServer(server) {
         server.middlewares.use('/api/results', async(req, res) => {
-          const resultsDir = process.env.RESULTS_PATH || path.join(process.cwd(), 'public', 'results')
+          const resultsDir = process.env.RESULTS_PATH || path.join(process.cwd(), 'results')
           try {
             if (req.url === '/available') {
               // Dynamically read the directory and format timestamps
