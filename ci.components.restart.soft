@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -x
+
+ssh ci-components.mediawiki-quickstart.eqiad1.wikimedia.cloud << EOF
+sudo su
+echo "Stopping selenium-test..."
+systemctl stop selenium-test
+echo "Restarting docker..."
+systemctl restart docker
+echo "Restarting results-server..."
+systemctl restart results-server
+echo "Starting selenium-test..."
+systemctl start selenium-test
+echo "Done."
+EOF

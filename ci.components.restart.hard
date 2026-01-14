@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -x
+
+ssh ci-components.mediawiki-quickstart.eqiad1.wikimedia.cloud << EOF
+sudo su
+echo "Rebooting..."
+reboot
+EOF
