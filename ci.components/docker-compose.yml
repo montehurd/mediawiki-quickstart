@@ -7,10 +7,10 @@ services:
       - 8088:8088
     volumes:
       - ./vue:/app
-      - ${RESULTS_PATH:-./results}:/app/results:ro
+      - ${RESULTS_PATH:-./results}:/app/ci.components/results:ro
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - RESULTS_PATH=/app/results
+      - RESULTS_PATH=/app/ci.components/results
       - NODE_OPTIONS=--max-old-space-size=4096
     restart: unless-stopped

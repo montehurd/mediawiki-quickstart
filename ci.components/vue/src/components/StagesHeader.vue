@@ -9,13 +9,13 @@
     </div>
 
     <div class="stages-header-title">
-      <span></span>
-      <span></span>
+      <span />
+      <span />
       <span class="stages">Stages</span>
     </div>
 
     <div class="grid-header">
-      <span></span>
+      <span />
       <span>Component</span>
       <span class="stage">1</span>
       <span class="stage">2</span>
