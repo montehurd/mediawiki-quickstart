@@ -7,6 +7,10 @@ source "./ci.components/run_for_core"
 
 separator="-----------------------------------------------------------------"
 
+ansi2html() {
+  docker exec -i ansi2html ansi2html
+}
+
 list_all_components() {
   find extensions skins -mindepth 1 -maxdepth 1 -type d | sort
 }
@@ -22,15 +26,7 @@ component_slug() {
 # Convert ANSI to HTML
 convert_to_html() {
   local ansi_file="$1"
-
-  if command -v alpine_ansi2html &>/dev/null; then
-    alpine_ansi2html <"${ansi_file}" >"${ansi_file}.html"
-  else
-    if [[ "${VERBOSE:-0}" != "0" ]]; then
-      echo "alpine_ansi2html not found; skipping HTML conversion for ${ansi_file}" >&2
-    fi
-    return 0
-  fi
+  ansi2html <"${ansi_file}" >"${ansi_file}.html"
 }
 
 run_all() {
@@ -85,5 +81,8 @@ commit:
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
+  docker rm -f ansi2html >/dev/null 2>&1 
+  docker run --platform linux/amd64 -d --name ansi2html -i --entrypoint cat ghcr.io/montehurd/mediawiki-docker-images/ansi2html:latest >/dev/null
   run_all "$@"
+  docker rm -f ansi2html >/dev/null 2>&1 
 fi
