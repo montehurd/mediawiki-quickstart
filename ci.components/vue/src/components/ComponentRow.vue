@@ -75,7 +75,7 @@ const getStatusClass = ( status ) => status || 'unknown'
 <style scoped>
 .grid-row {
   display: grid;
-  grid-template-columns: 4ch 44ch 3ch 3ch 3ch 3ch minmax(10ch, auto);
+  grid-template-columns: 4ch 44ch 3ch 3ch 3ch 3ch max-content;
   gap: 1ch;
   align-items: center;
 }

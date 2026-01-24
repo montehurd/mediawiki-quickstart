@@ -15,11 +15,11 @@
       <span>./run_selenium_tests</span>
       <span :class="core.stages.run_selenium_tests">{{ getStatusSymbol( core.stages.run_selenium_tests ) }}</span>
     </div>
-    <div>
+    <div class="logs-row">
       <div class="core-row">
         <span v-if="core.links" class="links-cell">
           <span class="logs-trigger">
-            <span class="core-logs">./<a href="#" @click.prevent.stop="onLogsClick">logs</a></span>
+            <span class="core-logs"><a href="#" @click.prevent.stop="onLogsClick">logs</a></span>
             <div v-if="isOpen" class="logs-popover">
               <a :href="core.links.html" rel="noopener" target="_blank">html</a>
               <span> · </span>
@@ -70,6 +70,10 @@ const onLogsClick = () => {
 
 .core-row span:first-child {
   width: 300px;
+}
+
+.logs-row {
+  margin-top: 0.5em;
 }
 
 .core-logs {

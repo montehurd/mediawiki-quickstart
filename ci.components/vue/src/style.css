@@ -33,6 +33,7 @@ body {
     white-space: nowrap;
     font-size: 0.78em;
     line-height: 1;
+    margin-left: 1ch;
 }
 
 .logs-trigger {
