@@ -28,6 +28,51 @@ body {
   background: white;
 }
 
+.links-cell {
+    text-align: left;
+    white-space: nowrap;
+    font-size: 0.78em;
+    line-height: 1;
+    margin-left: 1ch;
+}
+
+.logs-trigger {
+    position: relative;
+    display: inline-block;
+}
+
+.links-cell a {
+    text-decoration: none;
+    opacity: 0.8;
+    padding: 0 0.2ch;
+    cursor: pointer;
+}
+
+.links-cell a:hover {
+    text-decoration: underline;
+    opacity: 1;
+}
+
+.links-cell > span {
+    opacity: 0.6;
+    padding: 0 0.1ch;
+    font-size: 0.9em;
+}
+
+.logs-popover {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: calc(100% + 0.5ch);
+    padding: 0.25rem 0.4rem;
+    border-radius: 3px;
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba( 0, 0, 0, 0.1 );
+    z-index: 10;
+    white-space: nowrap;
+}
+
 .pass {color: green;}
 .fail {color: red;}
 .none {color: green;}
