@@ -219,7 +219,7 @@ _yq() {
 }
 
 alpine_ansi2html() {
-  docker run --rm -i ghcr.io/montehurd/mediawiki-docker-images/ansi2html:latest
+  docker run --platform linux/amd64 --rm -i ghcr.io/montehurd/mediawiki-docker-images/ansi2html:latest
 }
 
 # parallel_process - Executes multiple commands in parallel with visual output grouping
