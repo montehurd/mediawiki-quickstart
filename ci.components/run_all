@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-RESULTS_DIR="${RESULTS_DIR:-./ci.components/results}"
+RESULTS_PATH="${RESULTS_PATH:-./ci.components/results}"
 source "./ci.components/run_for_component"
 source "./ci.components/run_for_core"
 
@@ -33,7 +33,7 @@ run_all() {
   local ts
   ts="$(date -u +%s)"
 
-  local run_dir="${RESULTS_DIR}/${ts}"
+  local run_dir="${RESULTS_PATH}/${ts}"
   mkdir -p "${run_dir}"
 
   local yaml_file="${run_dir}/run.yaml"
