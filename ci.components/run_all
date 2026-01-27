@@ -1,5 +1,4 @@
 #!/bin/bash
-set -euo pipefail
 
 RESULTS_PATH="${RESULTS_PATH:-./ci.components/results}"
 source "./ci.components/run_for_component"
