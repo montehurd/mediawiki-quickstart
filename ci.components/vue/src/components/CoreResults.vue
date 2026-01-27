@@ -19,7 +19,7 @@
       <div class="core-row">
         <span v-if="core.links" class="links-cell">
           <span class="logs-trigger">
-            <span class="core-logs"><a href="#" @click.prevent.stop="onLogsClick">logs</a></span>
+            <a href="#" @click.prevent.stop="onLogsClick">logs</a>
             <div v-if="isOpen" class="logs-popover">
               <a :href="core.links.html" rel="noopener" target="_blank">html</a>
               <span> · </span>
@@ -74,10 +74,6 @@ const onLogsClick = () => {
 
 .logs-row {
   margin-top: 0.5em;
-}
-
-.core-logs {
-  font-size: x-large;
 }
 
 .logs-popover {
