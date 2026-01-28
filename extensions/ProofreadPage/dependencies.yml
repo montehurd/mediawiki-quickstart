@@ -1,1 +1,5 @@
+- extensions/BetaFeatures
+- extensions/LabeledSectionTransclusion
 - extensions/ParserFunctions
+- extensions/Scribunto
+- extensions/VisualEditor
