@@ -1,5 +1,8 @@
-// Inject WDIO_INJECTION_ARGS into the wdio process's args
-
+// Inject arguments into wdio or Cypress processes
+//
+// We might later want to rename this script something like
+// testing-arg-injector.js - and WDIO_INJECTION_ARGS too.
+// 
 // Injection is needed because we can't rely on npm's built-in argument
 // forwarding (npm run selenium-test -- args). This is because many
 // package.json selenium-test scripts don't pass through arguments -
@@ -11,59 +14,70 @@
 //
 // Since we don't control these package.json files in MediaWiki
 // core/extensions/skins, we use NODE_OPTIONS to require this injector
-// script before wdio starts, which then injects our arguments directly
-// into wdio's process.argv regardless of how deeply nested or how the
+// script before the test runner starts, which then injects our arguments
+// directly into process.argv regardless of how deeply nested or how the
 // npm script is structured
 //
 // The WDIO_INJECTION_ARGS env var also provides a clean way to pass
 // arguments from the host across the container boundary without having
 // to worry about shell escaping complexities.
 
-if (process.env.WDIO_INJECTION_ARGS) {
-  const isWdio = process.argv[1] && (
-    process.argv[1].endsWith('/wdio') ||
-    process.argv[1].includes('@wdio/cli')
-  )
-  // console.log(`Injection candidate process: ${process.argv[1]}`)
-  if (!isWdio) {
-    return
-  }
-  // Decode and split on null bytes
-  const decoded = Buffer.from(process.env.WDIO_INJECTION_ARGS, 'base64').toString().trim()
-  if (decoded === '\0' || decoded == '') {
-    return
-  }
-  const args = decoded.split('\0').filter(arg => arg)
-  // console.error('Decoded args:', args)
-  const firstFlagIndex = args.findIndex(arg => arg.startsWith('--'))
-  if (firstFlagIndex === -1) {
-    return
-  }
+'use strict';
 
-  let extraArgs = args.slice(firstFlagIndex)
+const isWdio = process.argv[1] && (
+  process.argv[1].endsWith('/wdio') ||
+  process.argv[1].includes('@wdio/cli')
+);
 
+const isCypress = process.argv[1] && (
+  process.argv[1].endsWith('/cypress')
+);
+
+// console.log(`Injection candidate process: ${process.argv[1]}`)
+if (!isWdio && !isCypress) {
+  return;
+}
+
+// Cypress: use shared cache location, inject --headed when DISPLAY is set
+const isCypressOpen = isCypress && process.argv.includes('open');
+if (isCypress) {
+  delete process.env.CYPRESS_CACHE_FOLDER;
+  if (process.env.DISPLAY && !process.argv.includes('--headed') && !isCypressOpen) {
+    console.error('Injecting Cypress arg: --headed (DISPLAY is set)');
+    process.argv.push('--headed');
+  }
+}
+
+if (!process.env.WDIO_INJECTION_ARGS) {
+  return;
+}
+
+// Decode and split on null bytes
+const decoded = Buffer.from(process.env.WDIO_INJECTION_ARGS, 'base64').toString().trim();
+if (decoded === '\0' || decoded === '') {
+  return;
+}
+
+const args = decoded.split('\0').filter(arg => arg);
+// console.error('Decoded args:', args)
+const firstFlagIndex = args.findIndex(arg => arg.startsWith('--'));
+if (firstFlagIndex === -1) {
+  return;
+}
+
+let extraArgs = args.slice(firstFlagIndex);
+
+// Handle --wait-for-debugger (wdio only - doesn't work with Cypress/Electron)
+if (isWdio) {
   const waitIndex = extraArgs.indexOf('--wait-for-debugger');
   if (waitIndex !== -1) {
-    process.env.NODE_OPTIONS = (process.env.NODE_OPTIONS || '') + ' --inspect-brk=0.0.0.0:9229'
-    extraArgs.splice(waitIndex, 1)
-    const maxIndex = extraArgs.indexOf('--maxInstances')
-    if (maxIndex !== -1) extraArgs.splice(maxIndex, 2)
-    extraArgs.push('--maxInstances', '1')
-  }
+    process.env.NODE_OPTIONS = (process.env.NODE_OPTIONS || '') + ' --inspect-brk=0.0.0.0:9229';
+    extraArgs.splice(waitIndex, 1);
 
-  if (extraArgs.includes('--spec')) {
-    const specIndex = extraArgs.indexOf('--spec')
-    if (specIndex + 1 < extraArgs.length) {
-      const specPath = extraArgs[specIndex + 1]
-      if (!specPath.startsWith('/')) {
-        extraArgs[specIndex + 1] = process.cwd() + '/' + specPath
-      }
-    }
-  }
+    const maxIndex = extraArgs.indexOf('--maxInstances');
+    if (maxIndex !== -1) extraArgs.splice(maxIndex, 2);
+    extraArgs.push('--maxInstances', '1');
 
-  console.error('Injecting wdio args:', extraArgs)
-
-  if (waitIndex !== -1) {
     setTimeout(() => console.error(`
 \x1b[32mWaiting for debugger attachment ("--wait-for-debugger" flag detected)...\x1b[0m
 \x1b[33m
@@ -71,11 +85,28 @@ if (process.env.WDIO_INJECTION_ARGS) {
 - 2: In VSCode, find your Selenium test file within 'mediawiki-quickstart/mediawiki' and set needed breakpoint(s)
 - 3: Use Ctrl+Shift+D (Shift+Command+D on MacOS) to show VSCode debug panel
 - 4: Click \x1b[32m\u25B6\uFE0F\x1b[0m Attach to Selenium WDIO Worker \x1b[33mnear the top of the VSCode debug panel to continue execution with debugging\x1b[0m
-    `), 5000)
+    `), 5000);
   }
-
-  process.argv.push(...extraArgs)
 }
+
+// Handle --spec (convert relative to absolute path) - not supported by cypress open
+const specIndex = extraArgs.indexOf('--spec');
+if (specIndex !== -1) {
+  if (isCypressOpen) {
+    // Remove --spec and its value for cypress open (not supported)
+    extraArgs.splice(specIndex, 2);
+  } else if (specIndex + 1 < extraArgs.length) {
+    const specPath = extraArgs[specIndex + 1];
+    if (!specPath.startsWith('/')) {
+      extraArgs[specIndex + 1] = process.cwd() + '/' + specPath;
+    }
+  }
+}
+
+const runner = isWdio ? 'wdio' : 'Cypress';
+console.error(`Injecting ${runner} args:`, extraArgs);
+
+process.argv.push(...extraArgs);
 
 // (async () => {
 //   const module = await import('/var/www/html/w/tests/selenium/wdio.conf.js')

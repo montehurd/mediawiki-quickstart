@@ -493,6 +493,42 @@ Debug a Component test file:
 ./run_selenium_tests extensions/Echo --wait-for-debugger --spec "tests/selenium/specs/echo.js"
 ```
 
+## Cypress
+
+Some MediaWiki extensions use Cypress instead of Selenium for browser tests. Both are triggered via `npm run selenium-test` in CI, so Quickstart uses the same `run_selenium_tests` script for both.
+
+- Run all Cypress tests in a specific extension
+
+```bash
+./install extensions/Cite
+./run_selenium_tests extensions/Cite
+```
+
+- Run a specific Cypress test file
+
+```bash
+./install extensions/Cite
+./run_selenium_tests extensions/Cite --spec tests/cypress/e2e/tests/referencePreviews/referencePreviews.cy.js
+```
+
+### Cypress Flags
+
+- `--spec` - Specify which test files to run
+
+### To see a complete list of Cypress flags
+
+```bash
+./shellto s npx cypress run --help
+```
+
+### Interactive Cypress UI
+
+Using Cite as an example, to use `cypress open` for interactive testing, temporarily change its `package.json` "selenium-test" script value to "cypress open", then run:
+
+```bash
+./run_selenium_tests extensions/Cite
+```
+
 ## Quickstart
 
 Quickstart's functionality is verified by a variety of tests found in `tests/`
