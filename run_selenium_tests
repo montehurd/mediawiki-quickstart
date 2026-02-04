@@ -12,6 +12,20 @@ run_selenium_tests() {
     component_path="$1"
   fi
 
+  if [[ -n "$component_path" ]]; then
+    if [[ ! "$component_path" =~ ^(extensions|skins)/ ]]; then
+      echo "Error: Component path must start with 'extensions/' or 'skins/'"
+      exit 1
+    fi
+    if [[ ! -d "mediawiki/${component_path}" ]]; then
+      echo
+      echo "Error: Component '${component_path}' is not installed."
+      echo -e "Install it first with: \033[32m./install ${component_path}\033[0m"
+      echo
+      exit 1
+    fi
+  fi
+
   ./shellto \
     $([[ "${SILENT:-0}" == "1" ]] || echo "-it") \
     -e NODE_OPTIONS="--require /var/local/wdio-arg-injector.js" \
