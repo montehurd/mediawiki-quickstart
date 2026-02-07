@@ -35,7 +35,13 @@ run_selenium_tests() {
       trap "kill 0" INT
       [ -f /var/www/html/w/.env ] && source /var/www/html/w/.env
       export CHROME_PATH
-      npm run selenium-test
+      timeout_after_seconds=900
+      timeout --kill-after=30 $timeout_after_seconds npm run selenium-test
+      status=$?
+      if [ $status -eq 124 ]; then
+        echo "Error: selenium-test timed out after $timeout_after_seconds seconds"
+      fi
+      exit $status
     '
 }
 
