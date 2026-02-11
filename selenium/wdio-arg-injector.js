@@ -40,9 +40,10 @@ if (!isWdio && !isCypress) {
 
 // Cypress: use shared cache location, inject --headed when DISPLAY is set
 const isCypressOpen = isCypress && process.argv.includes('open');
+const isCypressRun = isCypress && process.argv.includes('run');
 if (isCypress) {
   delete process.env.CYPRESS_CACHE_FOLDER;
-  if (process.env.DISPLAY && !process.argv.includes('--headed') && !isCypressOpen) {
+  if (isCypressRun && process.env.DISPLAY && !process.argv.includes('--headed')) {
     console.error('Injecting Cypress arg: --headed (DISPLAY is set)');
     process.argv.push('--headed');
   }
