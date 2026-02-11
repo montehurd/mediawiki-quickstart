@@ -40,7 +40,7 @@ run_all() {
   local yaml_content="timestamp: ${ts}
 commit:
   hash: $(git rev-parse --short HEAD)
-  message: $(git log -1 --format='%s')"
+  message: \"$(git log -1 --format='%s')\""
 
   # ----- Core -----
   local core_dir="${run_dir}/core"
