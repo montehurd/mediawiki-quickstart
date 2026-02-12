@@ -23,6 +23,7 @@ fs.writeFileSync(`${packageJsonPath}.orig`, JSON.stringify(packageJson, null, 2)
 
 packageJson.private = true // Required for workspaces
 packageJson.workspaces = packageJson.workspaces || [".", "extensions/*", "skins/*"]
+packageJson.overrides = { ...packageJson.overrides, superagent: '^10.3.0' }
 
 fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
 
