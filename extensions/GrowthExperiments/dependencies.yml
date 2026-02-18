@@ -2,3 +2,9 @@
 - extensions/PageViewInfo
 - extensions/CirrusSearch
 - extensions/CommunityConfiguration
+- extensions/WikimediaMessages
+- extensions/GuidedTour
+- extensions/Echo
+- extensions/EventLogging
+- extensions/MobileFrontend
+- skins/MinervaNeue
