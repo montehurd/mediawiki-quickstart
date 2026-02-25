@@ -292,11 +292,22 @@ clone_git_repo() {
     clone_depth=""
   fi
 
-  if ! git clone --progress --single-branch ${branch_arg} ${recurse_flag} ${clone_depth} "${repo_url}" "${target_path}" 2>&1 |
-    verboseOrDotPerLine "Git clone ${branch_arg}${recurse_flag}${clone_depth:-full depth}${repo_url} to '${target_path}'" "use CLONE_DEPTH=0 for full depth"; then
-    echo "Failed to clone repository '$repo_url'"
-    return 1
-  fi
+  local max_retries=5
+  local attempt=1
+  while [ $attempt -le $max_retries ]; do
+    if git clone --progress --single-branch ${branch_arg} ${recurse_flag} ${clone_depth} "${repo_url}" "${target_path}" 2>&1 |
+      verboseOrDotPerLine "Git clone ${branch_arg}${recurse_flag}${clone_depth:-full depth}${repo_url} to '${target_path}'" "use CLONE_DEPTH=0 for full depth"; then
+      break
+    fi
+    if [ $attempt -eq $max_retries ]; then
+      echo "Failed to clone repository '$repo_url' after $max_retries attempts"
+      return 1
+    fi
+    echo "Clone attempt $attempt of $max_retries failed, retrying in 5 seconds..."
+    rm -rf "${target_path:?}/.git" "${target_path:?}"/*
+    sleep 5
+    attempt=$((attempt + 1))
+  done
   if [ ! -d "$target_path/.git" ]; then
     return 1
   fi
