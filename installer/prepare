@@ -137,6 +137,14 @@ prepare() {
   # Execute clone commands in parallel
   parallel_process "$clone_commands" 2>&1 | verboseOrDotPerLine "Cloning component(s)"
 
+  # Verify all clones succeeded (clone failures can be swallowed by pipes)
+  for component_path in "$@"; do
+    if [ ! -d "$component_path/.git" ]; then
+      echo "Failed to clone '$component_path'"
+      exit 1
+    fi
+  done
+
   # Linking needs to happen in-order (ie not parallel/async)
   _link_components "$@" 2>&1 | verboseOrDotPerLine "Linking component(s) LocalSettings.php to Mediawiki Core LocalSettings.php"
 
