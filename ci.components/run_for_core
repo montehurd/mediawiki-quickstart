@@ -17,7 +17,7 @@ run_for_core() {
       export FORCE=1
       export SILENT=1
       export SKIP_COUNTDOWN=1
-      export SKIP_SKIN=1
+      # export SKIP_SKIN=1
       ./fresh_install 2>&1 | verboseOrDotPerLine "Fresh install of MediaWiki..."
       fresh_install_status=${PIPESTATUS[0]}
       if [ $fresh_install_status -eq 0 ]; then
