@@ -102,7 +102,7 @@ open_url_when_available() {
     else
       echo "powershell.exe not found."
     fi
-  elif [[ "$OSTYPE" == "linux-gnu" ]] || [[ "$OSTYPE" == "linux" ]]; then
+  elif [[ "$OSTYPE" == linux* ]]; then
     # Linux system
     open_url_with_linux_browser "$url" || echo "$error_message"
   else
