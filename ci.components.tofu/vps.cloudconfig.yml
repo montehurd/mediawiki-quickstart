@@ -18,6 +18,10 @@ users:
     groups: [sudo, docker]
     shell: /bin/bash
     sudo: ALL=(ALL) NOPASSWD:ALL
+    # Note: Puppet on Cloud VPS purges the cloud-init sudoers file
+    # (/etc/sudoers.d/90-cloud-init-users), so the sudo grant above may not
+    # persist. The selenium-test service uses ExecStopPost=+ to run systemctl
+    # restart commands as root without needing sudo.
 
 runcmd:
   # Format and mount the attached volume FIRST, before Docker starts
@@ -136,7 +140,9 @@ runcmd:
     Environment="SKIP_PAGE_IMPORT=1"
     Environment="RECLAIM_DISK_SPACE=1"
     Environment="RESULTS_PATH=/mnt/data/selenium-results"
-    ExecStart=/bin/bash -c 'sleep 30 && git pull && ./ci.components/run_all && docker compose down && sudo systemctl restart docker && sudo systemctl restart results-server'
+    ExecStart=/bin/bash -c 'sleep 30 && git pull && ./ci.components/run_all && docker compose down'
+    ExecStopPost=+/usr/bin/systemctl restart docker
+    ExecStopPost=+/usr/bin/systemctl restart results-server
     Restart=always
 
     [Install]
