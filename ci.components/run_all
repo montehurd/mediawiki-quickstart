@@ -4,6 +4,11 @@ RESULTS_PATH="${RESULTS_PATH:-./ci.components/results}"
 source "./ci.components/run_for_component"
 source "./ci.components/run_for_core"
 
+# Disable errexit inherited from sourced files (common/utility.sh sets
+# "set -eu"). run_all must never abort mid-run — a single component or
+# infrastructure failure should not prevent remaining components from running.
+set +e
+
 separator="-----------------------------------------------------------------"
 
 ansi2html() {
