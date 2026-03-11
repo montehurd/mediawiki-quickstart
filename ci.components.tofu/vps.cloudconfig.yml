@@ -148,27 +148,12 @@ runcmd:
     [Install]
     WantedBy=multi-user.target
     EOL
-  # Clean up temp dirs created by the 'remove' script's async mediawiki
-  # folder deletion (mktemp -d /tmp/mw-delete-XXXXXX). Background cleanup
-  # can silently fail on root-owned files, leaving orphaned dirs that
-  # accumulate and exhaust inodes. systemd-tmpfiles runs as root so
-  # ownership is not an issue. The 'e' directive cleans contents of
-  # matching dirs older than the specified age; empty dirs left behind
-  # are one inode each and negligible.
-  - |
-    echo 'e /tmp/mw-delete-* - - - 5min -' > /etc/tmpfiles.d/mw-cleanup.conf
-    mkdir -p /etc/systemd/system/systemd-tmpfiles-clean.timer.d
-    cat > /etc/systemd/system/systemd-tmpfiles-clean.timer.d/frequency.conf << 'EOL'
-    [Timer]
-    OnUnitActiveSec=5min
-    EOL
   - sleep 5
   - systemctl daemon-reload
   - systemctl enable results-server
   - systemctl start results-server
   - systemctl enable selenium-test
   - systemctl start selenium-test
-  - systemctl restart systemd-tmpfiles-clean.timer
   - |
     mkdir -p /etc/systemd/journald.conf.d
     cat > /etc/systemd/journald.conf.d/size-limit.conf << 'EOL'
