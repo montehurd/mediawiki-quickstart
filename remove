@@ -19,7 +19,12 @@ delete_mediawiki_folder() {
     # temp dir so we can proceed immediately after the mv
     # completes, and we launch a detached process to finish
     # the removal in the background
-    local temp_dir=$(mktemp -d /tmp/mw-delete-XXXXXX)
+    #
+    # We create the temp dir on the *same filesystem* so mv is an
+    # instant rename instead of a cross-filesystem copy (which
+    # floods /tmp with inodes) - this is critical if quickstart
+    # is being used on a separate volume
+    local temp_dir=$(mktemp -d "$(dirname "$MEDIAWIKI_PATH")/.mediawiki-delete-XXXXXX")
     # Perform the move
     if mv "$MEDIAWIKI_PATH" "$temp_dir"; then
       sleep 1

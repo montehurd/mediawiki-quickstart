@@ -1,4 +1,5 @@
 /mediawiki/
+/.mediawiki-delete-*/
 /common/docker-compose.components.yml
 /.env
 /ci.components/results/
