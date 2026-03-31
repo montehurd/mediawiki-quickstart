@@ -19,6 +19,11 @@ install_node_dependencies() {
     echo "NPM install failed. Exiting"
     return 1
   fi
+
+  if [ -f "package.json.orig" ]; then
+    mv package.json.orig package.json
+  fi
+
   return 0
 }
 
