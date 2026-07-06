@@ -300,8 +300,12 @@ clone_git_repo() {
   local max_retries=5
   local attempt=1
   while [ $attempt -le $max_retries ]; do
-    if git -c "http.userAgent=${git_user_agent}" clone --progress --single-branch ${branch_arg} ${recurse_flag} ${clone_depth} "${repo_url}" "${target_path}" 2>&1 |
-      verboseOrDotPerLine "Git clone ${branch_arg}${recurse_flag}${clone_depth:-full depth}${repo_url} to '${target_path}'" "use CLONE_DEPTH=0 for full depth"; then
+    # The formatter is the last command in this pipeline and always exits 0,
+    # so the pipeline's overall status can't detect a failed clone. Read
+    # git's real exit code from PIPESTATUS immediately after the pipeline
+    git -c "http.userAgent=${git_user_agent}" clone --progress --single-branch ${branch_arg} ${recurse_flag} ${clone_depth} "${repo_url}" "${target_path}" 2>&1 |
+      verboseOrDotPerLine "Git clone ${branch_arg}${recurse_flag}${clone_depth:-full depth}${repo_url} to '${target_path}'" "use CLONE_DEPTH=0 for full depth"
+    if [ "${PIPESTATUS[0]}" -eq 0 ]; then
       break
     fi
     if [ $attempt -eq $max_retries ]; then
