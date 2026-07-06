@@ -318,9 +318,14 @@ clone_git_repo() {
       echo "Failed to clone repository '$repo_url' after $max_retries attempts"
       return 1
     fi
-    echo "Clone attempt $attempt of $max_retries failed, retrying in 5 seconds..."
+    # Growing backoff (5s, 10s, 20s, ...) gives later attempts a chance to
+    # land after a rate-limit window expires. The 0-4s jitter keeps parallel
+    # jobs that got throttled at the same moment from all retrying at the
+    # same instant
+    local retry_delay=$((5 * 2 ** (attempt - 1) + RANDOM % 5))
+    echo "Clone attempt $attempt of $max_retries failed, retrying in ${retry_delay} seconds..."
     rm -rf "${target_path:?}/.git" "${target_path:?}"/*
-    sleep 5
+    sleep "$retry_delay"
     attempt=$((attempt + 1))
   done
   if [ ! -d "$target_path/.git" ]; then
