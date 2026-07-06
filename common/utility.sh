@@ -292,10 +292,15 @@ clone_git_repo() {
     clone_depth=""
   fi
 
+  # Identify ourselves per https://meta.wikimedia.org/wiki/User-Agent_policy
+  # (default git user agents land in the most restrictive anonymous
+  # rate-limit tier)
+  local git_user_agent="mediawiki-quickstart (https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart)"
+
   local max_retries=5
   local attempt=1
   while [ $attempt -le $max_retries ]; do
-    if git clone --progress --single-branch ${branch_arg} ${recurse_flag} ${clone_depth} "${repo_url}" "${target_path}" 2>&1 |
+    if git -c "http.userAgent=${git_user_agent}" clone --progress --single-branch ${branch_arg} ${recurse_flag} ${clone_depth} "${repo_url}" "${target_path}" 2>&1 |
       verboseOrDotPerLine "Git clone ${branch_arg}${recurse_flag}${clone_depth:-full depth}${repo_url} to '${target_path}'" "use CLONE_DEPTH=0 for full depth"; then
       break
     fi
