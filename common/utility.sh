@@ -245,7 +245,13 @@ parallel_process() {
   awk '{printf "%d:%s%c", NR-1, $0, 0}' <<<"$1" |
     xargs -0 -P "$num_procs" -n1 bash -c '
       IFS=: read -r index cmd <<< "$1"
-      eval "$cmd" 2>&1 | awk "{print \"\033[32m|${index}|\033[0m \" \$0}"
+      # Pure bash prefixer: awk is unusable here because Debian mawk buffers
+      # its INPUT until the buffer fills or EOF, so lines from long-running
+      # jobs (e.g. clone retries) would not appear until the job exits, and
+      # an output fflush() cannot help. bash read is unbuffered on pipes
+      eval "$cmd" 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+        printf "\033[32m|%s|\033[0m %s\n" "$index" "$line"
+      done
     ' _
 }
 
