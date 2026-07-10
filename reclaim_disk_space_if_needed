@@ -30,6 +30,13 @@ reclaim_disk_space_if_needed() {
   # Nuke dangling docker bits
   docker system prune -af
 
+  # 'docker system prune' never reclaims volumes, and npm never evicts its
+  # cache, so under sustained use the npm cache volume can outgrow everything
+  # the prune above reclaims. Removing it is safe here: 'remove' has already
+  # brought the mediawiki compose project down, and it's purely a download
+  # cache that repopulates on the next install
+  docker volume rm mediawiki_npm_cache 2>/dev/null || true
+
   free_percent=$(disk_free_space_percent)
   echo "Disk space after cleanup attempt: ${free_percent}% free"
 }
