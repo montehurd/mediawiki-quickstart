@@ -5,7 +5,10 @@ source "/var/local/common/utility.sh"
 set -eu
 
 run_mediawiki_maintenance_update() {
-  if ! php maintenance/run.php update --quick 2>&1 | verboseOrDotPerLine "Mediawiki maintenance update"; then
+  php maintenance/run.php update --quick 2>&1 | verboseOrDotPerLine "Mediawiki maintenance update"
+  # Check update.php's own status - the pipeline's status is
+  # verboseOrDotPerLine's, which always succeeds
+  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
     echo "PHP maintenance update failed. Exiting"
     return 1
   fi

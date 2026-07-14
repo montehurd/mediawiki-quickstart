@@ -45,7 +45,7 @@ start() {
       ./mysql_restore_from_backup "./import-on-fresh-install/mysql.backup.gz" || exit 1
     fi
 
-    ./shellto -e VERBOSE m /var/local/installer/run_mediawiki_maintenance_update
+    ./shellto -e VERBOSE m /var/local/installer/run_mediawiki_maintenance_update || exit 1
     ./shellto -e VERBOSE m /var/local/installer/install_node_dependencies
 
     sleep 2
