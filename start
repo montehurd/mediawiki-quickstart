@@ -37,6 +37,10 @@ start() {
       --pass "$MW_PASS" \
       --skins "" \
         "$MW_SITENAME" "$MW_USER"' 2>&1 | verboseOrDotPerLine "php maintenance/run.php install"
+    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+      printf "\e[31mMediawiki install failed\e[0m\n"
+      exit 1
+    fi
 
     # Restore any mysql backup now that a successful install has produced
     # LocalSettings.php - the maintenance update below migrates the restored
@@ -50,6 +54,10 @@ start() {
 
     sleep 2
     import_extra_local_settings 2>&1 | verboseOrDotPerLine "Importing extra local settings"
+    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+      printf "\e[31mImporting extra local settings failed\e[0m\n"
+      exit 1
+    fi
     if [[ "${SKIP_SKIN:-0}" != "1" ]]; then
       use_skin "Vector"
     else

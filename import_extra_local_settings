@@ -6,6 +6,14 @@ import_extra_local_settings() {
   local import_dir="$SCRIPT_PATH/import-on-fresh-install"
   local host_localsettings_file="$MEDIAWIKI_PATH/LocalSettings.php"
 
+  # Never append to a LocalSettings.php that doesn't exist - that would
+  # create a file with no opening php tag which Mediawiki serves as
+  # plain text, hiding whatever install failure prevented its creation
+  if [ ! -f "$host_localsettings_file" ]; then
+    echo "Error: '$host_localsettings_file' not found, cannot import extra local settings"
+    return 1
+  fi
+
   # Copy LocalSettings.extra.php and other PHP files from import directory into mediawiki dir
   for file in "$import_dir"/*.php; do
     echo "Copying '$file' to '$MEDIAWIKI_PATH/$(basename "$file")'"
