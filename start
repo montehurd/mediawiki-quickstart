@@ -37,6 +37,14 @@ start() {
       --pass "$MW_PASS" \
       --skins "" \
         "$MW_SITENAME" "$MW_USER"' 2>&1 | verboseOrDotPerLine "php maintenance/run.php install"
+
+    # Restore any mysql backup now that a successful install has produced
+    # LocalSettings.php - the maintenance update below migrates the restored
+    # data if it was captured with an older schema
+    if [[ "${MW_DBTYPE:-}" == "mysql" ]] && [[ -f "./import-on-fresh-install/mysql.backup.gz" ]]; then
+      ./mysql_restore_from_backup "./import-on-fresh-install/mysql.backup.gz" || exit 1
+    fi
+
     ./shellto -e VERBOSE m /var/local/installer/run_mediawiki_maintenance_update
     ./shellto -e VERBOSE m /var/local/installer/install_node_dependencies
 

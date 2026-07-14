@@ -2,6 +2,7 @@
 
 source "./config"
 source "./common/utility.sh"
+source "./docker.sh"
 
 prepare() {
   mkdir -p "$MEDIAWIKI_PATH"
@@ -36,9 +37,15 @@ prepare() {
   echo "$MW_ENV" >.env
 
   if [[ "${MW_DBTYPE:-}" == "mysql" ]]; then
-    if [[ -f "./import-on-fresh-install/mysql.backup.gz" ]]; then
-      ./mysql_restore_from_backup "./import-on-fresh-install/mysql.backup.gz"
+    if is_service_running "mysql"; then
+      docker compose stop mysql 2>&1 | verboseOrDotPerLine "Stopping MySQL container"
     fi
+    # Give the installer a virgin datadir so it always creates tables with
+    # the current schema and writes LocalSettings.php - any mysql backup is
+    # restored after the install (see 'start') so the maintenance update can
+    # migrate data captured with an older schema
+    rm -rf mysql-data
+    mkdir -p mysql-data
   fi
 }
 
