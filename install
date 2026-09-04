@@ -52,13 +52,19 @@ install() {
   fi
 
   # Installation steps that need to happen before component docker-compose.yml services are brought up
-  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH -e GERRIT_PATCHES m /var/local/installer/prepare $components
+  # 'set -e' is in effect here, so a bare call would abort the script before its
+  # status could be read. Capturing through '||' keeps the checks below reachable
+  local install_status=0
+  ./shellto -e VERBOSE -e GIT_CLONE_BASE_URL -e BRANCH -e GERRIT_PATCHES m /var/local/installer/prepare $components ||
+    install_status=$?
 
-  local install_status=$?
-
-  if [ $install_status -eq 2 ]; then
+  if [ "$install_status" -eq 2 ]; then
     # No components were installed, exit normally
     return 0
+  fi
+
+  if [ "$install_status" -ne 0 ]; then
+    return "$install_status"
   fi
 
   # In case components with thier own docker-compose.yml were installed, bring their services up
@@ -74,11 +80,11 @@ install() {
   # Installation steps that need to happen after component docker-compose.yml services are brought up
   # ( install is split into 'prepare'/'finalize' stages so we don't have to use hacky methods to message
   # to the host the correct place to invoke 'docker compose up -d --wait' )
-  ./shellto -e VERBOSE -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT -u root m /var/local/installer/finalize $components
+  install_status=0
+  ./shellto -e VERBOSE -e SKIP_LOCALIZATION_CACHE_REBUILD -e SKIP_PAGE_IMPORT -u root m /var/local/installer/finalize $components ||
+    install_status=$?
 
-  install_status=$?
-
-  if [ $install_status -eq 0 ]; then
+  if [ "$install_status" -eq 0 ]; then
     if run_service_setup_for_components "$@"; then
       # Restart if we ran any component service setup scripts
       # Let's say "my_service" in a component docker-compose.yml did a shared volume on the
@@ -90,7 +96,7 @@ install() {
     open_special_version_page
   else
     # Other error occurred
-    return $install_status
+    return "$install_status"
   fi
 }
 

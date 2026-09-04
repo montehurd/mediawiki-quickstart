@@ -1,6 +1,8 @@
 #!/bin/bash
 
-set -u
+# -e arrives implicitly with the first sourced file below, which makes error
+# handling depend on source order. State it here instead
+set -eu
 
 source "./config"
 source "./common/utility.sh"
