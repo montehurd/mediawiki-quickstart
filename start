@@ -38,7 +38,7 @@ start() {
       --skins "" \
         "$MW_SITENAME" "$MW_USER"' 2>&1 | verboseOrDotPerLine "php maintenance/run.php install"
     if [ "${PIPESTATUS[0]}" -ne 0 ]; then
-      printf "\e[31mMediawiki install failed\e[0m\n"
+      reportStepFailure "Mediawiki install failed"
       exit 1
     fi
 
@@ -55,7 +55,7 @@ start() {
     sleep 2
     import_extra_local_settings 2>&1 | verboseOrDotPerLine "Importing extra local settings"
     if [ "${PIPESTATUS[0]}" -ne 0 ]; then
-      printf "\e[31mImporting extra local settings failed\e[0m\n"
+      reportStepFailure "Importing extra local settings failed"
       exit 1
     fi
     if [[ "${SKIP_SKIN:-0}" != "1" ]]; then
@@ -73,7 +73,7 @@ start() {
   wait_until_url_available $SPECIAL_VERSION_URL 60 2>&1 | verboseOrDotPerLine "Waiting for Mediawiki page availability"
   local wait_status=${PIPESTATUS[0]}
   if [ "$wait_status" -ne 0 ]; then
-    printf "\e[31mUnable to open '$SPECIAL_VERSION_URL'\e[0m\n"
+    reportStepFailure "Unable to open '$SPECIAL_VERSION_URL'"
     printf "\e[31mOpening troubleshooting section of 'README.md'...\e[0m\n"
     open_url_when_available "https://gitlab.wikimedia.org/repos/test-platform/mediawiki-quickstart#troubleshooting"
     exit 1

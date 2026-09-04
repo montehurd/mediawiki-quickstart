@@ -9,7 +9,7 @@ run_mediawiki_maintenance_update() {
   # Check update.php's own status - the pipeline's status is
   # verboseOrDotPerLine's, which always succeeds
   if [ "${PIPESTATUS[0]}" -ne 0 ]; then
-    echo "PHP maintenance update failed. Exiting"
+    reportStepFailure "PHP maintenance update failed. Exiting"
     return 1
   fi
   return 0

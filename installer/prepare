@@ -117,6 +117,8 @@ prepare() {
   export -f _clone_component
   export -f clone_git_repo
   export -f verboseOrDotPerLine
+  export -f _step_output_buffer
+  export -f reportStepFailure
   export -f print_duration_since_start
   # export -f map_gerrit_to_github
 

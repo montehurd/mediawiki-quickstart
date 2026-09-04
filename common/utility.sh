@@ -2,6 +2,34 @@
 
 set -eu
 
+# Path of the buffer holding the most recent step's output. Non-verbose mode
+# renders each line of a step's output as a single progress dot, so without
+# this the text is gone by the time a step turns out to have failed. $$ is the
+# invoking shell's PID even inside the pipeline subshell verboseOrDotPerLine
+# runs in, so the writer and its caller always agree on the path. The uid keeps
+# the host and the container's root/non-root steps out of each other's files
+_step_output_buffer() {
+  local dir="${TMPDIR:-/tmp}"
+  echo "${dir%/}/mediawiki-quickstart-step-$(id -u)-$$.log"
+}
+
+# Print a step failure along with the output verboseOrDotPerLine buffered for
+# it. Returns 0 so callers keep deciding for themselves whether to return or
+# exit, which matters under 'set -e'
+reportStepFailure() {
+  local message="$1"
+  local RED='\033[0;31m'
+  local NC='\033[0m'
+  local buffer
+  buffer="$(_step_output_buffer)"
+  printf "${RED}%s${NC}\n" "$message"
+  if [ -s "$buffer" ]; then
+    printf "${RED}Output of the failed step:${NC}\n"
+    cat "$buffer"
+  fi
+  return 0
+}
+
 # snippet for testing verboseOrDotPerLine, add "VERBOSE=1 " before "bash" to test it in verbose mode
 # bash -c 'source ./common/utility.sh && (echo "This is a test" && sleep 2 && echo "cha cha") | verboseOrDotPerLine "Hi there" "optional message with THIS=that test, and OTHER=123 test"'
 verboseOrDotPerLine() {
@@ -36,6 +64,15 @@ verboseOrDotPerLine() {
     echo -e "${GREEN}${title}${NC}${msg}"
   fi
 
+  local buffer
+  buffer="$(_step_output_buffer)"
+  # Truncate in both modes: a buffer left by an earlier step, or by an earlier
+  # run that happened to get this PID, must never be reported as this step's
+  # output. A step whose output cannot be buffered still has to render
+  if ! : >"$buffer" 2>/dev/null; then
+    buffer="/dev/null"
+  fi
+
   if [ "${VERBOSE:-0}" = "1" ]; then
     if [ -n "$prefix" ]; then
       awk -v prefix="$prefix" -v GREEN="$GREEN" -v NC="$NC" 'BEGIN {
@@ -50,7 +87,7 @@ verboseOrDotPerLine() {
       cat
     fi
   else
-    (echo && cat) | while IFS= read -r line || [ -n "$line" ]; do
+    tee "$buffer" | (echo && cat) | while IFS= read -r line || [ -n "$line" ]; do
       if [[ $line =~ ^($'\E'\[[0-9;]*m) ]]; then
         # Capture any ANSI escape codes at the beginning of the line
         color_code="${BASH_REMATCH[1]}"
@@ -315,7 +352,7 @@ clone_git_repo() {
       break
     fi
     if [ $attempt -eq $max_retries ]; then
-      echo "Failed to clone repository '$repo_url' after $max_retries attempts"
+      reportStepFailure "Failed to clone repository '$repo_url' after $max_retries attempts"
       return 1
     fi
     # Growing backoff (5s, 10s, 20s, ...) gives later attempts a chance to
