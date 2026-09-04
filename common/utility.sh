@@ -66,14 +66,13 @@ verboseOrDotPerLine() {
 
   local buffer
   buffer="$(_step_output_buffer)"
-  # Truncate in both modes: a buffer left by an earlier step, or by an earlier
-  # run that happened to get this PID, must never be reported as this step's
-  # output. A step whose output cannot be buffered still has to render
-  if ! : >"$buffer" 2>/dev/null; then
-    buffer="/dev/null"
-  fi
 
   if [ "${VERBOSE:-0}" = "1" ]; then
+    # Verbose output already reaches the screen, so there is nothing to buffer.
+    # Removing rather than truncating leaves no empty file behind per shell, and
+    # still keeps an earlier step's buffer from being reported as this step's
+    rm -f "$buffer" 2>/dev/null || true
+
     if [ -n "$prefix" ]; then
       awk -v prefix="$prefix" -v GREEN="$GREEN" -v NC="$NC" 'BEGIN {
           RS = "\r|\n"
@@ -87,6 +86,13 @@ verboseOrDotPerLine() {
       cat
     fi
   else
+    # Truncate so a buffer left by an earlier step, or by an earlier run that
+    # happened to get this PID, is never reported as this step's output. A step
+    # whose output cannot be buffered still has to render
+    if ! : >"$buffer" 2>/dev/null; then
+      buffer="/dev/null"
+    fi
+
     tee "$buffer" | (echo && cat) | while IFS= read -r line || [ -n "$line" ]; do
       if [[ $line =~ ^($'\E'\[[0-9;]*m) ]]; then
         # Capture any ANSI escape codes at the beginning of the line
