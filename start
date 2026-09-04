@@ -9,7 +9,11 @@ source "./import_extra_local_settings"
 
 start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
-    docker compose up -d 2>&1 | verboseOrDotPerLine "Docker compose up" || exit 1
+    docker compose up -d 2>&1 | verboseOrDotPerLine "Docker compose up"
+    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+      reportStepFailure "Docker compose up failed. Exiting"
+      exit 1
+    fi
 
     ./shellto -u root m sh -c 'chmod 777 /var/local/composer'
     ./shellto -u root m sh -c 'chmod 777 /var/local/npm'

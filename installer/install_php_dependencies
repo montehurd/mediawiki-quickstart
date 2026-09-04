@@ -5,18 +5,24 @@ source "/var/local/common/utility.sh"
 set -eu
 
 install_php_dependencies() {
-  if ! cp composer.local.json-sample composer.local.json 2>&1 | verboseOrDotPerLine "Hoisting all skin/extension PHP dependency satisfaction to MW core, if needed"; then
-    echo "Failed to copy composer.local.json-sample. Exiting"
+  # The formatter is the last command in this pipeline and always exits 0, so
+  # the pipeline's own status cannot detect a failure. Read the real exit code
+  # from PIPESTATUS immediately after the pipeline
+  cp composer.local.json-sample composer.local.json 2>&1 | verboseOrDotPerLine "Hoisting all skin/extension PHP dependency satisfaction to MW core, if needed"
+  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    reportStepFailure "Failed to copy composer.local.json-sample. Exiting"
     return 1
   fi
 
-  if ! composer update 2>&1 | verboseOrDotPerLine "Composer update"; then
-    echo "Composer update failed. Exiting"
+  composer update 2>&1 | verboseOrDotPerLine "Composer update"
+  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    reportStepFailure "Composer update failed. Exiting"
     return 1
   fi
 
-  if ! composer install 2>&1 | verboseOrDotPerLine "Composer install"; then
-    echo "Composer install failed. Exiting"
+  composer install 2>&1 | verboseOrDotPerLine "Composer install"
+  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    reportStepFailure "Composer install failed. Exiting"
     return 1
   fi
   return 0

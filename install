@@ -62,7 +62,14 @@ install() {
   fi
 
   # In case components with thier own docker-compose.yml were installed, bring their services up
-  docker compose up -d --wait 2>&1 | verboseOrDotPerLine "Docker compose up ( for any component containers )" || exit 1
+  # The formatter is the last command in this pipeline and always exits 0, so
+  # the pipeline's own status cannot detect a failure. Read the real exit code
+  # from PIPESTATUS immediately after the pipeline
+  docker compose up -d --wait 2>&1 | verboseOrDotPerLine "Docker compose up ( for any component containers )"
+  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    reportStepFailure "Docker compose up failed. Exiting"
+    exit 1
+  fi
 
   # Installation steps that need to happen after component docker-compose.yml services are brought up
   # ( install is split into 'prepare'/'finalize' stages so we don't have to use hacky methods to message
