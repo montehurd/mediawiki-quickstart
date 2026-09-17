@@ -103,7 +103,12 @@ services:
     image: ghcr.io/montehurd/mediawiki-docker-images/mysql:latest
     user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      # MariaDB's own script, which stays unhealthy until the server is
+      # serving on the network. A 'mysqladmin ping -h localhost' answers over
+      # the unix socket, so it can report healthy during the entrypoint's
+      # temporary server phase, while networking is still disabled and
+      # clients connecting over TCP are refused
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
       timeout: 5s
       retries: 10
