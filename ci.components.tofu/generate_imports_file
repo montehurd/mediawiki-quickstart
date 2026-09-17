@@ -32,8 +32,13 @@ get_web_proxy_id() {
   # A DNS lookup is not authoritative: the record can still resolve for a while
   # after a proxy is deleted, which would emit an import block for a proxy that
   # no longer exists and fail the plan with "No such domain".
-  local url="https://proxy-eqiad1.wmflabs.org:5668/dynamicproxy-api/v1/$(get_project_id)/mapping/$fqdn"
-  local status=$(curl -s -o /dev/null -w '%{http_code}' -H "X-Auth-Token: $(get_auth_token)" "$url")
+  local token=$(get_auth_token)
+  local project=$(get_project_id)
+  # Without these the request would be unauthenticated and its 404 would look
+  # exactly like "the proxy is gone", so bail out loudly instead.
+  [[ -z "$token" || -z "$project" ]] && { echo "warning: cannot authenticate to look up $fqdn" >&2; return; }
+  local url="https://proxy-eqiad1.wmflabs.org:5668/dynamicproxy-api/v1/$project/mapping/$fqdn"
+  local status=$(curl -s --max-time 20 -o /dev/null -w '%{http_code}' -H "X-Auth-Token: $token" "$url")
   case "$status" in
     200) echo "$fqdn" ;;
     404) ;;  # really gone
