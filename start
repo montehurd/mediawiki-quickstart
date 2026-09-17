@@ -9,7 +9,12 @@ source "./import_extra_local_settings"
 
 start() {
   if ! is_container_present "mediawiki-mediawiki-1"; then
-    docker compose up -d 2>&1 | verboseOrDotPerLine "Docker compose up"
+    # With the mysql profile the installer below reaches the database seconds
+    # after this returns, before MariaDB has initialized the virgin datadir,
+    # so wait on its healthcheck. It is the only service with one, so this is
+    # a no-op on the SQLite default. The timeout keeps a stuck service from
+    # hanging here
+    docker compose up -d --wait --wait-timeout 120 2>&1 | verboseOrDotPerLine "Docker compose up"
     if [ "${PIPESTATUS[0]}" -ne 0 ]; then
       reportStepFailure "Docker compose up failed. Exiting"
       exit 1
