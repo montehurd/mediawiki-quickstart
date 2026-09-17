@@ -17,13 +17,28 @@ get_attachment_id() {
   openstack server show "$instance_id" -f value -c volumes_attached | grep -q "$volume_id" && echo "${instance_id}/${volume_id}"
 }
 
+get_auth_token() {
+  openstack token issue -f value -c id 2>/dev/null
+}
+
+get_project_id() {
+  openstack token issue -f value -c project_id 2>/dev/null
+}
+
 get_web_proxy_id() {
   local hostname="$1"
   local fqdn="${hostname}.wmcloud.org"
-  # Query Wikimedia's nameserver
-  if dig +short "$fqdn" @ns0.openstack.eqiad1.wikimediacloud.org. | grep -q .; then
-    echo "$fqdn"
-  fi
+  # Ask the dynamicproxy API, which is what the cloudvps provider itself uses.
+  # A DNS lookup is not authoritative: the record can still resolve for a while
+  # after a proxy is deleted, which would emit an import block for a proxy that
+  # no longer exists and fail the plan with "No such domain".
+  local url="https://proxy-eqiad1.wmflabs.org:5668/dynamicproxy-api/v1/$(get_project_id)/mapping/$fqdn"
+  local status=$(curl -s -o /dev/null -w '%{http_code}' -H "X-Auth-Token: $(get_auth_token)" "$url")
+  case "$status" in
+    200) echo "$fqdn" ;;
+    404) ;;  # really gone
+    *) echo "warning: proxy lookup for $fqdn failed: HTTP $status" >&2 ;;
+  esac
 }
 
 generate_file() {
