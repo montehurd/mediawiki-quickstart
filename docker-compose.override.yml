@@ -13,6 +13,7 @@ services:
 
   mediawiki:
     image: ghcr.io/montehurd/mediawiki-docker-images/mediawiki:latest
+    pull_policy: daily
     volumes:
       - ./skins:/var/local/skins
       - ./extensions:/var/local/extensions
@@ -29,6 +30,7 @@ services:
       - .env
 
   mediawiki-web:
+    pull_policy: daily
     environment:
       <<: *default-environment
       MW_SERVER: http://localhost:8080
@@ -46,6 +48,7 @@ services:
       - 9229:9229  # Expose Node inspector port for WDIO worker debugging
 
   mediawiki-jobrunner:
+    pull_policy: daily
     environment:
       <<: *default-environment
     env_file: !override
@@ -56,6 +59,7 @@ services:
 
   selenium:
     image: ghcr.io/montehurd/mediawiki-docker-images/selenium:latest
+    pull_policy: daily
     environment:
       <<: *default-environment
       MW_SERVER: http://localhost:8080
@@ -78,6 +82,7 @@ services:
 
   qunit:
     image: ghcr.io/montehurd/mediawiki-docker-images/qunit:latest
+    pull_policy: daily
     environment:
       MW_SERVER: http://localhost:8080
       MW_SCRIPT_PATH: /w
@@ -91,6 +96,7 @@ services:
 
   novnc:
     image: ghcr.io/montehurd/mediawiki-docker-images/novnc:latest
+    pull_policy: daily
     environment:
       - NOVNC_PORT=8086
     ports:
@@ -101,6 +107,7 @@ services:
   #   COMPOSE_PROFILES="default,mysql" ./fresh_install
   mysql:
     image: ghcr.io/montehurd/mediawiki-docker-images/mysql:latest
+    pull_policy: daily
     user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]

@@ -4,6 +4,8 @@ services:
     # Un-comment this if you're using a local build, by running this in your check-out of the orchestrator:
     # docker build -f .pipeline/blubber.yaml --target development -t local-orchestrator .
     # image: local-orchestrator:latest
+    # and set pull_policy to missing, since a local build can't be pulled
+    pull_policy: daily
     ports:
       - 6254:6254
     environment:
@@ -48,6 +50,8 @@ services:
     # Un-comment this if you're using a local build, by running this in your check-out of the evaluator:
     # docker build -f .pipeline/blubber.yaml --target development-python3-all-wasm -t local-evaluator-py .
     # image: local-evaluator-py:latest
+    # and set pull_policy to missing, since a local build can't be pulled
+    pull_policy: daily
     ports:
       - 6928:6927
   function-evaluator-javascript:
@@ -55,5 +59,7 @@ services:
     # Un-comment this if you're using a local build, by running this in your check-out of the evaluator:
     # docker build -f .pipeline/blubber.yaml --target development-javascript-all-wasm -t local-evaluator-js .
     # image: local-evaluator-js:latest
+    # and set pull_policy to missing, since a local build can't be pulled
+    pull_policy: daily
     ports:
       - 6929:6927

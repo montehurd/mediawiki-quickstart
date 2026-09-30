@@ -11,6 +11,7 @@ services:
 
   elasticsearch:
     image: docker-registry.wikimedia.org/repos/search-platform/cirrussearch-elasticsearch-image:v7.10.2-12
+    pull_policy: daily
     volumes:
       - elasticdata:/usr/share/elasticsearch/data
     environment:
