@@ -66,6 +66,36 @@ test_mediawiki_image_consistency() {
   ensure_image_consistency "mediawiki" "https://gitlab.wikimedia.org/mhurd/mediawiki-docker-images/-/raw/main/mediawiki/Dockerfile?ref_type=heads"
 }
 
+test_node_major_matches_quibble() {
+  # Wikimedia CI runs MediaWiki's npm, QUnit and Selenium jobs on the Node
+  # major its Quibble image is built from; run the same one so results agree
+  local quibble_url="https://raw.githubusercontent.com/wikimedia/integration-config/master/dockerfiles/quibble-bookworm/Dockerfile.template"
+  local expected
+  expected=$(curl -fsSL "$quibble_url" | grep -oE '"node[0-9]+"' | head -1 | tr -dc '0-9')
+  if [ -z "$expected" ]; then
+    echo "Error: Could not determine Quibble's Node version from '$quibble_url'"
+    return 1
+  fi
+
+  local service image actual failures=0
+  for service in mediawiki selenium qunit; do
+    image=$(_yq ".services.\"$service\".image" "$(cat docker-compose.override.yml)")
+    actual=$(docker run --rm --entrypoint node "$image" -v 2>/dev/null | cut -d. -f1 | tr -d v)
+    if [ "$actual" != "$expected" ]; then
+      echo "'$service' ($image) runs Node ${actual:-unknown}, Quibble runs Node $expected"
+      failures=$((failures + 1))
+    else
+      echo "'$service' runs Node $actual, matching Quibble"
+    fi
+  done
+  if [ "$failures" -ne 0 ]; then
+    echo "Either the mediawiki, selenium and qunit Dockerfiles in mediawiki-docker-images need Node $expected,"
+    echo "or they already have it and this host has a stale copy of the image(s) above ('docker pull' them)"
+    return 1
+  fi
+  return 0
+}
+
 test_no_files_owned_by_root() {
   output=$(SILENT=1 ./shellto w find . -user root 2>&1)
   if [ -z "$output" ]; then
