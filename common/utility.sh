@@ -257,7 +257,15 @@ _yq() {
   if command -v yq >/dev/null 2>&1; then
     echo "$2" | yq eval "$1" -
   else
-    echo "$2" | docker run -q --rm -i mikefarah/yq eval "$1" -
+    # Mount the input rather than pipe it: 'docker run -i' can lose the
+    # stdin EOF, leaving yq waiting forever
+    local input status=0
+    input=$(mktemp) || return 1
+    echo "$2" >"$input"
+    # Capture through '||' so a failure under set -e still reaches the cleanup
+    docker run -q --rm -u "$(id -u):$(id -g)" -v "$input:/input.yml:ro" mikefarah/yq eval "$1" /input.yml || status=$?
+    rm -f "$input"
+    return $status
   fi
 }
 
