@@ -270,7 +270,15 @@ _yq() {
 }
 
 alpine_ansi2html() {
-  docker run --platform linux/amd64 --rm -i ghcr.io/montehurd/mediawiki-docker-images/ansi2html:latest
+  # Mount the input rather than pipe it: 'docker run -i' can lose the
+  # stdin EOF, leaving the container waiting forever
+  local input status=0
+  input=$(mktemp) || return 1
+  cat >"$input"
+  docker run --platform linux/amd64 --rm -u "$(id -u):$(id -g)" -v "$input:/input.log:ro" --entrypoint sh \
+    ghcr.io/montehurd/mediawiki-docker-images/ansi2html:latest -c 'ansi2html < /input.log' || status=$?
+  rm -f "$input"
+  return $status
 }
 
 # parallel_process - Executes multiple commands in parallel with visual output grouping

@@ -12,7 +12,18 @@ set +e
 separator="-----------------------------------------------------------------"
 
 ansi2html() {
-  docker exec -i ansi2html ansi2html
+  # Copy the input in rather than pipe it: 'docker exec -i' can lose the
+  # stdin EOF, leaving the conversion waiting forever. Conversions run one
+  # at a time, so a fixed path inside the container is safe
+  local input status=0
+  input=$(mktemp) || return 1
+  cat >"$input"
+  docker cp -q "$input" ansi2html:/tmp/input.log || status=$?
+  if [ "$status" -eq 0 ]; then
+    docker exec ansi2html sh -c 'ansi2html < /tmp/input.log' || status=$?
+  fi
+  rm -f "$input"
+  return $status
 }
 
 list_all_components() {
