@@ -19,8 +19,15 @@ install_node_dependencies() {
     return 1
   fi
 
-  npm install --legacy-peer-deps --foreground-scripts 2>&1 | verboseOrDotPerLine "Npm install"
-  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+  # npm can hang forever, so fail rather than stall the install. timeout
+  # signals its whole process group, which includes nested npm processes
+  timeout 30m npm install --legacy-peer-deps --foreground-scripts 2>&1 | verboseOrDotPerLine "Npm install"
+  local status="${PIPESTATUS[0]}"
+  if [ "$status" -eq 124 ]; then
+    reportStepFailure "NPM install timed out after 30 minutes. Exiting"
+    return 1
+  fi
+  if [ "$status" -ne 0 ]; then
     reportStepFailure "NPM install failed. Exiting"
     return 1
   fi
