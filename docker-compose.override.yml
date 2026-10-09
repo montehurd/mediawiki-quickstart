@@ -8,6 +8,9 @@ x-environment: &default-environment
   HOME: /var/www/html/w
   COMPOSER_CACHE_DIR: /var/local/composer
   NPM_CONFIG_CACHE: /var/local/npm
+  # Skip npm's vulnerability report on every install (incl. nested ones):
+  # nobody acts on it in a throwaway wiki, and npm has hung in it
+  NPM_CONFIG_AUDIT: 'false'
 
 services:
 
