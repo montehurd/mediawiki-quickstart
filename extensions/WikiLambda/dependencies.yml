@@ -4,3 +4,4 @@
 - extensions/EventLogging
 - extensions/EventBus
 - extensions/WikiEditor
+- extensions/CodeMirror
