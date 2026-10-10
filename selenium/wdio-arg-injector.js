@@ -41,9 +41,12 @@ if (!isWdio && !isCypress) {
 // Cypress: use shared cache location, inject --headed when DISPLAY is set
 const isCypressOpen = isCypress && process.argv.includes('open');
 const isCypressRun = isCypress && process.argv.includes('run');
+// cypress-parallel's concurrent runs (CYPRESS_THREAD) stay headless: headed windows
+// on one display steal focus from each other, so ':focus'-gated widgets never open
+const isParallelThread = Boolean(process.env.CYPRESS_THREAD);
 if (isCypress) {
   delete process.env.CYPRESS_CACHE_FOLDER;
-  if (isCypressRun && process.env.DISPLAY && !process.argv.includes('--headed')) {
+  if (isCypressRun && process.env.DISPLAY && !isParallelThread && !process.argv.includes('--headed')) {
     console.error('Injecting Cypress arg: --headed (DISPLAY is set)');
     process.argv.push('--headed');
   }
