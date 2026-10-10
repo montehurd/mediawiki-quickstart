@@ -53,6 +53,15 @@ _clone_component() {
   fi
 }
 
+_has_component_json() {
+  local component_path="$1"
+  local json
+  for json in "$component_path"/extension*.json "$component_path"/skin*.json; do
+    [ -f "$json" ] && return 0
+  done
+  return 1
+}
+
 _install_php_and_node_dependencies() {
   if ! /var/local/installer/install_php_dependencies; then
     echo "Failed to install PHP dependencies"
@@ -143,6 +152,17 @@ prepare() {
   for component_path in "$@"; do
     if [ ! -d "$component_path/.git" ]; then
       echo "Failed to clone '$component_path'"
+      exit 1
+    fi
+    # An archived or moved-to-core repo still clones, but update.php can't load it
+    if ! _has_component_json "$component_path"; then
+      echo "'$component_path' has no extension or skin JSON upstream, so it may be archived or moved into MediaWiki core"
+      for note in MOVED_TO_CORE OBSOLETE README.md; do
+        if [ -f "$component_path/$note" ]; then
+          head -n 5 "$component_path/$note"
+          break
+        fi
+      done
       exit 1
     fi
   done
