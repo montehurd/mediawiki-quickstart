@@ -71,7 +71,7 @@ test_node_major_matches_quibble() {
   # major its Quibble image is built from; run the same one so results agree
   local quibble_url="https://raw.githubusercontent.com/wikimedia/integration-config/master/dockerfiles/quibble-bookworm/Dockerfile.template"
   local expected
-  expected=$(curl -fsSL "$quibble_url" | grep -oE '"node[0-9]+"' | head -1 | tr -dc '0-9')
+  expected=$(curl -fsSL --proto '=https' "$quibble_url" | grep -oE '"node[0-9]+"' | head -1 | tr -dc '0-9')
   if [ -z "$expected" ]; then
     echo "Error: Could not determine Quibble's Node version from '$quibble_url'"
     return 1
