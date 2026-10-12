@@ -85,6 +85,13 @@ install() {
     exit 1
   fi
 
+  # finalize runs as root, and a log it creates first stays unwritable for the web
+  # and job runner PHP, which run as the host user and drop failed writes silently
+  local log
+  for log in mw-error.log mw-dberror.log; do
+    [ -e "$MEDIAWIKI_PATH/cache/$log" ] || touch "$MEDIAWIKI_PATH/cache/$log" 2>/dev/null || true
+  done
+
   # Installation steps that need to happen after component docker-compose.yml services are brought up
   # ( install is split into 'prepare'/'finalize' stages so we don't have to use hacky methods to message
   # to the host the correct place to invoke 'docker compose up -d --wait' )
