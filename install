@@ -77,6 +77,14 @@ install() {
     exit 1
   fi
 
+  # Its idle runJobs.php keeps its startup settings and would rebuild the l10n cache
+  # without these components. --timeout 0 since its entrypoint ignores SIGTERM
+  docker compose restart --timeout 0 mediawiki-jobrunner 2>&1 | verboseOrDotPerLine "Restart job runner to load the new settings"
+  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    reportStepFailure "Job runner restart failed. Exiting"
+    exit 1
+  fi
+
   # Installation steps that need to happen after component docker-compose.yml services are brought up
   # ( install is split into 'prepare'/'finalize' stages so we don't have to use hacky methods to message
   # to the host the correct place to invoke 'docker compose up -d --wait' )

@@ -57,6 +57,10 @@ services:
     env_file: !override
       - .env
     volumes:
+      # Components.php requires each component's LocalSettings.php from these
+      # paths, so runJobs.php cannot load the settings without them
+      - ./skins:/var/local/skins
+      - ./extensions:/var/local/extensions
       - composer_cache:/var/local/composer
       - npm_cache:/var/local/npm
 
