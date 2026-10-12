@@ -3,6 +3,25 @@
 source "./selenium/selenium.sh"
 source "./common/utility.sh"
 
+SERVER_ERROR_LOG="mediawiki/cache/mw-error.log"
+
+_file_size() {
+  if [ -r "$1" ]; then
+    wc -c <"$1" | tr -d ' '
+  else
+    echo 0
+  fi
+}
+
+# A browser test failure rarely shows its cause, which MediaWiki logs
+# server-side. Print what the error log gained during the tests, capped
+print_server_errors_since() {
+  local offset="$1"
+  [ "$(_file_size "$SERVER_ERROR_LOG")" -gt "$offset" ] || return 0
+  printf "\n\033[31mMediaWiki errors logged during the tests (first 150 lines of %s):\033[0m\n" "$SERVER_ERROR_LOG"
+  tail -c +$((offset + 1)) "$SERVER_ERROR_LOG" | sed -n '1,150p'
+}
+
 run_selenium_tests() {
   ensure_selenium_ready || exit 1
 
@@ -26,6 +45,9 @@ run_selenium_tests() {
     fi
   fi
 
+  local error_log_offset status=0
+  error_log_offset=$(_file_size "$SERVER_ERROR_LOG")
+
   ./shellto \
     $([[ "${SILENT:-0}" == "1" ]] || echo "-it") \
     -e NODE_OPTIONS="--require /var/local/wdio-arg-injector.js" \
@@ -42,7 +64,13 @@ run_selenium_tests() {
         echo "Error: selenium-test timed out after $timeout_after_seconds seconds"
       fi
       exit $status
-    '
+    ' || status=$?
+
+  if [ "$status" -ne 0 ]; then
+    # '|| true' keeps a failing diagnostic from replacing the test status under 'set -e'
+    print_server_errors_since "$error_log_offset" || true
+  fi
+  return "$status"
 }
 
 if [[ "$0" == "${BASH_SOURCE[0]}" ]]; then
