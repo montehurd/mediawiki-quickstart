@@ -7,10 +7,11 @@ services:
       - 8088:8088
     volumes:
       - ./vue:/app
-      - ${RESULTS_PATH:-./results}:/app/ci.components/results:ro
+      # Outside Vite's root (/app): its dependency scan would read every results .html file
+      - ${RESULTS_PATH:-./results}:/results:ro
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - RESULTS_PATH=/app/ci.components/results
+      - RESULTS_PATH=/results
       - NODE_OPTIONS=--max-old-space-size=4096
     restart: unless-stopped
