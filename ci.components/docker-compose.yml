@@ -1,6 +1,6 @@
 services:
   ci-components-results-server:
-    image: node:24.2-alpine3.21
+    image: node:24.22.1-alpine
     working_dir: /app
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 8088"
     ports:
