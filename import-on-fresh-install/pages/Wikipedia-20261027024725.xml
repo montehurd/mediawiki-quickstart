@@ -1,0 +1,314 @@
+<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.11/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.11/ http://www.mediawiki.org/xml/export-0.11.xsd" version="0.11" xml:lang="en">
+  <siteinfo>
+    <sitename>Wikipedia</sitename>
+    <dbname>enwiki</dbname>
+    <base>https://en.wikipedia.org/wiki/Main_Page</base>
+    <generator>MediaWiki 1.47.0-wmf.24</generator>
+    <case>first-letter</case>
+    <namespaces>
+      <namespace key="-2" case="first-letter">Media</namespace>
+      <namespace key="-1" case="first-letter">Special</namespace>
+      <namespace key="0" case="first-letter" />
+      <namespace key="1" case="first-letter">Talk</namespace>
+      <namespace key="2" case="first-letter">User</namespace>
+      <namespace key="3" case="first-letter">User talk</namespace>
+      <namespace key="4" case="first-letter">Wikipedia</namespace>
+      <namespace key="5" case="first-letter">Wikipedia talk</namespace>
+      <namespace key="6" case="first-letter">File</namespace>
+      <namespace key="7" case="first-letter">File talk</namespace>
+      <namespace key="8" case="first-letter">MediaWiki</namespace>
+      <namespace key="9" case="first-letter">MediaWiki talk</namespace>
+      <namespace key="10" case="first-letter">Template</namespace>
+      <namespace key="11" case="first-letter">Template talk</namespace>
+      <namespace key="12" case="first-letter">Help</namespace>
+      <namespace key="13" case="first-letter">Help talk</namespace>
+      <namespace key="14" case="first-letter">Category</namespace>
+      <namespace key="15" case="first-letter">Category talk</namespace>
+      <namespace key="100" case="first-letter">Portal</namespace>
+      <namespace key="101" case="first-letter">Portal talk</namespace>
+      <namespace key="118" case="first-letter">Draft</namespace>
+      <namespace key="119" case="first-letter">Draft talk</namespace>
+      <namespace key="126" case="first-letter">MOS</namespace>
+      <namespace key="127" case="first-letter">MOS talk</namespace>
+      <namespace key="710" case="first-letter">TimedText</namespace>
+      <namespace key="711" case="first-letter">TimedText talk</namespace>
+      <namespace key="828" case="first-letter">Module</namespace>
+      <namespace key="829" case="first-letter">Module talk</namespace>
+      <namespace key="1728" case="first-letter">Event</namespace>
+      <namespace key="1729" case="first-letter">Event talk</namespace>
+    </namespaces>
+  </siteinfo>
+  <page>
+    <title>Marmot</title>
+    <ns>0</ns>
+    <id>401005</id>
+    <revision>
+      <id>1368855219</id>
+      <parentid>1368028777</parentid>
+      <timestamp>2026-08-11T12:50:45Z</timestamp>
+      <contributor>
+        <username>Topshelver</username>
+        <id>20555080</id>
+      </contributor>
+      <minor/>
+      <comment>/* Description */ paragraph breaks</comment>
+      <origin>1368855219</origin>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text bytes="16015" sha1="ikhsebj7j55xt4fs1iw28hnsthgpajh" xml:space="preserve">{{Short description|Genus of mammals (large ground squirrels)}}
+{{other uses}}
+{{distinguish|Marmoset}}
+{{Automatic taxobox
+| name = Marmots
+| fossil_range = Late [[Miocene]] – recent
+| image = 071 Wild marmot at Grand Muveran Nature Reserve Photo by Giles Laurent.jpg
+| image_caption = [[Alpine marmot]] (''Marmota marmota'')
+| taxon = Marmota
+| authority = [[Johann Friedrich Blumenbach|Blumenbach]], 1779
+| type_species = ''[[Alpine marmot|Mus marmota]]''
+| type_species_authority = [[Linnaeus]], [[10th edition of Systema Naturae|1758]]
+| subdivision_ranks = Species
+| subdivision = 15, see [[#Subgenera and species|text]]
+}}
+
+'''Marmots''' are large [[ground squirrel]]s in the [[genus]] '''''Marmota''''', with 15 species living in Asia, Europe, and North America. These [[herbivore]]s are active during the summer, when they can often be found in groups, but are not seen during the winter, when they [[hibernate]] underground. They are the heaviest and largest members of the [[squirrel]] family.&lt;ref name=Krystufek2013&gt;{{cite journal | author1=Kryštufek, B. | author2=B. Vohralík | year=2013 | title=Taxonomic revision of the Palaearctic rodents (Rodentia). Part 2. Sciuridae: Urocitellus, Marmota and Sciurotamias | journal=Lynx, N. S. (Praha) | volume=44 | pages=27–138 }}&lt;/ref&gt;
+
+[[File:Marmot1.jpg|thumb|Marmot in its natural habitat]]
+==Description==
+[[File:Marmotte (Montréal).jpg|thumb|North American marmot, Montreal, Canada]]
+Marmots are large rodents with characteristically short but robust legs, enlarged claws that are well adapted to digging, stout bodies, and large heads and incisors to quickly process a variety of vegetation. While most species are various forms of earthen-hued brown, marmots vary in fur coloration based roughly on their surroundings. Species found in more open habitats are more likely to be paler color, while those found in well-[[forested]] regions tend to be darker.&lt;ref&gt;{{cite book|last1=Armitage|first1=KB|last2=Wolff|first2=JO|last3=Sherman|first3=PW|year=2007|title=Evolution of sociality in marmots: it begins with hibernation|pages=356–367|location=Chicago, Illinois|publisher=University of Chicago Press}}&lt;/ref&gt;&lt;ref name= Cardini&gt;{{cite journal|last1=Cardini|first1=A|last2=O'Higgins|first2=Paul|year=2004|title=Patterns of morphological evolution in Marmota (Rodentia, Sciuridae): geometric morphometrics of the cranium in the context of marmot phylogeny, ecology, and conservation|journal=Biological Journal of the Linnean Society|volume=82|issue=3|pages=385–407|doi=10.1111/j.1095-8312.2004.00367.x|s2cid=83837961|doi-access=|hdl=11380/690293|hdl-access=free}}&lt;/ref&gt; 
+
+Total length varies typically from about {{convert|42|to|72|cm|in|abbr=on}} and body mass averages about {{convert|2|kg|lb|frac=2|abbr=on}} in spring in the smaller species and {{convert|8|kg|lb|abbr=on}} in autumn, at times exceeding {{convert|11|kg|lb|abbr=on}}, in the larger species.&lt;ref name="Armitage"&gt;{{cite book|last1=Armitage|first1=KB|last2=Blumstein|first2=DT|year=2002|title=Body-mass diversity in marmots. Holarctic marmots as a factor of biodiversity|publisher=ABF|location=Moscow|pages=22–32}}&lt;/ref&gt;&lt;ref name="Edelman"&gt;{{cite journal|last=Edelman|first=AJ|year=2003|title=Marmota olympus|journal=Mammalian Species|volume=2003|issue=736|pages=1–5|doi=10.1644/736|s2cid=198129914|doi-access=free}}&lt;/ref&gt;&lt;ref name="Armitage, K. B. 1976"&gt;{{cite journal|last1=Armitage|first1=KB|last2=Downhower|first2=JF|last3=Svendsen|first3=GE|year=1976|title=Seasonal changes in weights of marmots|journal=American Midland Naturalist|volume=96|issue=1|pages=36–51|doi=10.2307/2424566|jstor=2424566}}&lt;/ref&gt; The largest and smallest species are not clearly known.&lt;ref name="Cardini" /&gt;&lt;ref name="Armitage" /&gt; In North America, on the basis of mean linear dimensions and body masses through the year, the smallest species appears to be the [[Alaska marmot]] and the largest is the [[Olympic marmot]].&lt;ref name="Edelman" /&gt;&lt;ref&gt;{{cite book |last=Barash |first=David P. |title=''Marmots: Social Behavior and Ecology'' |publisher=Stanford University Press |year=1989 |location=Stanford, California |url=https://books.google.com/books?id=NAOVkgr_eVgC |isbn=978-0-8047-1534-8 }}&lt;/ref&gt;&lt;ref&gt;{{cite journal|last=Hubbart|first=JA|year=2011|title=Current Understanding of the Alaska Marmot (Marmota broweri): A Sensitive Species in a Changing Environment|journal=Journal of Biology and Life Sciences|volume=2|issue=2|pages=6–13}}&lt;/ref&gt;&lt;ref name="Armitage, K. B. 1976" /&gt; Some species, such as the [[Himalayan marmot]] and [[Tarbagan marmot]] in Asia, appear to attain roughly similar body masses to the Olympic marmot, but are not known to reach as high a total length as the Olympic species.&lt;ref&gt;{{cite journal|last1=Murdoch|first1=JD|last2=Munkhzul|first2=T|last3=Buyandelger|first3=S|last4=Reading|first4=RP|last5=Sillero-Zubiri|first5=C|year=2009|title=The Endangered Siberian marmot Marmota sibirica as a keystone species? Observations and implications of burrow use by corsac foxes Vulpes corsac in Mongolia|journal=Oryx|volume=43|issue=3|pages=431–434|doi=10.1017/S0030605309001100|bibcode=2009Oryx...43..431M |doi-access=free}}&lt;/ref&gt;&lt;ref&gt;{{cite journal|last1=Chaudhary|first1=V|last2=Tripathi|first2=RS|last3=Singh|first3=S|last4=Raghuvanshi|first4=MS|year=2017|title=Distribution and population of Himalayan Marmot Marmota himalayana (Hodgson, 1841)(Mammalia: Rodentia: Sciuridae) in Leh-Ladakh, Jammu &amp; Kashmir, India|journal=Journal of Threatened Taxa|volume=9|issue=11|pages=10886–10891|doi=10.11609/jott.3336.9.11.10886-10891|doi-access=free}}&lt;/ref&gt; 
+
+Using the traditional definition of [[hibernation]], the largest marmots are considered the largest "true hibernators", since larger "hibernators" such as [[bear]]s do not have the same physiological characteristics as [[Hibernation#Obligate hibernation|obligate hibernating]] animals such as assorted [[rodent]]s, [[bat]]s and [[Eulipotyphla|insectivores]].&lt;ref&gt;{{cite journal|last=Armitage|first=KB|year=1999|title=Evolution of sociality in marmots|journal=Journal of Mammalogy|volume=80|issue=1|pages=1–10|doi=10.2307/1383202|jstor=1383202|bibcode=1999JMamm..80....1A |s2cid=87325825 |doi-access=}}&lt;/ref&gt;&lt;ref&gt;{{cite journal|last1=Nedergaard|first1=J|last2=Cannon|first2=B|year=1990|title=Mammalian hibernation|journal= Philosophical Transactions of the Royal Society of London. B, Biological Sciences|volume=326|issue=1237|pages=669–686|doi=10.1098/rstb.1990.0038|pmid=1969651|bibcode=1990RSPTB.326..669N|doi-access=}}&lt;/ref&gt;
+
+==Biology==
+Some species live in mountainous areas, such as the [[Alps]], northern [[Apennine Mountains|Apennines]], [[Carpathian Mountains|Carpathians]], [[Tatra Mountains|Tatras]], and [[Pyrenees]] in Europe; northwestern Asia; the [[Rocky Mountains]], [[Black Hills]], the [[Cascade Range|Cascade]] and [[Pacific Ranges]], and the [[Sierra Nevada (U.S.)|Sierra Nevada]] in North America; and the [[Deosai National Park|Deosai Plateau]] in [[Pakistan]] and [[Ladakh]] in India. Other species prefer rough grassland and can be found widely across North America and the [[Eurasian Steppe]]. The slightly smaller and more social [[prairie dog]] is not classified in the genus ''Marmota'', but in the related genus ''Cynomys''.
+
+Marmots typically live in [[burrow]]s (often within rockpiles, particularly in the case of the [[yellow-bellied marmot]]), and [[Hibernation|hibernate]] there through the winter.  Most marmots are highly social and use loud whistles to communicate with one another, especially when alarmed.
+
+Marmots mainly eat greens and many types of [[Poaceae|grasses]], [[berry|berries]], [[lichen]]s, [[moss]]es, [[root]]s, and [[flower]]s.
+[[File:Marmot eating.webm|thumb|An [[alpine marmot]] eating flowers|256px]]
+
+== Subgenera and species ==
+The following is a list of all ''Marmota'' species recognized by Thorington and Hoffman&lt;ref&gt;Thorington, R. W., Jr., and R. S. Hoffman. (2005). "Family Sciuridae". ''[https://books.google.com/books?id=JgAMbNSt8ikC&amp;q=marmot+OR+Marmota Mammal Species of the World: A Taxonomic and Geographic Reference]'', pp. 754–818.  D. E. Wilson and D. M. Reeder, eds. Johns Hopkins University Press, Baltimore.&lt;/ref&gt; plus the recently defined ''M.&amp;nbsp;kastschenkoi''.&lt;ref name=forest/&gt;  They divide marmots into two [[Subgenus|subgenera]].
+
+{| class="wikitable"
+|-
+! Subgenus
+! Image
+! Name
+! Common name
+! Distribution
+|-
+! rowspan="11" style="text-align:center;"| ''Marmota''
+|[[File:Marmota baibacina.jpg|120px]]
+|''Marmota baibacina'' 
+|[[Gray marmot]] or Altai marmot
+|Siberia
+|-
+|[[File:Сурок Гальичья сопка (5).jpg|120px]]
+|''Marmota bobak'' 
+|[[Bobak marmot]]
+|eastern Europe to central Asia
+|-
+|[[File:Marmota broweri 71042866 (cropped).jpg|120px]]
+|''Marmota broweri'' 
+|[[Alaska marmot]], Brower's marmot, or [[Brooks Range]] marmot
+|[[Alaska]]
+|-
+|[[File:Сурок черношапочный (камчатский).jpg|120px]]
+|''Marmota camtschatica'' 
+| [[Black-capped marmot]]
+| eastern [[Siberia]]
+|-
+|[[File:Marmota caudata Kashmir.jpg|120px]]
+|''Marmota caudata''
+|[[Long-tailed marmot]], golden marmot, or red marmot
+| central Asia
+|-
+|[[File:Himalayan Marmot at Tshophu Lake Bhutan 091007 b.jpg|120px]]
+|''Marmota himalayana'' 
+| [[Himalayan marmot]] or Tibetan snow pig
+|the [[Himalayas]]
+|-
+|[[File:Marmota kastschenkoi 1488414.jpg|120px]]
+|''Marmota kastschenkoi'' 
+|[[Forest-steppe marmot]]
+|south Russia&lt;ref name=forest&gt;{{cite journal|title=On species status of the forest-steppe marmot ''Marmota kastschenkoi'' ([[Rodent]]ia, Marmotinae)|journal=[[Zoologičeskij žurnal]]|language=ru|year=2003|volume=82|issue=12|pages=1498–1505|last=Brandler|first=OV}}&lt;/ref&gt;
+|-
+|[[File:Marmotte 2014 2015 (10).JPG|120px]]
+|''Marmota marmota'' 
+|[[Alpine marmot]]
+|Europe only in the Alps, Carpathian Mountains, Tatra Mountains, northern Apennine Mountains, and reintroduced in the [[Pyrenees]]
+|-
+|
+|''Marmota menzbieri'' 
+|[[Menzbier's marmot]]
+|central Asia
+|-
+|[[File:Marmota monax UL 04.jpg|120px]]
+|''Marmota monax''
+|[[Groundhog]], woodchuck, or whistle pig
+|Canada and eastern United States
+|-
+|[[File:Filhote-de-Marmota-Sibirica.jpg|120px]]
+|''Marmota sibirica'' 
+|[[Tarbagan marmot]], Mongolian marmot, or ''tarvaga''
+|Siberia
+|-
+! rowspan="4" style="text-align:center;"| ''Petromarmota''
+|[[File:Hoary Marmot in Glacier National Park.jpg|120px]]
+|''Marmota caligata'' 
+|[[Hoary marmot]]
+| northwestern North America (Alaska, Yukon, British Columbia, Alberta, Washington, Montana)
+|-
+|[[File:Marmota flaviventris (Yellow Bellied Marmot), Yosemite NP - Diliff.jpg|120px]]
+|''Marmota flaviventris'' 
+|[[Yellow-bellied marmot]]
+|southwestern Canada and western United States
+|-
+|[[File:My Friend the Marmot (4241532773) flipped.jpg|120px]]
+|''Marmota olympus'' 
+|[[Olympic marmot]]
+|endemic to the [[Olympic Peninsula]], [[Washington (state)|Washington]], United States
+|-
+|[[File:Marmota vancouverensis 94537857.jpg|120px]]
+|''Marmota vancouverensis'' 
+|[[Vancouver Island marmot]]
+|endemic to [[Vancouver Island]], British Columbia, Canada
+|-
+|}
+
+Some [[Extinction|extinct]] species of marmots are recognized from the fossil record, for example:
+
+*†''Marmota arizonae'', Arizona, U.S.&lt;ref&gt;{{cite web | last = GBIF Secretariat | title = ''Marmota arizonae'' GBIF Backbone Taxonomy| url = https://www.gbif.org/species/4972398 | access-date = 30 April 2017}}&lt;/ref&gt;&lt;ref&gt;{{Cite web|url=https://www.si.edu/object/nmnhpaleobiology_3427701|title = Marmota arizonae Hay}}&lt;/ref&gt;
+*†''Marmota minor'', Nevada, U.S.&lt;ref&gt;{{cite web | last = Paleobiology Database | title = ''Marmota minor'' | url = https://paleobiodb.org/classic/basicTaxonInfo?taxon_no=47901 | access-date = 30 April 2017 }}&lt;/ref&gt;
+*†''Marmota vetus'', Nebraska, U.S.&lt;ref&gt;{{cite web | last = GBIF Secretariat | title = ''Marmota vetus'' GBIF Backbone Taxonomy| url = https://www.gbif.org/species/4972395 | access-date = 30 April 2017}}&lt;/ref&gt;
+
+==History and etymology==
+
+[[File:Jacopo Ligozzi, A Marmot with a Branch of Plums, 1605, NGA 139309.jpg|thumb|''A Marmot with a Branch of Plums'', 1605 by [[Jacopo Ligozzi]]]]
+[[File:Marmota primigenia.JPG|thumb|right|''Marmota primigenia'' fossil]]
+
+Marmots have been known since antiquity. Research by the [[France|French]] [[Ethnology|ethnologist]] [[Michel Peissel]] claimed the story of the "[[Gold-digging ant]]" reported by the [[Ancient Greece|Ancient Greek]] historian [[Herodotus]], who lived in the fifth century BCE, was founded on the golden [[Himalayan marmot]] of the Deosai Plateau and the habit of local tribes such as the [[Brokpa]] to collect the [[gold]] dust excavated from their burrows.&lt;ref&gt;Peissel, Michel. "The Ants' Gold: The Discovery of the Greek El Dorado in the Himalayas". Collins, 1984. {{ISBN|978-0-00-272514-9}}.&lt;/ref&gt;
+Some historians believe that [[Strabo]]'s {{Lang|grc|λέων μύρμηξ}} ({{Lang|grc-Latn|léōn mýrmēx}}), and [[Agatharchides]]'s {{Lang|grc|μυρμηκολέων}} ({{Lang|grc-Latn|myrmēkoléōn}}), most probably are the marmot.&lt;ref&gt;[https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.01.0239%3Abook%3D16%3Achapter%3D4%3Asection%3D15#note-link1 Strabo, Geography H.C. Hamilton, Esq., W. Falconer, M.A., Ed., 16.4.15, note 1]&lt;/ref&gt;
+
+An anatomically accurate image of a marmot was printed and distributed as early as 1605 by [[Jacopo Ligozzi]], who was noted for his images of flora and fauna.
+
+The etymology of the term "marmot" is uncertain. It may have arisen from the [[Gallo-Romance languages|Gallo-Romance]] prefix ''marm-'', meaning to mumble or murmur (an example of [[onomatopoeia]]). Another possible origin is postclassical [[Latin]], {{Lang|la|mus montanus}}, meaning "mountain mouse".&lt;ref&gt;{{OED|Marmot}}&lt;/ref&gt;
+
+They historically formed part of the diet of Swiss Alpine peasants.&lt;ref&gt;{{ cite news |last=Gray |first=Annie |title=History on a plate |url=https://ft.pressreader.com/v99c/20260704/282140708115580 |work=Financial Times |date=4 July 2026 |access-date=6 July 2026 }}{{subscription required}}&lt;/ref&gt;
+
+Beginning in 2010, Alaska celebrates February 2 as "[[Marmot Day]]", a holiday intended to observe the prevalence of marmots in that state and take the place of [[Groundhog Day]].&lt;ref&gt;The Associated Press. [http://www.newsminer.com/view/full_story/5722944/article-Alaska-to-celebrate-its-first-Marmot-Day-? "Alaska to Celebrate its First Marmot Day"] {{webarchive|url=https://web.archive.org/web/20100205172035/http://newsminer.com/view/full_story/5722944/article-Alaska-to-celebrate-its-first-Marmot-Day- |date=2010-02-05 }}, ''Fairbanks Daily News-Miner''. February 1, 2010. Accessed February 1, 2010.&lt;/ref&gt;
+
+===Relationship to the Black Death===
+Some historians and paleogeneticists have postulated that marmots might be among the [[natural reservoir]] species for the ''[[Yersinia pestis]]'' variant that caused the [[Black Death]] pandemic, which swept across Eurasia in the [[14th century]].&lt;ref&gt;Smithsonian Magazine. [https://www.smithsonianmag.com/history/did-black-death-rampage-across-world-more-century-previously-thought-180977331/ "Did the Black Death Rampage Across the World a Century Earlier Than Previously Thought?"], March 25, 2021. Accessed March 27, 2010.&lt;/ref&gt;&lt;ref&gt;The American Historical Review. [https://academic.oup.com/ahr/article-abstract/125/5/1601/6040962 "The Four Black Deaths"], December 17, 2020. Accessed March 27, 2010.&lt;/ref&gt;
+{{clear right}}
+
+==References==
+{{Reflist}}
+
+==External links==
+* [https://www.marmotburrow.ucla.edu/ The Marmot Burrow]
+* [https://web.archive.org/web/20160303190517/http://www.cons-dev.org/marm/index.html International Marmot Network]
+
+{{S. Xerinae1 nav}}
+{{Sciuromorpha|state=collapsed}}
+{{Taxonbar|from=Q131567}}
+{{sister bar|auto=1}}
+{{Authority control}}
+
+[[Category:Marmots| ]]
+[[Category:Articles containing video clips]]
+[[Category:Rodents of Asia]]
+[[Category:Rodents of Europe]]
+[[Category:Rodents of North America]]
+[[Category:Extant Miocene first appearances]]
+[[Category:Taxa named by Johann Friedrich Blumenbach]]</text>
+      <sha1>ikhsebj7j55xt4fs1iw28hnsthgpajh</sha1>
+    </revision>
+  </page>
+  <page>
+    <title>Pebble</title>
+    <ns>0</ns>
+    <id>314610</id>
+    <revision>
+      <id>1370988432</id>
+      <parentid>1367454773</parentid>
+      <timestamp>2026-08-24T01:32:20Z</timestamp>
+      <contributor>
+        <username>NamelessSpeaker</username>
+        <id>55361283</id>
+      </contributor>
+      <minor/>
+      <origin>1370988432</origin>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text bytes="7594" sha1="fqw4c82g47uyamw2asyue322k2g9x8q" xml:space="preserve">{{Short description|Small rock fragment}}
+{{About||the smartwatch|Pebble (watch)|other}}
+{{More citations needed|date=December 2013}}
+[[File:Pebble Dash (15366562092).jpg|thumb|upright=1.35|Close view of pebbles]]
+
+A '''pebble''' is a [[clastic rocks|clast]] of [[rock (geology)|rock]] with a [[grain size|particle size]] of {{cvt|4-64|mm|in}} based on the [[Particle size (grain size)|Udden-Wentworth scale]] of [[sedimentology]].&lt;ref&gt;{{Cite web |title=Udden Grade Scale {{!}} sedimentology {{!}} Britannica |url=https://www.britannica.com/science/Udden-Grade-Scale |access-date=2026-07-14 |website=www.britannica.com |language=en}}&lt;/ref&gt; Pebbles are generally considered larger than [[Granule (geology)|granules]] ({{cvt|2-4|mm|in}} in diameter) and smaller than [[Cobble (geology)|cobbles]] ({{cvt|64-256|mm|in}} in diameter). [[Oldowan|Pebble tools]] are among the earliest known man-made artifacts,&lt;ref&gt;{{Cite web |title=Pebble chopper {{!}} Stone Age, Handheld Tool &amp; Primitive Technology {{!}} Britannica |url=https://www.britannica.com/technology/pebble-chopper |access-date=2026-07-14 |website=www.britannica.com |language=en}}&lt;/ref&gt; dating from the [[Palaeolithic]] period of human history. 
+
+A beach composed chiefly of surface pebbles is commonly termed a [[shingle beach]].&lt;ref&gt;{{Cite journal |last=Wood |first=A. M. Muir |date=1970-01-29 |title=Characteristics Of Shingle Beaches The Solution To Some Practical Problems |url=https://icce-ojs-tamu.tdl.org/icce/article/view/2673 |journal=Coastal Engineering Proceedings |language=en |issue=12 |pages=68–68 |doi=10.9753/icce.v12.68 |issn=2156-1028|doi-access=free }}&lt;/ref&gt; This type of beach has [[armor (hydrology)|armoring characteristics]] with respect to wave [[erosion]], as well as ecological niches that provide [[habitat]] for animals and plants.
+
+Inshore banks of shingle (large quantities of pebbles) exist in some locations, such as the entrance to the [[River Ore]], England, where the moving banks of shingle give notable navigational challenges.&lt;ref&gt;{{cite web|url=http://www.visitmyharbour.com/harbours/east-coast/ore-alde-rivers/|title=Ore and Alde, Rivers - East Coast: pilotage, charts, photos and marine business listings|website=www.visitmyharbour.com}}&lt;/ref&gt;
+
+Pebbles come in various colors and textures and can have streaks, known as [[Vein (geology)|vein]]s, of [[quartz]] or other [[mineral]]s. Pebbles are mostly smooth but, dependent on how frequently they come in contact with the sea, they can have marks of contact with other rocks or other pebbles. Pebbles left above the [[tide|high water mark]] may have growths of organisms such as [[lichen]] on them, signifying the lack of contact with [[seawater]].
+
+== Location ==
+{{unsourced|section|date=May 2024}}
+Pebbles on Earth exist in two types of locations – on the beaches of various oceans and seas, and inland where ancient seas used to cover the land. Then, when the seas retreated, the rocks became landlocked.&lt;ref&gt;{{Cite web |date=July 3, 2025 |title=Rocky shore |url=https://www.qld.gov.au/environment/coasts-waterways/marine-habitats/rocky-shore |url-status=live |access-date=August 23, 2026 |website=Queensland Government}}&lt;/ref&gt;  Here, they entered lakes and ponds, and form in [[river]]s, travelling into [[estuary|estuaries]] where the smoothing continues in the sea.
+
+Beach pebbles and river pebbles (also known as river rock) are distinct in their geological formation and appearance.
+
+Manufactured Pebbles-These  are made from natural stones such as marble, granite, and sandstone. Manufactured Pebbles are designed to specified sizes and forms, making them flexible for many purposes.
+
+=== Beach ===
+[[File:Beach rocks and pebbles.jpg|thumb|Differently sized rocks and pebbles on a beach in northern England]]
+Beach pebbles form gradually over time as the ocean water washes over loose rock particles. The result is a smooth, rounded appearance.  The typical size range is from 2&amp;nbsp;mm to 50&amp;nbsp;mm. The colors range from translucent white to black, and include shades of yellow, brown, red and green.  Some of the more plentiful pebble beaches are along the coast of the [[Pacific Ocean]], beginning in Canada and extending down to the tip of South America in Argentina. Other pebble beaches are in northern Europe (particularly on the beaches of the [[Norwegian Sea]]), along the coast of the U.K. and Ireland, on the shores of Australia, and around the islands of Indonesia and Japan.
+
+=== Inland ===
+[[File:River side pebbles and rocks.jpg|thumb|upright|Pebbles on a riverbank]]
+Inland pebbles (river pebbles of river rock) are usually found along the shores of large rivers and lakes. These pebbles form as the flowing water washes over rock particles on the bottom and along the shores of the [[river]]. The smoothness and color of river pebbles depends on several factors, such as the composition of the [[soil]] of the river banks, the chemical characteristics of the water, and the speed of the [[Water current|current]].  Because river current is gentler than the [[Wind wave|ocean waves]], river pebbles are usually not as smooth as beach pebbles. The most common colors of river rock are black, grey, green, brown and white.
+
+== Human use ==
+[[File:Pebble lane.JPG|thumb|A walkway decorated with pebbles set into concrete]]
+Beach pebbles and river pebbles are used for a variety of purposes, both outdoors and indoors.  They can be sorted by colour and size, and they can also be polished to improve the texture and colour. Outdoors, beach pebbles are often used for [[landscaping]], [[building construction|construction]] and as decorative elements. Beach pebbles are often used to cover walkways and driveways, around pools, in and around plant containers, on patios and decks. Beach and river pebbles are also used to create water-smart gardens in areas where water is scarce. Small pebbles are also used to create living spaces and gardens on the rooftops of buildings. Indoors, pebbles can be used as [[bookend]]s and [[paperweight]]s. Large pebbles are also used to create "[[pet rocks]]" for children.
+
+== Mars ==
+On [[Mars]], slabs of pebbly [[conglomerate (geology)|conglomerate]] rock have been found and have been interpreted by scientists as having formed in an ancient streambed. The gravels, which were discovered by [[NASA]]'s Mars rover [[Curiosity (rover)|Curiosity]], range from the size of sand particles to the size of golf balls. Analysis has shown that the pebbles were deposited by a stream that flowed at walking pace and was ankle- to hip-deep.&lt;ref name="Mars1"&gt;{{cite web | url=http://www.jpl.nasa.gov/news/news.php?release=2012-305 | title=NASA Rover Finds Old Streambed on Martian Surface | publisher=[[Jet Propulsion Laboratory]] / [[California Institute of Technology]] | work=News | date=27 September 2012 | access-date=28 February 2016}}&lt;/ref&gt;
+
+==Gallery==
+&lt;gallery mode=packed&gt;
+File:Wave Retreating from Pebbles.jpg |Pebbles given a rounded shape by wave action
+File:Halite Dead Sea Beach Pebbles.JPG|Beach pebbles made of [[halite]]; western [[Dead Sea]] coast, [[Israel]]
+File:Pebbles on beach at Broulee -NSW -Australia-2Jan2009.jpg|Pebbles on a beach at Broulee, Australia
+&lt;/gallery&gt;
+
+==See also==
+*[[Gravel]]
+*[[Japanese Garden of Peace]]
+*[[Rock (geology)|Rock]]
+*[[Floaters (geology)|Floater]]
+
+==References==
+{{Reflist}}
+
+==External links==
+{{Commons category-inline|Pebbles}}
+
+{{coastal geography}}
+{{Authority control}}
+
+[[Category:Stone (material)]]
+[[Category:Sedimentology]]
+[[Category:Granularity of materials]]
+[[Category:Building stone]]
+[[Category:Natural materials]]</text>
+      <sha1>fqw4c82g47uyamw2asyue322k2g9x8q</sha1>
+    </revision>
+  </page>
+</mediawiki>
