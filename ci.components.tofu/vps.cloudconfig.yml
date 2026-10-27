@@ -86,11 +86,13 @@ runcmd:
   - |
     HOST_MTU=$(ip route | grep default | head -n1 | awk '{print $5}' | xargs -I {} ip link show {} | awk -F'mtu ' '{print $2}' | awk '{print $1}')
     mkdir -p /etc/docker
-    # Configure Docker with both MTU and data directory
+    # Configure Docker with MTU, data directory and log rotation (container
+    # logs are outside journald's SystemMaxUse cap below)
     cat > /etc/docker/daemon.json << DOCKEREOF
     {
       "mtu": $HOST_MTU,
-      "data-root": "/mnt/data/docker"
+      "data-root": "/mnt/data/docker",
+      "log-opts": { "max-size": "10m", "max-file": "3" }
     }
     DOCKEREOF
     # Configure containerd to use data volume
