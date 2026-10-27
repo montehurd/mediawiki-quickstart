@@ -12,6 +12,9 @@
 // Increase size to 200 MB
 $wgMaxArticleSize = 20480;
 
+// Parsoid has its own size limit, which DevelopmentSettings.php sets to 20 KB
+$wgParsoidSettings['wt2htmlLimits']['wikitextSize'] = $wgMaxArticleSize * 1024;
+
 // $wgShowExceptionDetails = true;
 
 # Include default skin configuration
