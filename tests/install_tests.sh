@@ -80,7 +80,8 @@ test_node_major_matches_quibble() {
   local service image actual failures=0
   for service in mediawiki selenium qunit; do
     image=$(_yq ".services.\"$service\".image" "$(cat docker-compose.override.yml)")
-    actual=$(docker run --rm --entrypoint node "$image" -v 2>/dev/null | cut -d. -f1 | tr -d v)
+    # Check the published image: a cached copy can predate its latest rebuild
+    actual=$(docker run --rm --pull always --entrypoint node "$image" -v 2>/dev/null | cut -d. -f1 | tr -d v)
     if [ "$actual" != "$expected" ]; then
       echo "'$service' ($image) runs Node ${actual:-unknown}, Quibble runs Node $expected"
       failures=$((failures + 1))
@@ -90,7 +91,7 @@ test_node_major_matches_quibble() {
   done
   if [ "$failures" -ne 0 ]; then
     echo "Either the mediawiki, selenium and qunit Dockerfiles in mediawiki-docker-images need Node $expected,"
-    echo "or they already have it and this host has a stale copy of the image(s) above ('docker pull' them)"
+    echo "or they already have it and the rebuilt image(s) above haven't been published yet"
     return 1
   fi
   return 0
